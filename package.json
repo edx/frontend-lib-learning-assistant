@@ -1,10 +1,10 @@
 {
-  "name": "@edx/frontend-template-application",
+  "name": "@edx/frontend-lib-learning-assistant",
   "version": "0.1.0",
   "description": "Frontend application template",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openedx/frontend-template-application.git"
+    "url": "git+https://github.com/edx/frontend-lib-learning-assistant.git"
   },
   "browserslist": [
     "extends @edx/browserslist-config"
@@ -25,12 +25,12 @@
   },
   "author": "edX",
   "license": "AGPL-3.0",
-  "homepage": "https://github.com/openedx/frontend-template-application#readme",
+  "homepage": "https://github.com/edx/frontend-lib-learning-assistant#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/openedx/frontend-template-application/issues"
+    "url": "https://github.com/edx/frontend-lib-learning-assistant/issues"
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
