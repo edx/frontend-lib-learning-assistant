@@ -9,6 +9,14 @@ transifex_input = $(i18n)/transifex_input.json
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
 
+build:
+	rm -rf ./dist
+	./node_modules/.bin/fedx-scripts babel src --out-dir dist --source-maps --ignore **/*.test.jsx,**/*.test.js,**/setupTest.js --copy-files
+	@# --copy-files will bring in everything else that wasn't processed by babel. Remove what we don't want.
+	@find dist -name '*.test.js*' -delete
+	rm ./dist/setupTest.js
+	@rm -rf dist/**/__snapshots__
+
 precommit:
 	npm run lint
 	npm audit
@@ -61,3 +69,8 @@ pull_translations:
 
 	$(intl_imports) paragon frontend-component-header frontend-component-footer frontend-lib-learning-assistant
 endif
+
+# This target is used by GitHub Actions.
+validate-no-uncommitted-package-lock-changes:
+	# Checking for package-lock.json changes...
+	git diff --exit-code package-lock.json

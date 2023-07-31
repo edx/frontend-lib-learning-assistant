@@ -1,7 +1,8 @@
 {
   "name": "@edx/frontend-lib-learning-assistant",
-  "version": "0.1.0",
-  "description": "Frontend application template",
+  "version": "1.0.0-semantically-released",
+  "description": "A frontend library for an Open edX learning assistant.",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/edx/frontend-lib-learning-assistant.git"
@@ -10,7 +11,9 @@
     "extends @edx/browserslist-config"
   ],
   "scripts": {
-    "build": "fedx-scripts webpack",
+    "prepublishOnly": "npm run build",
+    "semantic-release": "semantic-release",
+    "build": "make build",
     "i18n_extract": "BABEL_ENV=i18n fedx-scripts babel src --quiet > /dev/null",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
     "lint:fix": "fedx-scripts eslint --fix --ext .js --ext .jsx .",
@@ -18,6 +21,9 @@
     "start": "fedx-scripts webpack-dev-server --progress",
     "test": "fedx-scripts jest --coverage --passWithNoTests"
   },
+  "files": [
+    "/dist"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
