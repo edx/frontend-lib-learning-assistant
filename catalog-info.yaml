@@ -4,15 +4,15 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "frontend-template-application"
-  description: "A template for Open edX micro-frontend applications."
+  name: "frontend-lib-learning-assistant"
+  description: "A frontend library for an Open edX learning assistant."
   links:
-    - url: "https://github.com/openedx/frontend-template-application/blob/master/README.rst"
+    - url: "https://github.com/edx/frontend-lib-learning-assistant/blob/master/README.rst"
       title: "README"
       icon: "Article"
   annotations:
     openedx.org/arch-interest-groups: ""
 spec:
-  owner: group:frontend-all
+  owner: group:masters-devs-cosmonauts
   type: "library"
   lifecycle: "experimental"
