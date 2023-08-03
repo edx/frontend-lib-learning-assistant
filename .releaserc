@@ -1,5 +1,7 @@
 {
-  "branch": "main",
+  "branches": [
+    "main"
+  ],
   "tagFormat": "v${version}",
   "verifyConditions": [
     "@semantic-release/npm",
