@@ -11,7 +11,7 @@ const Xpert = ({ courseId }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (messageList[messageList.length - 1].role === 'user') {
+    if (messageList[messageList.length - 1]?.role === 'user') {
       dispatch(getChatResponse(courseId));
     }
   }, [dispatch, courseId, messageList]);
