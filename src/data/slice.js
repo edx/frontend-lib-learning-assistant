@@ -37,4 +37,4 @@ export const {
 
 export const {
   reducer,
-} = learningAssistantSlice.reducer;
+} = learningAssistantSlice;
