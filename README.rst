@@ -37,6 +37,34 @@ documented in the repository README.
 
 .. _Learning MFE: https://github.com/openedx/frontend-app-learning
 
+Development
+-----------
+This library is intended for use with the `Learning MFE`_. In order to install a local checkout of this library into 
+the `Learning MFE`_ instead of from npm, follow the documentation for `local module development`_ in the `Learning MFE`_.
+
+If you are planning to run the `Learning MFE`_ in `devstack`_, be sure to clone this repository into a ``src`` 
+subdirectory of your `devstack`_ workspace directory so that the code is properly mounted into the `Learning MFE`_ 
+Docker container. You will need to update the ``dir`` key in your ``module.config.js`` file appropriately. See 
+the `Mounting frontend packages from src directory`_ ADR in the `devstack`_ repository for further details.
+
+If you want to install a local checkout of this library into the `Learning MFE`_, follow the documentation mentioned 
+above. However, if you want do active development on this library and wish to see your changes immediately reflected in 
+the `Learning MFE`_, then you will need to modify your ``module.config.js`` to reference the ``src`` directory of this 
+``repository`` in the ``dist`` key instead of the ``dist`` directory. Below is an example ``module.config.js`` for this
+use case. If you set up your ``module.config.js`` this way, your changes will be picked up by the `Learning MFE`_ via 
+the hot module reloading process.::
+
+  module.exports = {
+    localModules: [
+        { moduleName: '@edx/frontend-lib-learning-assistant', dir: '../src/frontend-lib-learning-assistant', dist: 'src' },
+    ],
+  };
+ 
+.. _devstack: https://github.com/openedx/devstack
+.. _Learning MFE: https://github.com/openedx/frontend-app-learning
+.. _local module development: https://github.com/openedx/frontend-app-learning#local-module-development
+.. _Mounting frontend packages from src directory: https://github.com/openedx/devstack/blob/master/docs/decisions/0005-frontend-package-mounts.rst
+
 Configuration
 -------------
 
