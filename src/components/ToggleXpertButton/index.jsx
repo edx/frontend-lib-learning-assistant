@@ -1,10 +1,17 @@
 import { ChevronRight } from 'react-feather';
 import PropTypes from 'prop-types';
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { ReactComponent as NewXeySvg } from '../../assets/new_xey.svg';
 import './index.css';
 
-const ToggleXpert = ({ isOpen, setIsOpen }) => {
+const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
   const handleClick = () => {
+    // log event if the tool is opened
+    if (!isOpen) {
+      sendTrackEvent('edx.ui.lms.learning_assistant.launch', {
+        course_id: courseId,
+      });
+    }
     setIsOpen(!isOpen);
   };
 
@@ -39,6 +46,7 @@ const ToggleXpert = ({ isOpen, setIsOpen }) => {
 ToggleXpert.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
+  courseId: PropTypes.string.isRequired,
 };
 
 export default ToggleXpert;

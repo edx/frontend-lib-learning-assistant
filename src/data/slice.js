@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 
 export const learningAssistantSlice = createSlice({
   name: 'learning-assistant',
@@ -7,6 +8,7 @@ export const learningAssistantSlice = createSlice({
     currentMessage: '',
     messageList: [],
     apiError: false,
+    conversationId: uuidv4(),
   },
   reducers: {
     setCurrentMessage: (state, { payload }) => {
