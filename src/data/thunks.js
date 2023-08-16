@@ -1,3 +1,4 @@
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import fetchChatResponse from './api';
 import {
   setCurrentMessage,
@@ -8,7 +9,7 @@ import {
 
 export function addChatMessage(role, content) {
   return (dispatch, getState) => {
-    const { messageList } = getState().learningAssistant;
+    const { messageList, conversationId } = getState().learningAssistant;
     const message = {
       role,
       content,
@@ -16,6 +17,12 @@ export function addChatMessage(role, content) {
     };
     const updatedMessageList = [...messageList, message];
     dispatch(setMessageList({ messageList: updatedMessageList }));
+    sendTrackEvent('edx.ui.lms.learning_assistant.message', {
+      id: conversationId,
+      timestamp: message.timestamp,
+      role: message.role,
+      content: message.content,
+    });
   };
 }
 
