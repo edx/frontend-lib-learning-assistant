@@ -14,6 +14,9 @@ export const learningAssistantSlice = createSlice({
     setCurrentMessage: (state, { payload }) => {
       state.currentMessage = payload.currentMessage;
     },
+    clearCurrentMessage: (state) => {
+      state.currentMessage = '';
+    },
     setMessageList: (state, { payload }) => {
       state.messageList = payload.messageList;
     },
@@ -30,6 +33,7 @@ export const learningAssistantSlice = createSlice({
 
 export const {
   setCurrentMessage,
+  clearCurrentMessage,
   setMessageList,
   resetMessages,
   setApiError,
