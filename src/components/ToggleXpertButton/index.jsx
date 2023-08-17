@@ -2,7 +2,7 @@ import { ChevronRight } from 'react-feather';
 import PropTypes from 'prop-types';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { ReactComponent as NewXeySvg } from '../../assets/new_xey.svg';
-import './index.css';
+import './index.scss';
 
 const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
   const handleClick = () => {
@@ -18,7 +18,7 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
   if (isOpen) {
     return (
       <button
-        className="fixed flex flex-row bottom-4 sidebar-open bg-white p-2 rounded-full shadow transition-all ease duration-800"
+        className="open position-fixed d-flex flex-row bg-white p-2"
         onClick={handleClick}
         type="button"
       >
@@ -29,14 +29,14 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
 
   return (
     <button
-      className="fixed justify-end bottom-4 sidebar-closed transition-all ease duration-800"
+      className="closed d-flex flex-column position-fixed justify-content-end align-items-end border-0"
       onClick={handleClick}
       type="button"
     >
-      <div className="open-negative-margin absolute bottom-16 px-4 py-2 text-white border border-white">
+      <div className="open-negative-margin px-3 py-2 text-white border border-white">
         <span>Have a question?</span>
       </div>
-      <div className="px-4 py-2">
+      <div>
         <NewXeySvg width="58" />
       </div>
     </button>

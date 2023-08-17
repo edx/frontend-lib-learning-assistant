@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Message from '../Message';
-import './ChatBox.css';
+import './ChatBox.scss';
 
 // container for all of the messages
 const ChatBox = ({ messageList, chatboxContainerRef }) => {
@@ -16,7 +16,7 @@ const ChatBox = ({ messageList, chatboxContainerRef }) => {
   }, [messageList]);
 
   return (
-    <div ref={chatboxContainerRef} className="scroller container d-flex justify-content-center">
+    <div ref={chatboxContainerRef} className="scroller d-flex flex-column">
       {messageList.map(({ role, content, timestamp }) => (
         <Message key={timestamp.toString()} variant={role} message={content} timestamp={timestamp} />
       ))}

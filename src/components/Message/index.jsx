@@ -1,15 +1,19 @@
 import React from 'react';
-import './Message.css';
+import './Message.scss';
 import PropTypes from 'prop-types';
 
 const Message = ({ variant, message, timestamp }) => {
   if (!timestamp) {
     return null;
   }
+
   return (
-    <div className={`msg ${variant}`} data-hj-suppress>
+    <div
+      className={`message ${variant} ${variant === 'user' ? 'align-self-end' : ''} text-left my-1 mx-2 py-1 px-2`}
+      data-hj-suppress
+    >
       {message}
-      <div className="time">{`${timestamp?.getHours()}:${timestamp?.getMinutes()}:${timestamp?.getSeconds()}`}</div>
+      <div className="time text-right pl-2">{`${timestamp?.getHours()}:${timestamp?.getMinutes()}:${timestamp?.getSeconds()}`}</div>
     </div>
   );
 };
