@@ -111,6 +111,7 @@ const Sidebar = ({
           onChange={handleUpdateCurrentMessage}
           placeholder="Type your question..."
           className="w-full border border-gray-300 rounded-md p-4 focus:outline-none focus:border-blue-500"
+          data-hj-suppress
         />
         <button className="text-blue-900 mt-2 mb-1 mx-2" type="submit">
           <Send size="22" className="ml-1" />
