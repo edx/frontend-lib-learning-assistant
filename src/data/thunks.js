@@ -3,9 +3,10 @@ import fetchChatResponse from './api';
 import {
   setCurrentMessage,
   clearCurrentMessage,
+  resetMessages,
   setMessageList,
   setApiError,
-  resetMessages,
+  setApiIsLoading,
 } from './slice';
 
 export function addChatMessage(role, content) {
@@ -36,11 +37,15 @@ export function addChatMessage(role, content) {
 export function getChatResponse(courseId) {
   return async (dispatch, getState) => {
     const { messageList } = getState().learningAssistant;
+
+    dispatch(setApiIsLoading(true));
     try {
       const message = await fetchChatResponse(courseId, messageList);
+      dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content));
     } catch (error) {
       dispatch(setApiError());
+      dispatch(setApiIsLoading(false));
     }
   };
 }

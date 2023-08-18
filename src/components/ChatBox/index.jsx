@@ -1,26 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Message from '../Message';
 import './ChatBox.scss';
 
 // container for all of the messages
-const ChatBox = ({ messageList, chatboxContainerRef }) => {
-  const [isResponseLoading, setResponseLoading] = useState(false);
-
-  useEffect(() => {
-    if (messageList[messageList.length - 1]?.role === 'user') {
-      setResponseLoading(true);
-    } else {
-      setResponseLoading(false);
-    }
-  }, [messageList]);
+const ChatBox = ({ chatboxContainerRef }) => {
+  const { messageList, apiIsLoading } = useSelector(state => state.learningAssistant);
 
   return (
     <div ref={chatboxContainerRef} className="scroller d-flex flex-column">
       {messageList.map(({ role, content, timestamp }) => (
         <Message key={timestamp.toString()} variant={role} message={content} timestamp={timestamp} />
       ))}
-      {isResponseLoading && (
+      {apiIsLoading && (
         <div className="loading">Xpert is thinking</div>
       )}
     </div>

@@ -7,11 +7,13 @@ import './Sidebar.scss';
 import {
   addChatMessage,
   clearMessages,
+  getChatResponse,
   updateCurrentMessage,
 } from '../../data/thunks';
 import { ReactComponent as NewXeySvg } from '../../assets/new_xey.svg';
 
 const Sidebar = ({
+  courseId,
   isOpen,
   setIsOpen,
 }) => {
@@ -51,7 +53,7 @@ const Sidebar = ({
         requestAnimationFrame(scroll);
       }
     }
-  }, [messageList]);
+  }, [messageList, isOpen]);
 
   const handleClick = () => {
     setIsOpen(false);
@@ -65,6 +67,7 @@ const Sidebar = ({
     event.preventDefault();
     if (currentMessage) {
       dispatch(addChatMessage('user', currentMessage));
+      dispatch(getChatResponse(courseId));
     }
   };
 
@@ -134,6 +137,7 @@ const Sidebar = ({
 };
 
 Sidebar.propTypes = {
+  courseId: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
 };
