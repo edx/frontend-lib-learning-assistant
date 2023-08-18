@@ -8,7 +8,7 @@ const ChatBox = ({ messageList, chatboxContainerRef }) => {
   const [isResponseLoading, setResponseLoading] = useState(false);
 
   useEffect(() => {
-    if (messageList[messageList.length - 1].role === 'user') {
+    if (messageList[messageList.length - 1]?.role === 'user') {
       setResponseLoading(true);
     } else {
       setResponseLoading(false);

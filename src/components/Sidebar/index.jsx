@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Send } from 'react-feather';
 import PropTypes from 'prop-types';
 import ChatBox from '../ChatBox';
@@ -17,6 +17,7 @@ const Sidebar = ({
 }) => {
   const { messageList, currentMessage } = useSelector(state => state.learningAssistant);
   const chatboxContainerRef = useRef(null);
+  const dispatch = useDispatch();
 
   // this use effect is intended to scroll to the bottom of the chat window, in the case
   // that a message is larger than the chat window height.
@@ -54,14 +55,18 @@ const Sidebar = ({
   };
 
   const handleUpdateCurrentMessage = (event) => {
-    updateCurrentMessage(event.target.value);
+    dispatch(updateCurrentMessage(event.target.value));
   };
 
   const handleSubmitMessage = (event) => {
     event.preventDefault();
     if (currentMessage) {
-      addChatMessage('user', currentMessage);
+      dispatch(addChatMessage('user', currentMessage));
     }
+  };
+
+  const handleClearMessages = () => {
+    dispatch(clearMessages());
   };
 
   return (
@@ -114,7 +119,7 @@ const Sidebar = ({
       <div className="flex justify-start">
         <button
           className="rounded-full bg-blue-100 text-blue-900 px-3 mx-2 mb-2"
-          onClick={clearMessages}
+          onClick={handleClearMessages}
           type="button"
         >
           Clear
