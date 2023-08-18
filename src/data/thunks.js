@@ -11,10 +11,15 @@ import {
 export function addChatMessage(role, content) {
   return (dispatch, getState) => {
     const { messageList, conversationId } = getState().learningAssistant;
+
+    // Redux recommends only serializable values in the store, so we'll stringify the timestap to store in Redux.
+    // When we need to operate on the Date object, we'll deserialize the string.
+    const timestamp = new Date();
+
     const message = {
       role,
       content,
-      timestamp: new Date(),
+      timestamp: timestamp.toString(),
     };
     const updatedMessageList = [...messageList, message];
     dispatch(setMessageList({ messageList: updatedMessageList }));
@@ -33,7 +38,7 @@ export function getChatResponse(courseId) {
     const { messageList } = getState().learningAssistant;
     try {
       const message = await fetchChatResponse(courseId, messageList);
-      addChatMessage(message.role, message.content);
+      dispatch(addChatMessage(message.role, message.content));
     } catch (error) {
       dispatch(setApiError());
     }

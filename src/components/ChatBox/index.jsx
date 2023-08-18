@@ -28,12 +28,10 @@ const ChatBox = ({ messageList, chatboxContainerRef }) => {
 };
 
 ChatBox.propTypes = {
-  messageList: PropTypes.arrayOf(PropTypes.shape({
-    role: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    timestamp: PropTypes.instanceOf(Date).isRequired,
-  })).isRequired,
-  chatboxContainerRef: PropTypes.string.isRequired,
+  chatboxContainerRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]).isRequired,
 };
 
 export default ChatBox;
