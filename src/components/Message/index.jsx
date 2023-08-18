@@ -7,7 +7,7 @@ const Message = ({ variant, message, timestamp }) => {
     return null;
   }
   return (
-    <div className={`msg ${variant}`}>
+    <div className={`msg ${variant}`} data-hj-suppress>
       {message}
       <div className="time">{`${timestamp?.getHours()}:${timestamp?.getMinutes()}:${timestamp?.getSeconds()}`}</div>
     </div>
