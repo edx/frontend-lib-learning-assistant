@@ -85,6 +85,7 @@ const Sidebar = ({
       >
         <button
           className="close position-absolute m-3 p-0 border-0"
+          data-testid="close-button"
           onClick={handleClick}
           type="button"
         >
@@ -119,7 +120,11 @@ const Sidebar = ({
             className="w-100 p-3"
             data-hj-suppress
           />
-          <button className="mt-2 mb-1 mx-2 border-0" type="submit">
+          <button
+            className="mt-2 mb-1 mx-2 border-0"
+            type="submit"
+            data-testid="submit-button"
+          >
             <Send size="22" className="ml-1" />
           </button>
         </form>

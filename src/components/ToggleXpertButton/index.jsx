@@ -19,6 +19,7 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
     return (
       <button
         className="open position-fixed d-flex flex-row bg-white p-2"
+        data-testid="toggle-button"
         onClick={handleClick}
         type="button"
       >
@@ -30,6 +31,7 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
   return (
     <button
       className="closed d-flex flex-column position-fixed justify-content-end align-items-end border-0"
+      data-testid="toggle-button"
       onClick={handleClick}
       type="button"
     >
