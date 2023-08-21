@@ -1,0 +1,19 @@
+.message {
+  width: fit-content;
+  max-width: 70%;
+  border-radius: 10px;
+  font-size: 15px;
+
+  &.user {
+    background:#EBEBEB;
+  }
+
+  &.assistant {
+    background:#0A3055;
+    color: white;
+  }
+}
+
+.time {
+  font-size: 10px;
+}

@@ -1,15 +1,21 @@
 import React from 'react';
-import './Message.css';
+import './Message.scss';
 import PropTypes from 'prop-types';
 
 const Message = ({ variant, message, timestamp }) => {
   if (!timestamp) {
     return null;
   }
+
+  const parsedTimestamp = new Date(Date.parse(timestamp));
+
   return (
-    <div className={`msg ${variant}`} data-hj-suppress>
+    <div
+      className={`message ${variant} ${variant === 'user' ? 'align-self-end' : ''} text-left my-1 mx-2 py-1 px-2`}
+      data-hj-suppress
+    >
       {message}
-      <div className="time">{`${timestamp?.getHours()}:${timestamp?.getMinutes()}:${timestamp?.getSeconds()}`}</div>
+      <div className="time text-right pl-2">{`${parsedTimestamp?.getHours()}:${parsedTimestamp?.getMinutes()}:${parsedTimestamp?.getSeconds()}`}</div>
     </div>
   );
 };
@@ -17,7 +23,7 @@ const Message = ({ variant, message, timestamp }) => {
 Message.propTypes = {
   variant: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
-  timestamp: PropTypes.instanceOf(Date).isRequired,
+  timestamp: PropTypes.string.isRequired,
 };
 
 export default Message;

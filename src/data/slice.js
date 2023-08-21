@@ -8,6 +8,7 @@ export const learningAssistantSlice = createSlice({
     currentMessage: '',
     messageList: [],
     apiError: false,
+    apiIsLoading: false,
     conversationId: uuidv4(),
   },
   reducers: {
@@ -28,6 +29,9 @@ export const learningAssistantSlice = createSlice({
     setApiError: (state) => {
       state.apiError = true;
     },
+    setApiIsLoading: (state, { payload }) => {
+      state.apiIsLoading = payload;
+    },
   },
 });
 
@@ -37,6 +41,7 @@ export const {
   setMessageList,
   resetMessages,
   setApiError,
+  setApiIsLoading,
 } = learningAssistantSlice.actions;
 
 export const {
