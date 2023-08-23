@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Send } from 'react-feather';
 import PropTypes from 'prop-types';
 import ChatBox from '../ChatBox';
+import APIError from '../APIError';
 import './Sidebar.scss';
 import {
   addChatMessage,
@@ -17,7 +18,7 @@ const Sidebar = ({
   isOpen,
   setIsOpen,
 }) => {
-  const { messageList, currentMessage } = useSelector(state => state.learningAssistant);
+  const { messageList, currentMessage, apiError } = useSelector(state => state.learningAssistant);
   const chatboxContainerRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -53,7 +54,7 @@ const Sidebar = ({
         requestAnimationFrame(scroll);
       }
     }
-  }, [messageList, isOpen]);
+  }, [messageList, isOpen, apiError]);
 
   const handleClick = () => {
     setIsOpen(false);
@@ -117,7 +118,15 @@ const Sidebar = ({
           chatboxContainerRef={chatboxContainerRef}
           messageList={messageList}
         />
-        <form className="d-flex flex-row p-2 mt-auto" onSubmit={handleSubmitMessage}>
+        {
+          apiError
+          && (
+            <div className="d-flex flex-column p-3 mt-auto">
+              <APIError />
+            </div>
+          )
+        }
+        <form className={`d-flex flex-row p-2 ${apiError ? 'mt-1' : 'mt-auto'}`} onSubmit={handleSubmitMessage}>
           <input
             type="text"
             value={currentMessage}
