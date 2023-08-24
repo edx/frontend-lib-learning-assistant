@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import { IntlProvider } from 'react-intl';
 import { reducer as learningAssistantReducer } from '../data/slice';
 
 function renderWithProviders(
@@ -16,7 +17,9 @@ function renderWithProviders(
   } = {},
 ) {
   const Wrapper = ({ children }) => (
-    <Provider store={store}>{children}</Provider>
+    <IntlProvider locale="en">
+      <Provider store={store}>{children}</Provider>
+    </IntlProvider>
   );
 
   Wrapper.propTypes = {
