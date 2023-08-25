@@ -16,6 +16,9 @@ const initialState = {
     messageList: [],
     apiIsLoading: false,
     apiError: false,
+    // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+    //            I will remove this and write tests in a future pull request.
+    disclosureAcknowledged: true,
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -179,6 +182,9 @@ test('error message should disappear upon succesful api call', async () => {
       messageList: [],
       apiIsLoading: false,
       apiError: true,
+      // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+      //            I will remove this and write tests in a future pull request.
+      disclosureAcknowledged: true,
     },
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
@@ -203,6 +209,9 @@ test('error message should disappear when dismissed', async () => {
       messageList: [],
       apiIsLoading: false,
       apiError: true,
+      // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+      //            I will remove this and write tests in a future pull request.
+      disclosureAcknowledged: true,
     },
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
@@ -225,6 +234,9 @@ test('error message should disappear when messages cleared', async () => {
       messageList: [],
       apiIsLoading: false,
       apiError: true,
+      // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+      //            I will remove this and write tests in a future pull request.
+      disclosureAcknowledged: true,
     },
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });

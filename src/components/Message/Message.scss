@@ -1,3 +1,5 @@
+@use '../../utils/variables';
+
 .message {
   width: fit-content;
   max-width: 70%;
@@ -5,12 +7,11 @@
   font-size: 15px;
 
   &.user {
-    background:#EBEBEB;
+    background: variables.$dark-green;
   }
 
   &.assistant {
-    background:#0A3055;
-    color: white;
+    background: #F2F0EF;
   }
 }
 
