@@ -17,39 +17,9 @@
     line-height: 1.75rem;
   }
 
-  button.close {
-    /* Override default opacity:0.5 for buttons */
-    opacity: 1;
-    height: fit-content;
+  button.chat-close {
     top: 0;
     right: 0;
-    background: none;
-
-    &.disclosure svg {
-      /* The default fill on the close button svg is too dark for the dark green background
-         of the disclosure, so use a white fill. */
-        fill: white;
-      }
-
-    svg {
-      width: 1.5rem;
-      height: 1.5rem;
-      fill: #6B7280;
-    }
-
-    svg:hover {
-      fill: #4B5563;
-    }
-  }
-
-  button.clear {
-    /* Bootstrap doesn't have any 0.75*$spacer utility classes. */
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    border-radius: 9999px;
-    border-style: solid;
-    background-color: variables.$dark-green;
-    color: white;
   }
 
   form {
@@ -62,11 +32,6 @@
       &:hover {
         border-color: variables.$dark-green;
       }
-    }
-
-    button {
-      color: variables.$dark-green;
-      background: none;
     }
   }
 }

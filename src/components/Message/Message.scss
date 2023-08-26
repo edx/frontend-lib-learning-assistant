@@ -8,11 +8,18 @@
 
   &.user {
     background: variables.$dark-green;
+    color: white;
   }
 
   &.assistant {
     background: #F2F0EF;
   }
+}
+
+// bootstrap automatically adds a bottom margin of 1rem,
+// which we do not need for the chat messages
+.message p {
+  margin-bottom: 0rem;
 }
 
 .time {
