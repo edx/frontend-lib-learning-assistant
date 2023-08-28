@@ -11,7 +11,7 @@ const Message = ({ variant, message, timestamp }) => {
 
   return (
     <div
-      className={`message ${variant} ${variant === 'user' ? 'align-self-end' : ''} text-left my-1 mx-2 py-1 px-2`}
+      className={`message ${variant} ${variant === 'user' ? 'align-self-end' : 'text-dark'} text-left text-white my-1 mx-2 py-1 px-2`}
       data-hj-suppress
     >
       {message}

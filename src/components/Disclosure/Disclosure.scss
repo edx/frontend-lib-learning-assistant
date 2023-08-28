@@ -1,0 +1,31 @@
+@use '../../utils/variables';
+
+.disclosure {
+    height: 100%;
+
+    overflow-y: auto;
+    background-color: variables.$dark-green;
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        color: variables.$accent-yellow;
+    }
+
+    p {
+        font-size: 0.625rem;
+    }
+
+    /* Due to CSS specificity of other typography selectors, selecting the a tag is not sufficient,
+       and we must add important. */
+    .privacy-policy-link {
+       text-decoration: underline !important;
+       text-decoration-color: white !important;
+    }
+
+    li {
+        font-size: 1rem;
+    }
+}

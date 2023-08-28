@@ -1,5 +1,7 @@
+@use '../../utils/variables';
+
 .open-negative-margin {
-    background-color: #0A3055;
+    background-color: variables.$dark-green;
     border-radius: 10px;
     bottom: 4rem;
 }

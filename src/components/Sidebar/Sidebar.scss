@@ -1,20 +1,16 @@
+@use '../../utils/variables';
+
 .sidebar {
-  height: 100vh;
-  /* Set the height of the chat container */
-  overflow-y: scroll;
-  /* Enable vertical scrolling */
-  scroll-behavior: smooth;
-  /* Add smooth scrolling behavior */
+  box-shadow: 0 0 1rem 0 #00000026,0 0 .625rem 0 #00000026;
   top: 0;
   bottom: 0;
-  border-left-width: 1px;
-  border-color: #9CA3AF;
-  background-color: #F9FAFB;
+  background-color: white;
 
-  &.open {
-    width: 30%;
-    right: 0;
-  }
+  width: 30%;
+  right: 0;
+
+  /* Add smooth scrolling behavior */
+  scroll-behavior: smooth;
 
   h1 {
     font-size: 1.25rem;
@@ -28,6 +24,12 @@
     top: 0;
     right: 0;
     background: none;
+
+    &.disclosure svg {
+      /* The default fill on the close button svg is too dark for the dark green background
+         of the disclosure, so use a white fill. */
+        fill: white;
+      }
 
     svg {
       width: 1.5rem;
@@ -46,8 +48,8 @@
     padding-right: 0.75rem;
     border-radius: 9999px;
     border-style: solid;
-    background-color: #DBEAFE;
-    color: #1E3A8A;
+    background-color: variables.$dark-green;
+    color: white;
   }
 
   form {
@@ -58,13 +60,12 @@
       border-style: solid;
 
       &:hover {
-        outline-style: none;
-        border-color: #3B82F6;
+        border-color: variables.$dark-green;
       }
     }
 
     button {
-      color: #1E3A8A;
+      color: variables.$dark-green;
       background: none;
     }
   }

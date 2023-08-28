@@ -8,6 +8,7 @@ import {
   setApiError,
   setApiIsLoading,
   resetApiError,
+  setDisclosureAcknowledged,
 } from './slice';
 
 export function addChatMessage(role, content) {
@@ -68,5 +69,11 @@ export function updateCurrentMessage(content) {
 export function clearApiError() {
   return (dispatch) => {
     dispatch(resetApiError());
+  };
+}
+
+export function acknowledgeDisclosure(isDisclosureAcknowledged) {
+  return (dispatch) => {
+    dispatch(setDisclosureAcknowledged(isDisclosureAcknowledged));
   };
 }
