@@ -29,6 +29,9 @@ export const learningAssistantSlice = createSlice({
     setApiError: (state) => {
       state.apiError = true;
     },
+    resetApiError: (state) => {
+      state.apiError = false;
+    },
     setApiIsLoading: (state, { payload }) => {
       state.apiIsLoading = payload;
     },
@@ -42,6 +45,7 @@ export const {
   resetMessages,
   setApiError,
   setApiIsLoading,
+  resetApiError,
 } = learningAssistantSlice.actions;
 
 export const {

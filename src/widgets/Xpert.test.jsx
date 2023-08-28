@@ -20,7 +20,7 @@ const initialState = {
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 
-const assertSidebarElementsInDOM = () => {
+const assertSidebarElementsNotInDOM = () => {
   expect(screen.queryByTestId('heading', { name: 'Hi, I\'m Xpert!' })).not.toBeInTheDocument();
   expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
   expect(screen.queryByTestId('submit-button')).not.toBeInTheDocument();
@@ -40,7 +40,7 @@ test('initial load displays correct elements', () => {
   expect(screen.getByRole('button', { name: 'Have a question?' })).toBeVisible();
 
   // assert that UI elements in the sidebar are not in the DOM
-  assertSidebarElementsInDOM();
+  assertSidebarElementsNotInDOM();
 });
 test('clicking the toggle button opens the sidebar', async () => {
   const user = userEvent.setup();
@@ -157,7 +157,7 @@ test('clicking the close button closes the sidebar', async () => {
   await user.click(screen.getByTestId('close-button'));
 
   // assert that UI elements in the sidebar are not in the DOM
-  assertSidebarElementsInDOM();
+  assertSidebarElementsNotInDOM();
 });
 test('clicking the toggle button closes the sidebar', async () => {
   const user = userEvent.setup();
@@ -167,5 +167,74 @@ test('clicking the toggle button closes the sidebar', async () => {
   await user.click(screen.getByTestId('toggle-button'));
 
   // assert that UI elements in the sidebar are not in the DOM
-  assertSidebarElementsInDOM();
+  assertSidebarElementsNotInDOM();
+});
+test('error message should disappear upon succesful api call', async () => {
+  const user = userEvent.setup();
+  const userMessage = 'Hello, Xpert!';
+
+  const errorState = {
+    learningAssistant: {
+      currentMessage: '',
+      messageList: [],
+      apiIsLoading: false,
+      apiError: true,
+    },
+  };
+  render(<Xpert courseId={courseId} />, { preloadedState: errorState });
+
+  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+
+  // assert that error message exists
+  expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
+
+  // submit text, assert that error message disappears
+  const input = screen.getByRole('textbox');
+  await user.type(input, userMessage);
+  await user.click(screen.getByTestId('submit-button'));
+  expect(screen.queryByText('Please try again by sending another question.')).not.toBeInTheDocument();
+});
+test('error message should disappear when dismissed', async () => {
+  const user = userEvent.setup();
+
+  const errorState = {
+    learningAssistant: {
+      currentMessage: '',
+      messageList: [],
+      apiIsLoading: false,
+      apiError: true,
+    },
+  };
+  render(<Xpert courseId={courseId} />, { preloadedState: errorState });
+
+  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+
+  // assert that error message exists
+  expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
+
+  // dismiss alert, assert that error message disappears
+  await user.click(screen.getByText('Dismiss'));
+  expect(screen.queryByText('Please try again by sending another question.')).not.toBeInTheDocument();
+});
+test('error message should disappear when messages cleared', async () => {
+  const user = userEvent.setup();
+
+  const errorState = {
+    learningAssistant: {
+      currentMessage: '',
+      messageList: [],
+      apiIsLoading: false,
+      apiError: true,
+    },
+  };
+  render(<Xpert courseId={courseId} />, { preloadedState: errorState });
+
+  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+
+  // assert that error message exists
+  expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
+
+  // clear messages, assert that error message disappears
+  await user.click(screen.getByText('Clear'));
+  expect(screen.queryByText('Please try again by sending another question.')).not.toBeInTheDocument();
 });

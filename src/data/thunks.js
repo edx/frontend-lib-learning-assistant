@@ -7,6 +7,7 @@ import {
   setMessageList,
   setApiError,
   setApiIsLoading,
+  resetApiError,
 } from './slice';
 
 export function addChatMessage(role, content) {
@@ -25,6 +26,7 @@ export function addChatMessage(role, content) {
     const updatedMessageList = [...messageList, message];
     dispatch(setMessageList({ messageList: updatedMessageList }));
     dispatch(clearCurrentMessage());
+    dispatch(resetApiError());
     sendTrackEvent('edx.ui.lms.learning_assistant.message', {
       id: conversationId,
       timestamp: message.timestamp,
@@ -53,11 +55,18 @@ export function getChatResponse(courseId) {
 export function clearMessages() {
   return (dispatch) => {
     dispatch(resetMessages());
+    dispatch(resetApiError());
   };
 }
 
 export function updateCurrentMessage(content) {
   return (dispatch) => {
     dispatch(setCurrentMessage({ currentMessage: content }));
+  };
+}
+
+export function clearApiError() {
+  return (dispatch) => {
+    dispatch(resetApiError());
   };
 }
