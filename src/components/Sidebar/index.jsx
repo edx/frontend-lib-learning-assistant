@@ -2,6 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Send } from 'react-feather';
 import PropTypes from 'prop-types';
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { Button, Icon, IconButton } from '@edx/paragon';
+import { Close } from '@edx/paragon/icons';
 import Disclosure from '../Disclosure';
 import ChatBox from '../ChatBox';
 import APIError from '../APIError';
@@ -21,6 +24,7 @@ const Sidebar = ({
 }) => {
   const {
     apiError,
+    apiIsLoading,
     currentMessage,
     disclosureAcknowledged,
     messageList,
@@ -79,13 +83,16 @@ const Sidebar = ({
   const handleSubmitMessage = (event) => {
     event.preventDefault();
     if (currentMessage) {
-      dispatch(addChatMessage('user', currentMessage));
+      dispatch(addChatMessage('user', currentMessage, courseId));
       dispatch(getChatResponse(courseId));
     }
   };
 
   const handleClearMessages = () => {
     dispatch(clearMessages());
+    sendTrackEvent('edx.ui.lms.learning_assistant.clear', {
+      course_id: courseId,
+    });
   };
 
   const getSidebar = () => (
@@ -122,22 +129,27 @@ const Sidebar = ({
           className="w-100 p-3"
           data-hj-suppress
         />
-        <button
-          className="mt-2 mb-1 mx-2 border-0"
+        <Button
+          className="mt-2 mb-1 mx-1 border-0"
           type="submit"
           data-testid="submit-button"
+          variant="inverse-primary"
+          disabled={apiIsLoading}
+          aria-label="submit"
         >
-          <Send size="22" className="ml-1" />
-        </button>
+          <Send size="22" />
+        </Button>
       </form>
       <div className="d-flex justify-content-start">
-        <button
+        <Button
           className="clear mx-2 mb-2 border-0"
           onClick={handleClearMessages}
+          aria-label="clear"
+          variant="primary"
           type="button"
         >
           Clear
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -147,19 +159,16 @@ const Sidebar = ({
       <div
         className="sidebar position-fixed"
       >
-        <button
-          className={`close position-absolute m-3 border-0 ${disclosureAcknowledged ? '' : 'disclosure'}`}
+        <IconButton
+          className="chat-close position-absolute m-2 border-0"
+          src={Close}
+          iconAs={Icon}
           data-testid="close-button"
           onClick={handleClick}
-          type="button"
-        >
-          <svg
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M10 8.586L4.707 3.293a1 1 0 00-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 101.414 1.414L10 11.414l5.293 5.293a1 1 0 001.414-1.414L11.414 10l5.293-5.293a1 1 0 00-1.414-1.414L10 8.586z" />
-          </svg>
-        </button>
+          aria-label="close"
+          variant="primary"
+          invertColors={!disclosureAcknowledged}
+        />
         {disclosureAcknowledged ? (getSidebar()) : (<Disclosure />)}
       </div>
     )

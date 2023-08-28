@@ -1,4 +1,5 @@
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import fetchChatResponse from './api';
 import {
   setCurrentMessage,
@@ -11,7 +12,7 @@ import {
   setDisclosureAcknowledged,
 } from './slice';
 
-export function addChatMessage(role, content) {
+export function addChatMessage(role, content, courseId) {
   return (dispatch, getState) => {
     const { messageList, conversationId } = getState().learningAssistant;
 
@@ -28,8 +29,12 @@ export function addChatMessage(role, content) {
     dispatch(setMessageList({ messageList: updatedMessageList }));
     dispatch(clearCurrentMessage());
     dispatch(resetApiError());
+
+    const { userId } = getAuthenticatedUser();
     sendTrackEvent('edx.ui.lms.learning_assistant.message', {
       id: conversationId,
+      course_id: courseId,
+      user_id: userId,
       timestamp: message.timestamp,
       role: message.role,
       content: message.content,
@@ -45,7 +50,7 @@ export function getChatResponse(courseId) {
     try {
       const message = await fetchChatResponse(courseId, messageList);
       dispatch(setApiIsLoading(false));
-      dispatch(addChatMessage(message.role, message.content));
+      dispatch(addChatMessage(message.role, message.content, courseId));
     } catch (error) {
       dispatch(setApiError());
       dispatch(setApiIsLoading(false));
