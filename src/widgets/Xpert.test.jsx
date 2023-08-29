@@ -44,17 +44,30 @@ test('initial load displays correct elements', () => {
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
   // button to open chat should be in the DOM
-  expect(screen.getByRole('button')).toBeVisible();
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('action-message')).toBeVisible();
 
   // assert that UI elements in the sidebar are not in the DOM
   assertSidebarElementsNotInDOM();
+});
+test('clicking the call to action dismiss button removes the message', async () => {
+  const user = userEvent.setup();
+  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+
+  // button to open chat should be in the DOM
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('action-message')).toBeVisible();
+
+  await user.click(screen.getByRole('button', { name: 'dismiss' }));
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('action-message')).not.toBeInTheDocument();
 });
 test('clicking the toggle button opens the sidebar', async () => {
   const user = userEvent.setup();
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that UI elements present in the sidebar are visible
   expect(screen.getByRole('heading', { name: 'Hi, I\'m Xpert!' })).toBeVisible();
@@ -69,7 +82,7 @@ test('submitted text appears as message in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   const input = screen.getByRole('textbox');
@@ -97,7 +110,7 @@ test('loading message appears in the sidebar while the response loads', async ()
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   await user.type(screen.getByRole('textbox'), userMessage);
@@ -121,7 +134,7 @@ test('response text appears as message in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   const input = screen.getByRole('textbox');
@@ -142,7 +155,7 @@ test('clicking the clear button clears messages in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   const input = screen.getByRole('textbox');
@@ -160,7 +173,7 @@ test('clicking the close button closes the sidebar', async () => {
   const user = userEvent.setup();
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
   await user.click(screen.getByTestId('close-button'));
 
   // assert that UI elements in the sidebar are not in the DOM
@@ -170,7 +183,7 @@ test('clicking the toggle button closes the sidebar', async () => {
   const user = userEvent.setup();
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
   await user.click(screen.getByTestId('toggle-button'));
 
   // assert that UI elements in the sidebar are not in the DOM
@@ -193,7 +206,7 @@ test('error message should disappear upon succesful api call', async () => {
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error has focus
   expect(screen.queryByTestId('alert-heading')).toHaveFocus();
@@ -223,7 +236,7 @@ test('error message should disappear when dismissed', async () => {
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error message exists
   expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
@@ -248,7 +261,7 @@ test('error message should disappear when messages cleared', async () => {
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error message exists
   expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
