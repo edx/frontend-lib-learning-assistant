@@ -37,10 +37,10 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
             alt="dismiss"
             onClick={handleDismiss}
             variant="light"
-            className="dismiss-button mx-2 mt-2 bg-gray"
+            className="dismiss-button mx-2 mt-1 bg-gray"
             size="sm"
           />
-          <div className="action-message open-negative-margin px-3 py-3 my-2">
+          <div className="action-message open-negative-margin p-3 mb-5.5">
             <span>
               Hi there! 👋 I&apos;m Xpert,
               an AI-powered assistant from edX who can help you with questions about this course.
