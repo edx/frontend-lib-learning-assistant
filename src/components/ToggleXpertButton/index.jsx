@@ -1,4 +1,3 @@
-import { ChevronRight } from 'react-feather';
 import PropTypes from 'prop-types';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { ReactComponent as NewXeySvg } from '../../assets/new_xey.svg';
@@ -14,19 +13,6 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
     }
     setIsOpen(!isOpen);
   };
-
-  if (isOpen) {
-    return (
-      <button
-        className="toggle open position-fixed d-flex flex-row bg-white p-2"
-        data-testid="toggle-button"
-        onClick={handleClick}
-        type="button"
-      >
-        <ChevronRight size="20" color="black" />
-      </button>
-    );
-  }
 
   return (
     <button

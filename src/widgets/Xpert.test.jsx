@@ -9,6 +9,9 @@ import Xpert from './Xpert';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
 
 jest.mock('@edx/frontend-platform/analytics');
+jest.mock('@edx/frontend-platform/auth', () => ({
+  getAuthenticatedUser: jest.fn(() => ({ userId: 1 })),
+}));
 
 const initialState = {
   learningAssistant: {
@@ -16,6 +19,9 @@ const initialState = {
     messageList: [],
     apiIsLoading: false,
     apiError: false,
+    // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+    //            I will remove this and write tests in a future pull request.
+    disclosureAcknowledged: true,
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -25,7 +31,7 @@ const assertSidebarElementsNotInDOM = () => {
   expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
   expect(screen.queryByTestId('submit-button')).not.toBeInTheDocument();
   expect(screen.queryByTestId('close-button')).not.toBeInTheDocument();
-  expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'clear' })).not.toBeInTheDocument();
 };
 
 beforeEach(() => {
@@ -54,7 +60,7 @@ test('clicking the toggle button opens the sidebar', async () => {
   expect(screen.getByRole('textbox')).toBeVisible();
   expect(screen.getByTestId('submit-button')).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
-  expect(screen.getByRole('button', { name: 'Clear' })).toBeVisible();
+  expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
 });
 test('submitted text appears as message in the sidebar', async () => {
   const user = userEvent.setup();
@@ -144,7 +150,7 @@ test('clicking the clear button clears messages in the sidebar', async () => {
 
   await screen.findByText(responseMessage.content);
 
-  await user.click(screen.getByRole('button', { name: 'Clear' }));
+  await user.click(screen.getByRole('button', { name: 'clear' }));
 
   expect(screen.queryByText(userMessage)).not.toBeInTheDocument();
   expect(screen.queryByText(responseMessage.content)).not.toBeInTheDocument();
@@ -179,11 +185,17 @@ test('error message should disappear upon succesful api call', async () => {
       messageList: [],
       apiIsLoading: false,
       apiError: true,
+      // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+      //            I will remove this and write tests in a future pull request.
+      disclosureAcknowledged: true,
     },
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
 
   await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+
+  // assert that error has focus
+  expect(screen.queryByTestId('alert-heading')).toHaveFocus();
 
   // assert that error message exists
   expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
@@ -203,6 +215,9 @@ test('error message should disappear when dismissed', async () => {
       messageList: [],
       apiIsLoading: false,
       apiError: true,
+      // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+      //            I will remove this and write tests in a future pull request.
+      disclosureAcknowledged: true,
     },
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
@@ -225,6 +240,9 @@ test('error message should disappear when messages cleared', async () => {
       messageList: [],
       apiIsLoading: false,
       apiError: true,
+      // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
+      //            I will remove this and write tests in a future pull request.
+      disclosureAcknowledged: true,
     },
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
