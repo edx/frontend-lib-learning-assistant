@@ -1,24 +1,22 @@
 @use '../../utils/variables';
 
-.open-negative-margin {
-    background-color: variables.$dark-green;
-    border-radius: 10px;
-    bottom: 4rem;
-}
-
 .toggle {
+    background-color: variables.$dark-green;
+    border-radius: 2rem;
     bottom: 1rem;
+    height: 3rem;
 
     &.open {
-        border-radius: 9999px;
-        border-style: solid;
-        border-color: rgb(229, 231, 235);
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         right: 31%;
     }
 
     &.closed {
-        background: none;
         right: 1%
+    }
+
+    /* The SVG should take up 100% of the height and width of the parent Button. */
+    svg {
+        height: 100%;
+        width: 100%;
     }
 }

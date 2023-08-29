@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
+import { Button } from '@edx/paragon';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { ReactComponent as NewXeySvg } from '../../assets/new_xey.svg';
+
+import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
+
 import './index.scss';
 
 const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
@@ -15,19 +18,14 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
   };
 
   return (
-    <button
-      className="toggle closed d-flex flex-column position-fixed justify-content-end align-items-end border-0"
+    <Button
+      variant="primary"
+      className="toggle closed d-flex flex-column position-fixed mx-3"
       data-testid="toggle-button"
       onClick={handleClick}
-      type="button"
     >
-      <div className="open-negative-margin px-3 py-2 text-white border border-white">
-        <span>Have a question?</span>
-      </div>
-      <div>
-        <NewXeySvg width="58" />
-      </div>
-    </button>
+      <XpertLogo />
+    </Button>
   );
 };
 
