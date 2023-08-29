@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
-import { Button } from '@edx/paragon';
+import { useState } from 'react';
+
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { Button, Icon, IconButton } from '@edx/paragon';
+import { Close } from '@edx/paragon/icons';
 
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
-
 import './index.scss';
 
 const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
+  const [hasDismissed, setHasDismissed] = useState(false);
   const handleClick = () => {
     // log event if the tool is opened
     if (!isOpen) {
@@ -17,15 +20,43 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
     setIsOpen(!isOpen);
   };
 
+  const handleDismiss = (event) => {
+    // prevent default and propagation to prevent sidebar from opening
+    event.preventDefault();
+    event.stopPropagation();
+    setHasDismissed(true);
+  };
+
   return (
-    <Button
-      variant="primary"
-      className="toggle closed d-flex flex-column position-fixed mx-3"
-      data-testid="toggle-button"
-      onClick={handleClick}
-    >
-      <XpertLogo />
-    </Button>
+    <div className="toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0">
+      {!hasDismissed && (
+        <div className="d-flex justify-content-end flex-row" data-testid="action-message">
+          <IconButton
+            src={Close}
+            iconAs={Icon}
+            alt="dismiss"
+            onClick={handleDismiss}
+            variant="light"
+            className="dismiss-button mx-2 mt-2 bg-gray"
+            size="sm"
+          />
+          <div className="action-message open-negative-margin px-3 py-3 my-2">
+            <span>
+              Hi there! 👋 I&apos;m Xpert,
+              an AI-powered assistant from edX who can help you with questions about this course.
+            </span>
+          </div>
+        </div>
+      )}
+      <Button
+        variant="primary"
+        className="toggle button-icon"
+        data-testid="toggle-button"
+        onClick={handleClick}
+      >
+        <XpertLogo />
+      </Button>
+    </div>
   );
 };
 
