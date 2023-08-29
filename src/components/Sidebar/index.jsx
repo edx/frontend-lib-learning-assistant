@@ -106,7 +106,7 @@ const Sidebar = ({
           </div>
         )
       }
-      <MessageForm courseId={courseId} />
+      <MessageForm courseId={courseId} shouldAutofocus />
       <div className="d-flex justify-content-start">
         <Button
           className="clear mx-2 mb-2 border-0"
