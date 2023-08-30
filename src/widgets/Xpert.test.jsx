@@ -75,6 +75,9 @@ test('clicking the toggle button opens the sidebar', async () => {
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
   expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
+
+  // assert that text input has focus
+  expect(screen.getByRole('textbox')).toHaveFocus();
 });
 test('submitted text appears as message in the sidebar', async () => {
   const user = userEvent.setup();
