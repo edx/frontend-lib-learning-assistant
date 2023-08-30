@@ -1,24 +1,42 @@
 @use '../../utils/variables';
 
-.open-negative-margin {
-    background-color: variables.$dark-green;
-    border-radius: 10px;
-    bottom: 4rem;
-}
-
 .toggle {
+    border-radius: 2rem;
     bottom: 1rem;
+    height: 3rem;
+
+    &.button-icon {
+        background-color: variables.$dark-green;
+        position: inherit;
+    }
 
     &.open {
-        border-radius: 9999px;
-        border-style: solid;
-        border-color: rgb(229, 231, 235);
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         right: 31%;
     }
 
     &.closed {
-        background: none;
         right: 1%
     }
+
+    /* The SVG should take up 100% of the height and width of the parent Button. */
+    svg {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.action-message {
+    background-color: white;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    color: black;
+    font-size: 14px;
+    width: 40%;
+    text-align: left;
+    border-radius: 1rem;
+}
+
+.dismiss-button {
+    // override paragon width and height for dismiss button
+    width: 1.5rem !important;
+    height: 1.5rem !important;
 }

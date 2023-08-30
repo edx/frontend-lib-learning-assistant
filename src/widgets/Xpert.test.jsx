@@ -29,7 +29,8 @@ const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const assertSidebarElementsNotInDOM = () => {
   expect(screen.queryByTestId('heading', { name: 'Hi, I\'m Xpert!' })).not.toBeInTheDocument();
   expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
-  expect(screen.queryByTestId('submit-button')).not.toBeInTheDocument();
+
+  expect(screen.queryByRole('button', { name: 'submit' })).not.toBeInTheDocument();
   expect(screen.queryByTestId('close-button')).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'clear' })).not.toBeInTheDocument();
 };
@@ -43,22 +44,35 @@ test('initial load displays correct elements', () => {
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
   // button to open chat should be in the DOM
-  expect(screen.getByRole('button', { name: 'Have a question?' })).toBeVisible();
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('action-message')).toBeVisible();
 
   // assert that UI elements in the sidebar are not in the DOM
   assertSidebarElementsNotInDOM();
+});
+test('clicking the call to action dismiss button removes the message', async () => {
+  const user = userEvent.setup();
+  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+
+  // button to open chat should be in the DOM
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('action-message')).toBeVisible();
+
+  await user.click(screen.getByRole('button', { name: 'dismiss' }));
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('action-message')).not.toBeInTheDocument();
 });
 test('clicking the toggle button opens the sidebar', async () => {
   const user = userEvent.setup();
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that UI elements present in the sidebar are visible
   expect(screen.getByRole('heading', { name: 'Hi, I\'m Xpert!' })).toBeVisible();
   expect(screen.getByRole('textbox')).toBeVisible();
-  expect(screen.getByTestId('submit-button')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
   expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
 });
@@ -68,7 +82,7 @@ test('submitted text appears as message in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   const input = screen.getByRole('textbox');
@@ -77,7 +91,7 @@ test('submitted text appears as message in the sidebar', async () => {
   // because we use a controlled input element, assert that user's message appears in the input element
   expect(input).toHaveValue(userMessage);
 
-  await user.click(screen.getByTestId('submit-button'));
+  await user.click(screen.getByRole('button', { name: 'submit' }));
 
   // assert that UI elements in the sidebar are in the DOM
   expect(screen.getByText(userMessage)).toBeInTheDocument();
@@ -96,7 +110,7 @@ test('loading message appears in the sidebar while the response loads', async ()
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   await user.type(screen.getByRole('textbox'), userMessage);
@@ -104,7 +118,7 @@ test('loading message appears in the sidebar while the response loads', async ()
   // It's better practice to use the userEvent API, but I could not get this test to properly assert
   // that the "Xpert is thinking" loading text appears in the DOM. Something about using the userEvent
   // API skipped straight to rendering the response message.
-  fireEvent.click(screen.getByTestId('submit-button'));
+  await fireEvent.click(screen.getByRole('button', { name: 'submit' }));
 
   await screen.findByText('Xpert is thinking');
   await screen.findByText(responseMessage.content);
@@ -120,12 +134,12 @@ test('response text appears as message in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   const input = screen.getByRole('textbox');
   await user.type(input, userMessage);
-  await user.click(screen.getByTestId('submit-button'));
+  await user.click(screen.getByRole('button', { name: 'submit' }));
 
   await screen.findByText(responseMessage.content);
   expect(screen.getByText(responseMessage.content)).toBeInTheDocument();
@@ -141,12 +155,12 @@ test('clicking the clear button clears messages in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
   const input = screen.getByRole('textbox');
   await user.type(input, userMessage);
-  await user.click(screen.getByTestId('submit-button'));
+  await user.click(screen.getByRole('button', { name: 'submit' }));
 
   await screen.findByText(responseMessage.content);
 
@@ -159,7 +173,7 @@ test('clicking the close button closes the sidebar', async () => {
   const user = userEvent.setup();
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
   await user.click(screen.getByTestId('close-button'));
 
   // assert that UI elements in the sidebar are not in the DOM
@@ -169,7 +183,7 @@ test('clicking the toggle button closes the sidebar', async () => {
   const user = userEvent.setup();
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
   await user.click(screen.getByTestId('toggle-button'));
 
   // assert that UI elements in the sidebar are not in the DOM
@@ -192,7 +206,7 @@ test('error message should disappear upon succesful api call', async () => {
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error has focus
   expect(screen.queryByTestId('alert-heading')).toHaveFocus();
@@ -203,7 +217,7 @@ test('error message should disappear upon succesful api call', async () => {
   // submit text, assert that error message disappears
   const input = screen.getByRole('textbox');
   await user.type(input, userMessage);
-  await user.click(screen.getByTestId('submit-button'));
+  await user.click(screen.getByRole('button', { name: 'submit' }));
   expect(screen.queryByText('Please try again by sending another question.')).not.toBeInTheDocument();
 });
 test('error message should disappear when dismissed', async () => {
@@ -222,7 +236,7 @@ test('error message should disappear when dismissed', async () => {
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error message exists
   expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
@@ -247,7 +261,7 @@ test('error message should disappear when messages cleared', async () => {
   };
   render(<Xpert courseId={courseId} />, { preloadedState: errorState });
 
-  await user.click(screen.getByRole('button', { name: 'Have a question?' }));
+  await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error message exists
   expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();

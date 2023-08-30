@@ -8,6 +8,10 @@
 
     h2 {
         font-size: 2rem;
+
+        .version-subscript {
+            color: variables.$accent-yellow;
+        }
     }
 
     h3 {
@@ -26,6 +30,10 @@
     }
 
     li {
+        font-size: 1rem;
+    }
+
+    .disclaimer {
         font-size: 1rem;
     }
 }

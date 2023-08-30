@@ -1,21 +1,22 @@
 import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Send } from 'react-feather';
 import PropTypes from 'prop-types';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { Button, Icon, IconButton } from '@edx/paragon';
+import {
+  Button,
+  Icon,
+  IconButton,
+} from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
-import Disclosure from '../Disclosure';
-import ChatBox from '../ChatBox';
+
 import APIError from '../APIError';
+import ChatBox from '../ChatBox';
+import Disclosure from '../Disclosure';
+import MessageForm from '../MessageForm';
 import './Sidebar.scss';
 import {
-  addChatMessage,
   clearMessages,
-  getChatResponse,
-  updateCurrentMessage,
 } from '../../data/thunks';
-import { ReactComponent as NewXeySvg } from '../../assets/new_xey.svg';
 
 const Sidebar = ({
   courseId,
@@ -24,8 +25,6 @@ const Sidebar = ({
 }) => {
   const {
     apiError,
-    apiIsLoading,
-    currentMessage,
     disclosureAcknowledged,
     messageList,
   } = useSelector(state => state.learningAssistant);
@@ -76,18 +75,6 @@ const Sidebar = ({
     }
   };
 
-  const handleUpdateCurrentMessage = (event) => {
-    dispatch(updateCurrentMessage(event.target.value));
-  };
-
-  const handleSubmitMessage = (event) => {
-    event.preventDefault();
-    if (currentMessage) {
-      dispatch(addChatMessage('user', currentMessage, courseId));
-      dispatch(getChatResponse(courseId));
-    }
-  };
-
   const handleClearMessages = () => {
     dispatch(clearMessages());
     sendTrackEvent('edx.ui.lms.learning_assistant.clear', {
@@ -98,9 +85,8 @@ const Sidebar = ({
   const getSidebar = () => (
     <div className="h-100 d-flex flex-column justify-content-stretch">
       <div className="d-flex flex-column align-items-center p-3">
-        <h1 className="font-weight-bold mb-3 d-inline-flex flex-row">
+        <h1 className="font-weight-bold mb-3">
           Hi, I&apos;m Xpert!
-          <NewXeySvg width="20" className="pl-1" />
         </h1>
         <p className="px-3 mb-0 text-center">
           Stuck on a concept? Need more clarification on a complicated topic?
@@ -120,26 +106,7 @@ const Sidebar = ({
           </div>
         )
       }
-      <form className={`d-flex flex-row p-2 ${apiError ? 'mt-1' : 'mt-auto'}`} onSubmit={handleSubmitMessage}>
-        <input
-          type="text"
-          value={currentMessage}
-          onChange={handleUpdateCurrentMessage}
-          placeholder="Type your question..."
-          className="w-100 p-3"
-          data-hj-suppress
-        />
-        <Button
-          className="mt-2 mb-1 mx-1 border-0"
-          type="submit"
-          data-testid="submit-button"
-          variant="inverse-primary"
-          disabled={apiIsLoading}
-          aria-label="submit"
-        >
-          <Send size="22" />
-        </Button>
-      </form>
+      <MessageForm courseId={courseId} />
       <div className="d-flex justify-content-start">
         <Button
           className="clear mx-2 mb-2 border-0"
@@ -169,7 +136,7 @@ const Sidebar = ({
           variant="primary"
           invertColors={!disclosureAcknowledged}
         />
-        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure />)}
+        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure courseId={courseId} />)}
       </div>
     )
   );

@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { ReactComponent as NewXeySvg } from '../../assets/new_xey.svg';
+import { Button, Icon, IconButton } from '@edx/paragon';
+import { Close } from '@edx/paragon/icons';
+
+import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './index.scss';
 
 const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
+  const [hasDismissed, setHasDismissed] = useState(false);
   const handleClick = () => {
     // log event if the tool is opened
     if (!isOpen) {
@@ -14,20 +20,43 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
     setIsOpen(!isOpen);
   };
 
+  const handleDismiss = (event) => {
+    // prevent default and propagation to prevent sidebar from opening
+    event.preventDefault();
+    event.stopPropagation();
+    setHasDismissed(true);
+  };
+
   return (
-    <button
-      className="toggle closed d-flex flex-column position-fixed justify-content-end align-items-end border-0"
-      data-testid="toggle-button"
-      onClick={handleClick}
-      type="button"
-    >
-      <div className="open-negative-margin px-3 py-2 text-white border border-white">
-        <span>Have a question?</span>
-      </div>
-      <div>
-        <NewXeySvg width="58" />
-      </div>
-    </button>
+    <div className="toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0">
+      {!hasDismissed && (
+        <div className="d-flex justify-content-end flex-row" data-testid="action-message">
+          <IconButton
+            src={Close}
+            iconAs={Icon}
+            alt="dismiss"
+            onClick={handleDismiss}
+            variant="light"
+            className="dismiss-button mx-2 mt-1 bg-gray"
+            size="sm"
+          />
+          <div className="action-message open-negative-margin p-3 mb-5.5">
+            <span>
+              Hi there! 👋 I&apos;m Xpert,
+              an AI-powered assistant from edX who can help you with questions about this course.
+            </span>
+          </div>
+        </div>
+      )}
+      <Button
+        variant="primary"
+        className="toggle button-icon"
+        data-testid="toggle-button"
+        onClick={handleClick}
+      >
+        <XpertLogo />
+      </Button>
+    </div>
   );
 };
 
