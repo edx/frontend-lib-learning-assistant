@@ -182,15 +182,14 @@ test('clicking the close button closes the sidebar', async () => {
   // assert that UI elements in the sidebar are not in the DOM
   assertSidebarElementsNotInDOM();
 });
-test('clicking the toggle button closes the sidebar', async () => {
+test('toggle elements do not appear when sidebar is open', async () => {
   const user = userEvent.setup();
   render(<Xpert courseId={courseId} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
-  await user.click(screen.getByTestId('toggle-button'));
 
-  // assert that UI elements in the sidebar are not in the DOM
-  assertSidebarElementsNotInDOM();
+  expect(screen.queryByTestId('toggle-button')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('action-message')).not.toBeInTheDocument();
 });
 test('error message should disappear upon succesful api call', async () => {
   const user = userEvent.setup();

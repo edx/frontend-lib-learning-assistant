@@ -28,6 +28,7 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
   };
 
   return (
+    (!isOpen && (
     <div className="toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0">
       {!hasDismissed && (
         <div className="d-flex justify-content-end flex-row" data-testid="action-message">
@@ -57,6 +58,7 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
         <XpertLogo />
       </Button>
     </div>
+    ))
   );
 };
 
