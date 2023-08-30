@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Form, Icon } from '@edx/paragon';
@@ -12,9 +12,16 @@ import {
   updateCurrentMessage,
 } from '../../data/thunks';
 
-const MessageForm = ({ courseId }) => {
-  const { apiIsLoading, currentMessage } = useSelector(state => state.learningAssistant);
+const MessageForm = ({ courseId, shouldAutofocus }) => {
+  const { apiIsLoading, currentMessage, apiError } = useSelector(state => state.learningAssistant);
   const dispatch = useDispatch();
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (inputRef.current && !apiError && !apiIsLoading && shouldAutofocus) {
+      inputRef.current.focus();
+    }
+  }, [apiError, apiIsLoading, shouldAutofocus]);
 
   const handleSubmitMessage = (event) => {
     event.preventDefault();
@@ -51,6 +58,7 @@ const MessageForm = ({ courseId }) => {
           onChange={handleUpdateCurrentMessage}
           trailingElement={getSubmitButton()}
           value={currentMessage}
+          ref={inputRef}
         />
       </Form.Group>
     </Form>
@@ -59,6 +67,11 @@ const MessageForm = ({ courseId }) => {
 
 MessageForm.propTypes = {
   courseId: PropTypes.string.isRequired,
+  shouldAutofocus: PropTypes.bool,
+};
+
+MessageForm.defaultProps = {
+  shouldAutofocus: false,
 };
 
 export default MessageForm;
