@@ -22,6 +22,7 @@ const initialState = {
     // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
     //            I will remove this and write tests in a future pull request.
     disclosureAcknowledged: true,
+    sidebarIsOpen: false,
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -41,7 +42,7 @@ beforeEach(() => {
 });
 
 test('initial load displays correct elements', () => {
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   // button to open chat should be in the DOM
   expect(screen.queryByTestId('toggle-button')).toBeVisible();
@@ -52,7 +53,7 @@ test('initial load displays correct elements', () => {
 });
 test('clicking the call to action dismiss button removes the message', async () => {
   const user = userEvent.setup();
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   // button to open chat should be in the DOM
   expect(screen.queryByTestId('toggle-button')).toBeVisible();
@@ -65,7 +66,7 @@ test('clicking the call to action dismiss button removes the message', async () 
 test('clicking the toggle button opens the sidebar', async () => {
   const user = userEvent.setup();
 
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -83,7 +84,7 @@ test('submitted text appears as message in the sidebar', async () => {
   const user = userEvent.setup();
   const userMessage = 'Hello, Xpert!';
 
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -111,7 +112,7 @@ test('loading message appears in the sidebar while the response loads', async ()
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
 
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -135,7 +136,7 @@ test('response text appears as message in the sidebar', async () => {
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
 
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -156,7 +157,7 @@ test('clicking the clear button clears messages in the sidebar', async () => {
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'default').mockImplementation(() => responseMessage);
 
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -174,7 +175,7 @@ test('clicking the clear button clears messages in the sidebar', async () => {
 });
 test('clicking the close button closes the sidebar', async () => {
   const user = userEvent.setup();
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
   await user.click(screen.getByTestId('close-button'));
@@ -184,7 +185,7 @@ test('clicking the close button closes the sidebar', async () => {
 });
 test('toggle elements do not appear when sidebar is open', async () => {
   const user = userEvent.setup();
-  render(<Xpert courseId={courseId} />, { preloadedState: initialState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -204,9 +205,10 @@ test('error message should disappear upon succesful api call', async () => {
       // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
+      sidebarIsOpen: false,
     },
   };
-  render(<Xpert courseId={courseId} />, { preloadedState: errorState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: errorState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -234,9 +236,10 @@ test('error message should disappear when dismissed', async () => {
       // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
+      sidebarIsOpen: false,
     },
   };
-  render(<Xpert courseId={courseId} />, { preloadedState: errorState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: errorState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -259,9 +262,10 @@ test('error message should disappear when messages cleared', async () => {
       // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
+      sidebarIsOpen: false,
     },
   };
-  render(<Xpert courseId={courseId} />, { preloadedState: errorState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: errorState });
 
   await user.click(screen.queryByTestId('toggle-button'));
 
