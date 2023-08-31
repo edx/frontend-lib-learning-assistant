@@ -11,6 +11,7 @@ export const learningAssistantSlice = createSlice({
     apiIsLoading: false,
     conversationId: uuidv4(),
     disclosureAcknowledged: false,
+    sidebarIsOpen: false,
   },
   reducers: {
     setCurrentMessage: (state, { payload }) => {
@@ -39,6 +40,9 @@ export const learningAssistantSlice = createSlice({
     setDisclosureAcknowledged: (state, { payload }) => {
       state.disclosureAcknowledged = payload;
     },
+    setSidebarIsOpen: (state, { payload }) => {
+      state.sidebarIsOpen = payload;
+    },
   },
 });
 
@@ -51,6 +55,7 @@ export const {
   setApiIsLoading,
   resetApiError,
   setDisclosureAcknowledged,
+  setSidebarIsOpen,
 } = learningAssistantSlice.actions;
 
 export const {

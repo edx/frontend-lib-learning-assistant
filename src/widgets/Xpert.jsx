@@ -1,10 +1,19 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSidebarIsOpen } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 
-const Xpert = ({ courseId }) => {
-  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+const Xpert = ({ courseId, contentToolsEnabled }) => {
+  const dispatch = useDispatch();
+
+  const {
+    sidebarIsOpen,
+  } = useSelector(state => state.learningAssistant);
+
+  const setSidebarIsOpen = (isOpen) => {
+    dispatch(updateSidebarIsOpen(isOpen));
+  };
 
   return (
     <div>
@@ -12,6 +21,7 @@ const Xpert = ({ courseId }) => {
         courseId={courseId}
         isOpen={sidebarIsOpen}
         setIsOpen={setSidebarIsOpen}
+        contentToolsEnabled={contentToolsEnabled}
       />
       <Sidebar
         courseId={courseId}
@@ -24,6 +34,7 @@ const Xpert = ({ courseId }) => {
 
 Xpert.propTypes = {
   courseId: PropTypes.string.isRequired,
+  contentToolsEnabled: PropTypes.bool.isRequired,
 };
 
 export default Xpert;

@@ -10,6 +10,7 @@ import {
   setApiIsLoading,
   resetApiError,
   setDisclosureAcknowledged,
+  setSidebarIsOpen,
 } from './slice';
 
 export function addChatMessage(role, content, courseId) {
@@ -80,5 +81,11 @@ export function clearApiError() {
 export function acknowledgeDisclosure(isDisclosureAcknowledged) {
   return (dispatch) => {
     dispatch(setDisclosureAcknowledged(isDisclosureAcknowledged));
+  };
+}
+
+export function updateSidebarIsOpen(isOpen) {
+  return (dispatch) => {
+    dispatch(setSidebarIsOpen(isOpen));
   };
 }
