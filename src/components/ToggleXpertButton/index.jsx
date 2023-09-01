@@ -8,7 +8,12 @@ import { Close } from '@edx/paragon/icons';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './index.scss';
 
-const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
+const ToggleXpert = ({
+  isOpen,
+  setIsOpen,
+  courseId,
+  contentToolsEnabled,
+}) => {
   const [hasDismissed, setHasDismissed] = useState(false);
   const handleClick = () => {
     // log event if the tool is opened
@@ -28,9 +33,17 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
   };
 
   return (
-    <div className="toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0">
+    (!isOpen && (
+    <div className={
+        `toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0 
+        ${contentToolsEnabled ? 'chat-content-tools-margin' : ''}`
+      }
+    >
       {!hasDismissed && (
-        <div className="d-flex justify-content-end flex-row" data-testid="action-message">
+        <div
+          className="d-flex justify-content-end flex-row"
+          data-testid="action-message"
+        >
           <IconButton
             src={Close}
             iconAs={Icon}
@@ -40,7 +53,7 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
             className="dismiss-button mx-2 mt-1 bg-gray"
             size="sm"
           />
-          <div className="action-message open-negative-margin p-3 mb-5.5">
+          <div className="action-message open-negative-margin p-3 mb-4.5">
             <span>
               Hi there! 👋 I&apos;m Xpert,
               an AI-powered assistant from edX who can help you with questions about this course.
@@ -57,6 +70,7 @@ const ToggleXpert = ({ isOpen, setIsOpen, courseId }) => {
         <XpertLogo />
       </Button>
     </div>
+    ))
   );
 };
 
@@ -64,6 +78,7 @@ ToggleXpert.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
   courseId: PropTypes.string.isRequired,
+  contentToolsEnabled: PropTypes.bool.isRequired,
 };
 
 export default ToggleXpert;
