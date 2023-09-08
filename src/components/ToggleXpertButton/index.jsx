@@ -30,7 +30,16 @@ const ToggleXpert = ({
     event.preventDefault();
     event.stopPropagation();
     setHasDismissed(true);
+    sendTrackEvent('edx.ui.lms.learning_assistant.dismiss_action_message', {
+      course_id: courseId,
+    });
   };
+
+  // TODO: Remove this Segment alert. This has been added purely to diagnose whether
+  //       usage issues are as a result of the Xpert toggle button not appearing.
+  sendTrackEvent('edx.ui.lms.learning_assistant.render_toggle_button', {
+    course_id: courseId,
+  });
 
   return (
     (!isOpen && (
