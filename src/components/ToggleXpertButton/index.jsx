@@ -15,12 +15,15 @@ const ToggleXpert = ({
   contentToolsEnabled,
 }) => {
   const [hasDismissed, setHasDismissed] = useState(false);
-  const handleClick = () => {
+  const handleClick = (event) => {
     // log event if the tool is opened
     if (!isOpen) {
-      sendTrackEvent('edx.ui.lms.learning_assistant.launch', {
-        course_id: courseId,
-      });
+      sendTrackEvent(
+        `edx.ui.lms.learning_assistant.launch${event.target.id === 'toggle-button' ? '' : '.cta-triggered'}`,
+        {
+          course_id: courseId,
+        },
+      );
     }
     setIsOpen(!isOpen);
   };
@@ -56,12 +59,18 @@ const ToggleXpert = ({
             className="dismiss-button mx-2 mt-1 bg-gray"
             size="sm"
           />
-          <div className="action-message open-negative-margin p-3 mb-4.5">
+          <button
+            className="action-message open-negative-margin p-3 mb-4.5"
+            data-testid="message-button"
+            onClick={handleClick}
+            aria-label="Can I answer any questions for you?"
+            type="button"
+          >
             <span>
               Hi there! 👋 I&apos;m Xpert,
               an AI-powered assistant from edX who can help you with questions about this course.
             </span>
-          </div>
+          </button>
         </div>
       )}
       <Button
@@ -69,6 +78,7 @@ const ToggleXpert = ({
         className="toggle button-icon"
         data-testid="toggle-button"
         onClick={handleClick}
+        id="toggle-button"
       >
         <XpertLogo />
       </Button>
