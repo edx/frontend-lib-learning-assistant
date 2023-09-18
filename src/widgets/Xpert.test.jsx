@@ -63,6 +63,23 @@ test('clicking the call to action dismiss button removes the message', async () 
   expect(screen.queryByTestId('toggle-button')).toBeVisible();
   expect(screen.queryByTestId('action-message')).not.toBeInTheDocument();
 });
+test('clicking the call to action opens the sidebar', async () => {
+  const user = userEvent.setup();
+
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+
+  await user.click(screen.queryByTestId('message-button'));
+
+  // assert that UI elements present in the sidebar are visible
+  expect(screen.getByRole('heading', { name: 'Hi, I\'m Xpert!' })).toBeVisible();
+  expect(screen.getByRole('textbox')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
+  expect(screen.getByTestId('close-button')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
+
+  // assert that text input has focus
+  expect(screen.getByRole('textbox')).toHaveFocus();
+});
 test('clicking the toggle button opens the sidebar', async () => {
   const user = userEvent.setup();
 
