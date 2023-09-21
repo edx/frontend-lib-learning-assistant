@@ -1,11 +1,18 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { Button, Icon, IconButton } from '@edx/paragon';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import {
+  Button,
+  Icon,
+  IconButton,
+  ProductTour,
+} from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
+import { activateProductTourExperiment, trackChatBotLaunchOptimizely } from '../../utils/optimizelyExperiment';
 import './index.scss';
 
 const ToggleXpert = ({
@@ -15,15 +22,26 @@ const ToggleXpert = ({
   contentToolsEnabled,
 }) => {
   const [hasDismissed, setHasDismissed] = useState(false);
+  const [showProductTourExp, setShowProductTourExp] = useState(false);
+  const { userId } = getAuthenticatedUser();
+
+  useEffect(() => {
+    const showProductTour = activateProductTourExperiment(userId.toString());
+    setShowProductTourExp(showProductTour);
+  }, [userId, setShowProductTourExp]);
+
   const handleClick = (event) => {
     // log event if the tool is opened
     if (!isOpen) {
       sendTrackEvent(
-        `edx.ui.lms.learning_assistant.launch${event.target.id === 'toggle-button' ? '' : '.cta-triggered'}`,
+        'edx.ui.lms.learning_assistant.launch',
         {
           course_id: courseId,
+          user_id: userId,
+          source: event.target.id === 'toggle-button' ? 'toggle' : 'cta',
         },
       );
+      trackChatBotLaunchOptimizely(userId.toString());
     }
     setIsOpen(!isOpen);
   };
@@ -38,51 +56,84 @@ const ToggleXpert = ({
     });
   };
 
+  const handleProductTourEnd = () => {
+    setIsOpen(true);
+    localStorage.setItem('completedLearningAssistantTour', 'true');
+    sendTrackEvent(
+      'edx.ui.lms.learning_assistant.launch',
+      {
+        course_id: courseId,
+        user_id: userId,
+        source: 'product-tour',
+      },
+    );
+    trackChatBotLaunchOptimizely(userId.toString());
+  };
+
+  const learningAssistantTour = {
+    tourId: 'learningAssistantTour',
+    endButtonText: 'Check it out',
+    onEnd: () => { handleProductTourEnd(); },
+    enabled: !localStorage.getItem('completedLearningAssistantTour') && showProductTourExp,
+    checkpoints: [
+      {
+        placement: 'left',
+        target: '#cta-button',
+        body: 'Xpert is a new part of your learning experience. '
+          + 'You can ask questions and get tutoring help during your course.',
+      },
+    ],
+  };
+
   return (
     (!isOpen && (
-    <div className={
-        `toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0 
-        ${contentToolsEnabled ? 'chat-content-tools-margin' : ''}`
-      }
-    >
-      {!hasDismissed && (
-        <div
-          className="d-flex justify-content-end flex-row"
-          data-testid="action-message"
-        >
-          <IconButton
-            src={Close}
-            iconAs={Icon}
-            alt="dismiss"
-            onClick={handleDismiss}
-            variant="light"
-            className="dismiss-button mx-2 mt-1 bg-gray"
-            size="sm"
-          />
-          <button
-            className="action-message open-negative-margin p-3 mb-4.5"
-            data-testid="message-button"
-            onClick={handleClick}
-            aria-label="Can I answer any questions for you?"
-            type="button"
-          >
-            <span>
-              Hi there! 👋 I&apos;m Xpert,
-              an AI-powered assistant from edX who can help you with questions about this course.
-            </span>
-          </button>
-        </div>
-      )}
-      <Button
-        variant="primary"
-        className="toggle button-icon"
-        data-testid="toggle-button"
-        onClick={handleClick}
-        id="toggle-button"
+    <>
+      <ProductTour tours={[learningAssistantTour]} />
+      <div className={
+          `toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0 
+          ${contentToolsEnabled ? 'chat-content-tools-margin' : ''}`
+        }
       >
-        <XpertLogo />
-      </Button>
-    </div>
+        {!hasDismissed && (
+          <div
+            className="d-flex justify-content-end flex-row "
+            data-testid="action-message"
+          >
+            <IconButton
+              src={Close}
+              iconAs={Icon}
+              alt="dismiss"
+              onClick={handleDismiss}
+              variant="light"
+              className="dismiss-button mx-2 mt-1 bg-gray"
+              size="sm"
+            />
+            <button
+              className="action-message open-negative-margin p-3 mb-4.5"
+              data-testid="message-button"
+              onClick={handleClick}
+              aria-label="Can I answer any questions for you?"
+              type="button"
+              id="cta-button"
+            >
+              <span>
+                Hi there! 👋 I&apos;m Xpert,
+                an AI-powered assistant from edX who can help you with questions about this course.
+              </span>
+            </button>
+          </div>
+        )}
+        <Button
+          variant="primary"
+          className="toggle button-icon"
+          data-testid="toggle-button"
+          onClick={handleClick}
+          id="toggle-button"
+        >
+          <XpertLogo />
+        </Button>
+      </div>
+    </>
     ))
   );
 };

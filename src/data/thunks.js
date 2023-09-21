@@ -12,6 +12,7 @@ import {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
 } from './slice';
+import { trackChatBotMessageOptimizely } from '../utils/optimizelyExperiment';
 
 export function addChatMessage(role, content, courseId) {
   return (dispatch, getState) => {
@@ -40,6 +41,10 @@ export function addChatMessage(role, content, courseId) {
       role: message.role,
       content: message.content,
     });
+
+    if (message.role === 'user') {
+      trackChatBotMessageOptimizely(userId.toString());
+    }
   };
 }
 
