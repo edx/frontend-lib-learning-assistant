@@ -68,9 +68,9 @@ const Sidebar = ({
   const handleClick = () => {
     setIsOpen(false);
 
-    // check to see if hotjar is available, then trigger hotjar event
+    // check to see if hotjar is available, then trigger hotjar event if user has sent and received a message
     const hasWindow = typeof window !== 'undefined';
-    if (hasWindow && window.hj) {
+    if (hasWindow && window.hj && messageList.length >= 2) {
       window.hj('event', 'ocm_learning_assistant_chat_closed');
     }
   };

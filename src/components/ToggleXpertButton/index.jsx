@@ -51,6 +51,7 @@ const ToggleXpert = ({
     event.preventDefault();
     event.stopPropagation();
     setHasDismissed(true);
+    localStorage.setItem('dismissedLearningAssistantCallToAction', 'true');
     sendTrackEvent('edx.ui.lms.learning_assistant.dismiss_action_message', {
       course_id: courseId,
     });
@@ -94,7 +95,7 @@ const ToggleXpert = ({
           ${contentToolsEnabled ? 'chat-content-tools-margin' : ''}`
         }
       >
-        {!hasDismissed && (
+        {(!localStorage.getItem('dismissedLearningAssistantCallToAction') && !hasDismissed) && (
           <div
             className="d-flex justify-content-end flex-row "
             data-testid="action-message"
