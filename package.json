@@ -42,7 +42,7 @@
   },
   "dependencies-note": "Most deps are peer deps because they're specified by frontend-app-learning.",
   "dependencies": {
-    "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
+    "@edx/brand": "npm:@openedx/brand-openedx@^1.2.3",
     "@optimizely/react-sdk": "^2.9.2",
     "react-markdown": "^8.0.5",
     "uuid": "9.0.0"
