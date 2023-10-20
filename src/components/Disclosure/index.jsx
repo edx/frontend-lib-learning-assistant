@@ -12,7 +12,7 @@ const Disclosure = ({ courseId }) => (
   <div className="disclosure d-flex flex-column align-items-stretch px-4 py-3">
     <h2 className="text-light-100">
       Xpert
-      <sub className="version-subscript">alpha</sub>
+      <sub className="version-subscript">beta</sub>
     </h2>
     <h3 className="small py-2">An AI-powered educational tool</h3>
     <div className="d-flex flex-column">
