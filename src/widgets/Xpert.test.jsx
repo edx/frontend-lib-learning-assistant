@@ -39,6 +39,7 @@ const assertSidebarElementsNotInDOM = () => {
 beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
+  window.localStorage.clear();
 });
 
 test('initial load displays correct elements', () => {
@@ -62,6 +63,10 @@ test('clicking the call to action dismiss button removes the message', async () 
   await user.click(screen.getByRole('button', { name: 'dismiss' }));
   expect(screen.queryByTestId('toggle-button')).toBeVisible();
   expect(screen.queryByTestId('action-message')).not.toBeInTheDocument();
+
+  // re-render exam, button to dismiss cta should not be there
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+  expect(screen.queryByRole('button', { name: 'dismiss' })).not.toBeInTheDocument();
 });
 test('clicking the call to action opens the sidebar', async () => {
   const user = userEvent.setup();
