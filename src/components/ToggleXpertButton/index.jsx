@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
@@ -12,7 +12,6 @@ import {
 import { Close } from '@edx/paragon/icons';
 
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
-import { activateProductTourExperiment, trackChatBotLaunchOptimizely } from '../../utils/optimizelyExperiment';
 import './index.scss';
 
 const ToggleXpert = ({
@@ -22,13 +21,7 @@ const ToggleXpert = ({
   contentToolsEnabled,
 }) => {
   const [hasDismissed, setHasDismissed] = useState(false);
-  const [showProductTourExp, setShowProductTourExp] = useState(false);
   const { userId } = getAuthenticatedUser();
-
-  useEffect(() => {
-    const showProductTour = activateProductTourExperiment(userId.toString());
-    setShowProductTourExp(showProductTour);
-  }, [userId, setShowProductTourExp]);
 
   const handleClick = (event) => {
     // log event if the tool is opened
@@ -41,7 +34,6 @@ const ToggleXpert = ({
           source: event.target.id === 'toggle-button' ? 'toggle' : 'cta',
         },
       );
-      trackChatBotLaunchOptimizely(userId.toString());
     }
     setIsOpen(!isOpen);
   };
@@ -68,14 +60,13 @@ const ToggleXpert = ({
         source: 'product-tour',
       },
     );
-    trackChatBotLaunchOptimizely(userId.toString());
   };
 
   const learningAssistantTour = {
     tourId: 'learningAssistantTour',
     endButtonText: 'Check it out',
     onEnd: () => { handleProductTourEnd(); },
-    enabled: !localStorage.getItem('completedLearningAssistantTour') && showProductTourExp,
+    enabled: !localStorage.getItem('completedLearningAssistantTour'),
     checkpoints: [
       {
         placement: 'left',
