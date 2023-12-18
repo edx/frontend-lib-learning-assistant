@@ -8,7 +8,7 @@ import { getConfig } from '@edx/frontend-platform/config';
 import MessageForm from '../MessageForm';
 import './Disclosure.scss';
 
-const Disclosure = ({ courseId }) => (
+const Disclosure = ({ courseId, unitId }) => (
   <div className="disclosure d-flex flex-column align-items-stretch px-4 py-3">
     <h2 className="text-light-100">
       Xpert
@@ -45,12 +45,13 @@ const Disclosure = ({ courseId }) => (
       </Hyperlink>
       .
     </p>
-    <MessageForm courseId={courseId} />
+    <MessageForm courseId={courseId} unitId={unitId} />
   </div>
 );
 
 Disclosure.propTypes = {
   courseId: PropTypes.string.isRequired,
+  unitId: PropTypes.string.isRequired,
 };
 
 export default Disclosure;

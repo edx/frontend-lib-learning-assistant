@@ -22,6 +22,7 @@ const Sidebar = ({
   courseId,
   isOpen,
   setIsOpen,
+  unitId,
 }) => {
   const {
     apiError,
@@ -106,7 +107,7 @@ const Sidebar = ({
           </div>
         )
       }
-      <MessageForm courseId={courseId} shouldAutofocus />
+      <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
       <div className="d-flex justify-content-start">
         <Button
           className="clear mx-2 mb-2 border-0"
@@ -136,7 +137,7 @@ const Sidebar = ({
           variant="primary"
           invertColors={!disclosureAcknowledged}
         />
-        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure courseId={courseId} />)}
+        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure courseId={courseId} unitId={unitId} />)}
       </div>
     )
   );
@@ -146,6 +147,7 @@ Sidebar.propTypes = {
   courseId: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
+  unitId: PropTypes.string.isRequired,
 };
 
 export default Sidebar;
