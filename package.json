@@ -53,7 +53,7 @@
   },
   "peerDependencies": {
     "@edx/frontend-platform": "^4.3.0 || ^5.0.0",
-    "@edx/paragon": "20.46.0",
+    "@openedx/paragon": "21.11.3",
     "@reduxjs/toolkit": "1.8.1",
     "react": "16.14.0 || ^17.0.0",
     "react-dom": "16.14.0 || ^17.0.0",
@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.1",
-    "@edx/frontend-build": "13.0.0",
+    "@openedx/frontend-build": "13.0.19",
     "@edx/frontend-platform": "5.5.4",
     "@edx/paragon": "20.46.0",
     "@edx/reactifex": "^2.1.1",

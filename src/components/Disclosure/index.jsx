@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Hyperlink, Icon } from '@edx/paragon';
-import { Chat } from '@edx/paragon/icons';
+import { Hyperlink, Icon } from '@openedx/paragon';
+import { Chat } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform/config';
 
 import MessageForm from '../MessageForm';

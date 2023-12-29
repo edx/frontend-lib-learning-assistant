@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Button, Form, Icon } from '@edx/paragon';
-import { Send } from '@edx/paragon/icons';
+import { Button, Form, Icon } from '@openedx/paragon';
+import { Send } from '@openedx/paragon/icons';
 
 import {
   acknowledgeDisclosure,
