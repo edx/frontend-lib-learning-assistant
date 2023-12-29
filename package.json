@@ -67,7 +67,7 @@
     "@edx/browserslist-config": "^1.1.1",
     "@openedx/frontend-build": "13.0.19",
     "@edx/frontend-platform": "5.5.4",
-    "@edx/paragon": "20.46.0",
+    "@openedx/paragon": "^21.11.3",
     "@edx/reactifex": "^2.1.1",
     "@reduxjs/toolkit": "1.8.1",
     "@testing-library/jest-dom": "^6.0.1",
