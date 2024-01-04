@@ -14,7 +14,6 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const setSidebarIsOpen = (isOpen) => {
     dispatch(updateSidebarIsOpen(isOpen));
   };
-
   return (
     <div>
       <ToggleXpert

@@ -5,10 +5,9 @@ import { Hyperlink, Icon } from '@edx/paragon';
 import { Chat } from '@edx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform/config';
 
-import MessageForm from '../MessageForm';
 import './Disclosure.scss';
 
-const Disclosure = ({ courseId, unitId }) => (
+const Disclosure = ({ children }) => (
   <div className="disclosure d-flex flex-column align-items-stretch px-4 py-3">
     <h2 className="text-light-100">
       Xpert
@@ -45,13 +44,12 @@ const Disclosure = ({ courseId, unitId }) => (
       </Hyperlink>
       .
     </p>
-    <MessageForm courseId={courseId} unitId={unitId} />
+    {children}
   </div>
 );
 
 Disclosure.propTypes = {
-  courseId: PropTypes.string.isRequired,
-  unitId: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default Disclosure;

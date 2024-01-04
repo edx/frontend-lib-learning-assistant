@@ -83,6 +83,10 @@ const Sidebar = ({
     });
   };
 
+  const getMessageForm = () => (
+    <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
+  );
+
   const getSidebar = () => (
     <div className="h-100 d-flex flex-column justify-content-stretch">
       <div className="d-flex flex-column align-items-center p-3">
@@ -107,7 +111,7 @@ const Sidebar = ({
           </div>
         )
       }
-      <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
+      {getMessageForm()}
       <div className="d-flex justify-content-start">
         <Button
           className="clear mx-2 mb-2 border-0"
@@ -137,7 +141,7 @@ const Sidebar = ({
           variant="primary"
           invertColors={!disclosureAcknowledged}
         />
-        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure courseId={courseId} unitId={unitId} />)}
+        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure>{getMessageForm()}</Disclosure>)}
       </div>
     )
   );
