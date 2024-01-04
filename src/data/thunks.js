@@ -43,13 +43,13 @@ export function addChatMessage(role, content, courseId) {
   };
 }
 
-export function getChatResponse(courseId) {
+export function getChatResponse(courseId, unitId) {
   return async (dispatch, getState) => {
     const { messageList } = getState().learningAssistant;
 
     dispatch(setApiIsLoading(true));
     try {
-      const message = await fetchChatResponse(courseId, messageList);
+      const message = await fetchChatResponse(courseId, messageList, unitId);
       dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId));
     } catch (error) {
