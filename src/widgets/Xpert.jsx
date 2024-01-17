@@ -4,7 +4,7 @@ import { updateSidebarIsOpen } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 
-const Xpert = ({ courseId, contentToolsEnabled }) => {
+const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const dispatch = useDispatch();
 
   const {
@@ -14,7 +14,6 @@ const Xpert = ({ courseId, contentToolsEnabled }) => {
   const setSidebarIsOpen = (isOpen) => {
     dispatch(updateSidebarIsOpen(isOpen));
   };
-
   return (
     <div>
       <ToggleXpert
@@ -27,6 +26,7 @@ const Xpert = ({ courseId, contentToolsEnabled }) => {
         courseId={courseId}
         isOpen={sidebarIsOpen}
         setIsOpen={setSidebarIsOpen}
+        unitId={unitId}
       />
     </div>
   );
@@ -35,6 +35,7 @@ const Xpert = ({ courseId, contentToolsEnabled }) => {
 Xpert.propTypes = {
   courseId: PropTypes.string.isRequired,
   contentToolsEnabled: PropTypes.bool.isRequired,
+  unitId: PropTypes.string.isRequired,
 };
 
 export default Xpert;

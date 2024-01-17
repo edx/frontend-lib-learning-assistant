@@ -12,7 +12,7 @@ import {
   updateCurrentMessage,
 } from '../../data/thunks';
 
-const MessageForm = ({ courseId, shouldAutofocus }) => {
+const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
   const { apiIsLoading, currentMessage, apiError } = useSelector(state => state.learningAssistant);
   const dispatch = useDispatch();
   const inputRef = useRef();
@@ -28,7 +28,7 @@ const MessageForm = ({ courseId, shouldAutofocus }) => {
     if (currentMessage) {
       dispatch(acknowledgeDisclosure(true));
       dispatch(addChatMessage('user', currentMessage, courseId));
-      dispatch(getChatResponse(courseId));
+      dispatch(getChatResponse(courseId, unitId));
     }
   };
 
@@ -67,6 +67,7 @@ const MessageForm = ({ courseId, shouldAutofocus }) => {
 
 MessageForm.propTypes = {
   courseId: PropTypes.string.isRequired,
+  unitId: PropTypes.string.isRequired,
   shouldAutofocus: PropTypes.bool,
 };
 
