@@ -7,7 +7,8 @@ import {
   Button,
   Icon,
   IconButton,
-  ProductTour,
+  ModalCloseButton,
+  ModalPopup,
 } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
@@ -20,7 +21,9 @@ const ToggleXpert = ({
   courseId,
   contentToolsEnabled,
 }) => {
-  const [hasDismissed, setHasDismissed] = useState(false);
+  const [hasDismissedCTA, setHasDismissedCTA] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [target, setTarget] = useState(null);
   const { userId } = getAuthenticatedUser();
 
   const handleClick = (event) => {
@@ -35,6 +38,8 @@ const ToggleXpert = ({
         },
       );
     }
+    setIsModalOpen(false);
+    localStorage.setItem('completedLearningAssistantTour', 'true');
     setIsOpen(!isOpen);
   };
 
@@ -42,16 +47,16 @@ const ToggleXpert = ({
     // prevent default and propagation to prevent sidebar from opening
     event.preventDefault();
     event.stopPropagation();
-    setHasDismissed(true);
+    setHasDismissedCTA(true);
     localStorage.setItem('dismissedLearningAssistantCallToAction', 'true');
     sendTrackEvent('edx.ui.lms.learning_assistant.dismiss_action_message', {
       course_id: courseId,
     });
   };
 
-  const handleProductTourEnd = () => {
-    setIsOpen(true);
+  const handleModalClose = () => {
     localStorage.setItem('completedLearningAssistantTour', 'true');
+    setIsModalOpen(false);
     sendTrackEvent(
       'edx.ui.lms.learning_assistant.launch',
       {
@@ -62,31 +67,53 @@ const ToggleXpert = ({
     );
   };
 
-  const learningAssistantTour = {
-    tourId: 'learningAssistantTour',
-    endButtonText: 'Check it out',
-    onEnd: () => { handleProductTourEnd(); },
-    enabled: !localStorage.getItem('completedLearningAssistantTour'),
-    checkpoints: [
-      {
-        placement: 'left',
-        target: '#cta-button',
-        body: 'Xpert is a new part of your learning experience. '
-          + 'You can ask questions and get tutoring help during your course.',
-      },
-    ],
-  };
+  const shouldDisplayCTA = (
+    (!localStorage.getItem('dismissedLearningAssistantCallToAction') && !hasDismissedCTA)
+    && (localStorage.getItem('completedLearningAssistantTour') || !isModalOpen)
+  );
 
   return (
     (!isOpen && (
     <>
-      <ProductTour tours={[learningAssistantTour]} />
-      <div className={
-          `toggle closed d-flex flex-column position-fixed justify-content-end align-items-end mx-3 border-0 
+      <div
+        className="position-fixed learning-assistant-popup-modal"
+      >
+        <ModalPopup
+          hasArrow
+          placement="left"
+          positionRef={target}
+          isOpen={isModalOpen && !localStorage.getItem('completedLearningAssistantTour')}
+          onClose={handleModalClose}
+        >
+          <div
+            className="bg-white p-3 rounded shadow border"
+            style={{ textAlign: 'start' }}
+          >
+            <p data-testid="modal-message">
+              Xpert is a new part of your learning experience.<br />
+              You can ask questions and get tutoring help during your course.
+            </p>
+            <div className="d-flex justify-content-start" style={{ gap: '10px' }}>
+              <ModalCloseButton variant="outline-primary" data-testid="close-button">Close</ModalCloseButton>
+              <Button
+                variant="primary"
+                className="mie-2"
+                onClick={handleClick}
+                data-testid="check-button"
+              >
+                Check it out
+              </Button>
+            </div>
+          </div>
+        </ModalPopup>
+      </div>
+      <div
+        className={
+          `toggle position-fixed closed d-flex flex-column justify-content-end align-items-end mx-3 border-0 
           ${contentToolsEnabled ? 'chat-content-tools-margin' : ''}`
         }
       >
-        {(!localStorage.getItem('dismissedLearningAssistantCallToAction') && !hasDismissed) && (
+        { shouldDisplayCTA && (
           <div
             className="d-flex justify-content-end flex-row "
             data-testid="action-message"
@@ -121,6 +148,7 @@ const ToggleXpert = ({
           data-testid="toggle-button"
           onClick={handleClick}
           id="toggle-button"
+          ref={setTarget}
         >
           <XpertLogo />
         </Button>
