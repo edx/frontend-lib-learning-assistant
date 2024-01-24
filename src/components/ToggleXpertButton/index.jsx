@@ -72,47 +72,48 @@ const ToggleXpert = ({
     && (localStorage.getItem('completedLearningAssistantTour') || !isModalOpen)
   );
 
+  const chatMargin = contentToolsEnabled ? 'mb-5' : 'mb-3';
+
   return (
     (!isOpen && (
-    <>
-      <div
-        className="position-fixed learning-assistant-popup-modal"
-      >
-        <ModalPopup
-          hasArrow
-          placement="left"
-          positionRef={target}
-          isOpen={isModalOpen && !localStorage.getItem('completedLearningAssistantTour')}
-          onClose={handleModalClose}
-        >
-          <div
-            className="bg-white p-3 rounded shadow border"
-            style={{ textAlign: 'start' }}
-          >
-            <p data-testid="modal-message">
-              Xpert is a new part of your learning experience.<br />
-              You can ask questions and get tutoring help during your course.
-            </p>
-            <div className="d-flex justify-content-start" style={{ gap: '10px' }}>
-              <ModalCloseButton variant="outline-primary" data-testid="close-button">Close</ModalCloseButton>
-              <Button
-                variant="primary"
-                className="mie-2"
-                onClick={handleClick}
-                data-testid="check-button"
-              >
-                Check it out
-              </Button>
-            </div>
-          </div>
-        </ModalPopup>
-      </div>
       <div
         className={
           `toggle position-fixed closed d-flex flex-column justify-content-end align-items-end mx-3 border-0 
-          ${contentToolsEnabled ? 'chat-content-tools-margin' : ''}`
+           ${chatMargin}`
         }
       >
+        <div
+          className="position-fixed learning-assistant-popup-modal mb-7"
+        >
+          <ModalPopup
+            hasArrow
+            placement="left"
+            positionRef={target}
+            isOpen={isModalOpen && !localStorage.getItem('completedLearningAssistantTour')}
+            onClose={handleModalClose}
+          >
+            <div
+              className={`bg-white p-3 rounded shadow border ${chatMargin}`}
+              style={{ textAlign: 'start' }}
+            >
+              <p data-testid="modal-message">
+                Xpert is a new part of your learning experience.<br />
+                You can ask questions and get tutoring help during your course.
+              </p>
+              <div className="d-flex justify-content-start" style={{ gap: '10px' }}>
+                <ModalCloseButton variant="outline-primary" data-testid="close-button">Close</ModalCloseButton>
+                <Button
+                  variant="primary"
+                  className="mie-2"
+                  onClick={handleClick}
+                  data-testid="check-button"
+                >
+                  Check it out
+                </Button>
+              </div>
+            </div>
+          </ModalPopup>
+        </div>
         { shouldDisplayCTA && (
           <div
             className="d-flex justify-content-end flex-row "
@@ -153,7 +154,6 @@ const ToggleXpert = ({
           <XpertLogo />
         </Button>
       </div>
-    </>
     ))
   );
 };
