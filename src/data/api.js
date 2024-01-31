@@ -19,4 +19,12 @@ async function fetchChatResponse(courseId, messageList, unitId) {
   return data;
 }
 
+async function fetchLearningAssistantEnabled(courseId) {
+  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/enabled`);
+
+  const { data } = await getAuthenticatedHttpClient().get(url.href);
+  return data;
+}
+
 export default fetchChatResponse;
+export { fetchLearningAssistantEnabled };
