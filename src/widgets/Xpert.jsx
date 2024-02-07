@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSidebarIsOpen } from '../data/thunks';
+import { updateSidebarIsOpen, getIsEnabled } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 
@@ -8,13 +9,19 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const dispatch = useDispatch();
 
   const {
+    isEnabled,
     sidebarIsOpen,
   } = useSelector(state => state.learningAssistant);
 
   const setSidebarIsOpen = (isOpen) => {
     dispatch(updateSidebarIsOpen(isOpen));
   };
-  return (
+
+  useEffect(() => {
+    dispatch(getIsEnabled(courseId));
+  }, [dispatch, courseId]);
+
+  return isEnabled ? (
     <div>
       <ToggleXpert
         courseId={courseId}
@@ -29,7 +36,7 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
         unitId={unitId}
       />
     </div>
-  );
+  ) : null;
 };
 
 Xpert.propTypes = {

@@ -1,6 +1,6 @@
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import fetchChatResponse from './api';
+import fetchChatResponse, { fetchLearningAssistantEnabled } from './api';
 import {
   setCurrentMessage,
   clearCurrentMessage,
@@ -11,6 +11,7 @@ import {
   resetApiError,
   setDisclosureAcknowledged,
   setSidebarIsOpen,
+  setIsEnabled,
 } from './slice';
 
 export function addChatMessage(role, content, courseId) {
@@ -87,5 +88,16 @@ export function acknowledgeDisclosure(isDisclosureAcknowledged) {
 export function updateSidebarIsOpen(isOpen) {
   return (dispatch) => {
     dispatch(setSidebarIsOpen(isOpen));
+  };
+}
+
+export function getIsEnabled(courseId) {
+  return async (dispatch) => {
+    try {
+      const data = await fetchLearningAssistantEnabled(courseId);
+      dispatch(setIsEnabled(data.enabled));
+    } catch (error) {
+      dispatch(setApiError());
+    }
   };
 }
