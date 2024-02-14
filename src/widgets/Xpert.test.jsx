@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import * as api from '../data/api';
@@ -39,15 +39,30 @@ const assertSidebarElementsNotInDOM = () => {
 beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
+  jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: true });
+
   window.localStorage.clear();
+  // Popup modal should be ignored for all tests unless explicitly enabled. This is because
+  // it makes all other elements non-clickable, so it is easier to test most test cases without the popup.
+  window.localStorage.setItem('completedLearningAssistantTour', 'true');
 });
 
-test('initial load displays correct elements', () => {
+test('doesn\'t load if not enabled', async () => {
+  jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: false });
+
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+
+  // button to open chat should not be in the DOM
+  await waitFor(() => expect(screen.queryByTestId('toggle-button')).not.toBeInTheDocument());
+  // expect(screen.queryByTestId('toggle-button')).not.toBeVisible();
+  await waitFor(() => (expect(screen.queryByTestId('action-message')).not.toBeInTheDocument()));
+});
+test('initial load displays correct elements', async () => {
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   // button to open chat should be in the DOM
-  expect(screen.queryByTestId('toggle-button')).toBeVisible();
-  expect(screen.queryByTestId('action-message')).toBeVisible();
+  await waitFor(() => expect(screen.queryByTestId('toggle-button')).toBeVisible());
+  await waitFor(() => expect(screen.queryByTestId('action-message')).toBeVisible());
 
   // assert that UI elements in the sidebar are not in the DOM
   assertSidebarElementsNotInDOM();
@@ -57,8 +72,8 @@ test('clicking the call to action dismiss button removes the message', async () 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
   // button to open chat should be in the DOM
-  expect(screen.queryByTestId('toggle-button')).toBeVisible();
-  expect(screen.queryByTestId('action-message')).toBeVisible();
+  await waitFor(() => expect(screen.queryByTestId('toggle-button')).toBeVisible());
+  await waitFor(() => expect(screen.queryByTestId('action-message')).toBeVisible());
 
   await user.click(screen.getByRole('button', { name: 'dismiss' }));
   expect(screen.queryByTestId('toggle-button')).toBeVisible();
@@ -72,6 +87,9 @@ test('clicking the call to action opens the sidebar', async () => {
   const user = userEvent.setup();
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+
+  // wait for button to appear
+  await screen.findByTestId('message-button');
 
   await user.click(screen.queryByTestId('message-button'));
 
@@ -90,6 +108,9 @@ test('clicking the toggle button opens the sidebar', async () => {
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
   await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that UI elements present in the sidebar are visible
@@ -107,6 +128,9 @@ test('submitted text appears as message in the sidebar', async () => {
   const userMessage = 'Hello, Xpert!';
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -136,6 +160,9 @@ test('loading message appears in the sidebar while the response loads', async ()
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
   await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
@@ -160,6 +187,9 @@ test('response text appears as message in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
   await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
@@ -181,6 +211,9 @@ test('clicking the clear button clears messages in the sidebar', async () => {
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
   await user.click(screen.queryByTestId('toggle-button'));
 
   // type the user message
@@ -199,6 +232,9 @@ test('clicking the close button closes the sidebar', async () => {
   const user = userEvent.setup();
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
 
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
   await user.click(screen.queryByTestId('toggle-button'));
   await user.click(screen.getByTestId('close-button'));
 
@@ -208,6 +244,9 @@ test('clicking the close button closes the sidebar', async () => {
 test('toggle elements do not appear when sidebar is open', async () => {
   const user = userEvent.setup();
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -231,6 +270,9 @@ test('error message should disappear upon succesful api call', async () => {
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: errorState });
+
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
 
   await user.click(screen.queryByTestId('toggle-button'));
 
@@ -263,6 +305,9 @@ test('error message should disappear when dismissed', async () => {
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: errorState });
 
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
   await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error message exists
@@ -289,6 +334,9 @@ test('error message should disappear when messages cleared', async () => {
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: errorState });
 
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
   await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that error message exists
@@ -297,4 +345,46 @@ test('error message should disappear when messages cleared', async () => {
   // clear messages, assert that error message disappears
   await user.click(screen.getByText('Clear'));
   expect(screen.queryByText('Please try again by sending another question.')).not.toBeInTheDocument();
+});
+test('popup modal should open chat', async () => {
+  const user = userEvent.setup();
+  window.localStorage.clear();
+
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
+  // button to open chat should be in the DOM
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('modal-message')).toBeVisible();
+
+  // click check it out
+  await user.click(screen.queryByTestId('check-button'));
+
+  // assert that UI elements present in the sidebar are visible
+  expect(screen.getByRole('heading', { name: 'Hi, I\'m Xpert!' })).toBeVisible();
+  expect(screen.getByRole('textbox')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
+  expect(screen.getByTestId('close-button')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
+});
+test('popup modal should close and display CTA', async () => {
+  const user = userEvent.setup();
+  window.localStorage.clear();
+
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} />, { preloadedState: initialState });
+
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
+  // button to open chat should be in the DOM
+  expect(screen.queryByTestId('toggle-button')).toBeVisible();
+  expect(screen.queryByTestId('modal-message')).toBeVisible();
+
+  // click close
+  await user.click(screen.queryByTestId('close-button'));
+
+  assertSidebarElementsNotInDOM();
+  expect(screen.queryByTestId('action-message')).toBeVisible();
 });
