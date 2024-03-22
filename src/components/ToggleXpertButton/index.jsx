@@ -9,8 +9,8 @@ import {
   IconButton,
   ModalCloseButton,
   ModalPopup,
-} from '@edx/paragon';
-import { Close } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Close } from '@openedx/paragon/icons';
 
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './index.scss';

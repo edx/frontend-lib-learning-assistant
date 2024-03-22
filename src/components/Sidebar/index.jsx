@@ -6,8 +6,8 @@ import {
   Button,
   Icon,
   IconButton,
-} from '@edx/paragon';
-import { Close } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Close } from '@openedx/paragon/icons';
 
 import APIError from '../APIError';
 import ChatBox from '../ChatBox';
