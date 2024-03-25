@@ -4,10 +4,12 @@
     border-radius: 2rem;
     bottom: 1rem;
     height: 3rem;
+    z-index: 9999;
 
     &.button-icon {
         background-color: variables.$dark-green;
         position: relative;
+        width: 125px;
     }
 
     &.open {
