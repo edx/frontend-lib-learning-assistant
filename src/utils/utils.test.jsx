@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { IntlProvider } from 'react-intl';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { reducer as learningAssistantReducer } from '../data/slice';
 
 function renderWithProviders(
