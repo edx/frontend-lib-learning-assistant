@@ -174,8 +174,10 @@ test('loading message appears in the sidebar while the response loads', async ()
   // API skipped straight to rendering the response message.
   await fireEvent.click(screen.getByRole('button', { name: 'submit' }));
 
-  await screen.findByText('Xpert is thinking');
-  await screen.findByText(responseMessage.content);
+  waitFor(async () => {
+    await screen.findByText('Xpert is thinking');
+    await screen.findByText(responseMessage.content);
+  });
 });
 test('response text appears as message in the sidebar', async () => {
   const user = userEvent.setup();
