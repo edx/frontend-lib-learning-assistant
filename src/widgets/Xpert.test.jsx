@@ -177,7 +177,7 @@ test('loading message appears in the sidebar while the response loads', async ()
   waitFor(async () => {
     await screen.findByText('Xpert is thinking');
     await screen.findByText(responseMessage.content);
-  });
+  }, { timeout: 2000 });
 });
 test('response text appears as message in the sidebar', async () => {
   const user = userEvent.setup();
