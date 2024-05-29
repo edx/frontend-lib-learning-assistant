@@ -52,7 +52,7 @@
     "uuid": "9.0.0"
   },
   "peerDependencies": {
-    "@edx/frontend-platform": "^7.0.0 || 8.0.0",
+    "@edx/frontend-platform": "^7.0.0 || ^8.0.0",
     "@openedx/paragon": "^22.0.0",
     "@reduxjs/toolkit": "1.8.1",
     "react": "16.14.0 || ^17.0.0",
