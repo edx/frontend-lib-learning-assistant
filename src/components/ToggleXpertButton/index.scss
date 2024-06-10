@@ -1,10 +1,13 @@
 @use '../../utils/variables';
 
 .toggle {
-    border-radius: 2rem;
     bottom: 1rem;
     height: 3rem;
     z-index: 9999;
+
+    .btn {
+        border-radius: 2rem;
+    }
 
     &.button-icon {
         background-color: variables.$dark-green;
