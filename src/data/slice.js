@@ -13,6 +13,7 @@ export const learningAssistantSlice = createSlice({
     disclosureAcknowledged: false,
     sidebarIsOpen: false,
     isEnabled: false,
+    experiments: {},
   },
   reducers: {
     setCurrentMessage: (state, { payload }) => {
@@ -47,6 +48,13 @@ export const learningAssistantSlice = createSlice({
     setIsEnabled: (state, { payload }) => {
       state.isEnabled = payload;
     },
+    setExperiment: (state, { payload }) => {
+      const { flag, decision } = payload;
+      state.experiments[flag] = decision;
+    },
+    clearExperiment: (state, { payload: flag }) => {
+      delete state.experiments[flag];
+    },
   },
 });
 
@@ -61,6 +69,8 @@ export const {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
+  setExperiment,
+  clearExperiment,
 } = learningAssistantSlice.actions;
 
 export const {
