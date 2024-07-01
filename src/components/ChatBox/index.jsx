@@ -11,8 +11,7 @@ const ChatBox = ({ chatboxContainerRef }) => {
   return (
     <div ref={chatboxContainerRef} className="flex-grow-1 scroller d-flex flex-column pb-4">
       {messageList.map(({ role, content, timestamp }) => (
-        <Message
-          key={timestamp.toString()}
+        <Message key={timestamp.toString()}
           variant={role}
           message={content}
         />
