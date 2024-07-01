@@ -17,6 +17,7 @@ import './Sidebar.scss';
 import {
   clearMessages,
 } from '../../data/thunks';
+import { PROMPT_EXPERIMENT_FLAG } from '../../constants/experiments';
 
 const Sidebar = ({
   courseId,
@@ -29,6 +30,7 @@ const Sidebar = ({
     disclosureAcknowledged,
     messageList,
   } = useSelector(state => state.learningAssistant);
+  const { variationKey } = useSelector(state => state.experiments?.[PROMPT_EXPERIMENT_FLAG]) || {};
   const chatboxContainerRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -80,6 +82,7 @@ const Sidebar = ({
     dispatch(clearMessages());
     sendTrackEvent('edx.ui.lms.learning_assistant.clear', {
       course_id: courseId,
+      ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
     });
   };
 
