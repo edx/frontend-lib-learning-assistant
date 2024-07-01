@@ -11,10 +11,11 @@ const useOptimizelyExperiment = (flag) => {
   const dispatch = useDispatch();
   const { userId } = getAuthenticatedUser();
   const [decision] = useDecision(flag, { autoUpdate: true }, { id: userId });
+  const { active, variationKey } = decision || {};
 
   useEffect(() => {
-    dispatch(setExperiment({ flag, decision }));
-  }, [dispatch, flag, decision]);
+    dispatch(setExperiment({ flag, active, variationKey }));
+  }, [dispatch, flag, active, variationKey]);
 };
 
 export default useOptimizelyExperiment;
