@@ -11,7 +11,11 @@ const ChatBox = ({ chatboxContainerRef }) => {
   return (
     <div ref={chatboxContainerRef} className="flex-grow-1 scroller d-flex flex-column pb-4">
       {messageList.map(({ role, content, timestamp }) => (
-        <Message key={timestamp.toString()} variant={role} message={content} />
+        <Message 
+          key={timestamp.toString()} 
+          variant={role} 
+          message={content} 
+        />
       ))}
       {apiIsLoading && (
         <div className="loading">Xpert is thinking</div>
