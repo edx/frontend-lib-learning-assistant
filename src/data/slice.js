@@ -49,8 +49,8 @@ export const learningAssistantSlice = createSlice({
       state.isEnabled = payload;
     },
     setExperiment: (state, { payload }) => {
-      const { flag, decision } = payload;
-      state.experiments[flag] = decision;
+      const { flag, active, variationKey } = payload;
+      state.experiments[flag] = { active, variationKey };
     },
     clearExperiment: (state, { payload: flag }) => {
       delete state.experiments[flag];
