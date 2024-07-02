@@ -17,7 +17,8 @@ import './Sidebar.scss';
 import {
   clearMessages,
 } from '../../data/thunks';
-import { PROMPT_EXPERIMENT_FLAG } from '../../constants/experiments';
+import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
+import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
 
 const Sidebar = ({
   courseId,
@@ -29,8 +30,9 @@ const Sidebar = ({
     apiError,
     disclosureAcknowledged,
     messageList,
+    experiments,
   } = useSelector(state => state.learningAssistant);
-  const { variationKey } = useSelector(state => state.experiments?.[PROMPT_EXPERIMENT_FLAG]) || {};
+  const { variationKey } = experiments ? experiments[PROMPT_EXPERIMENT_FLAG] : {};
   const chatboxContainerRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -71,10 +73,12 @@ const Sidebar = ({
   const handleClick = () => {
     setIsOpen(false);
 
-    // check to see if hotjar is available, then trigger hotjar event if user has sent and received a message
-    const hasWindow = typeof window !== 'undefined';
-    if (hasWindow && window.hj && messageList.length >= 2) {
-      window.hj('event', 'ocm_learning_assistant_chat_closed');
+    if (messageList.length >= 2) {
+      if (variationKey === PROMPT_EXPERIMENT_KEY) {
+        showVariationSurvey();
+      } else {
+        showControlSurvey();
+      }
     }
   };
 

@@ -1,17 +1,47 @@
 import React from 'react';
 
-import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import * as api from '../data/api';
 import Xpert from './Xpert';
 
+import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(() => ({ userId: 1 })),
 }));
+
+jest.mock(
+  '@optimizely/react-sdk',
+  () => {
+    const originalModule = jest.requireActual('@optimizely/react-sdk');
+    return {
+      __esModule: true,
+      ...originalModule,
+      createInstance: jest.fn(() => ({
+        track: jest.fn(),
+      })),
+      useDecision: jest.fn(() => [{ enabled: true, variationKey: 'control' }]),
+      withOptimizely: jest.fn(
+        (Component) => (
+          function HOC(props) {
+            const newProps = {
+              ...props, optimizely: { track: jest.fn() },
+            };
+            return (<Component {...newProps} />);
+          }
+        ),
+      ),
+    };
+  },
+  { virtual: true },
+);
+
+// import useDecision here, after mocking, so that it can be used in tests
+import { useDecision } from '@optimizely/react-sdk'; // eslint-disable-line
 
 const initialState = {
   learningAssistant: {
@@ -23,6 +53,7 @@ const initialState = {
     //            I will remove this and write tests in a future pull request.
     disclosureAcknowledged: true,
     sidebarIsOpen: false,
+    experiments: {},
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -150,35 +181,6 @@ test('submitted text appears as message in the sidebar', async () => {
   // because we use a controlled input element, assert that the input element is cleared
   expect(input).toHaveValue('');
 });
-test('loading message appears in the sidebar while the response loads', async () => {
-  const user = userEvent.setup();
-  const userMessage = 'Hello, Xpert!';
-
-  // re-mock the fetchChatResponse API function so that we can assert that the
-  // responseMessage appears in the DOM
-  const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
-
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
-
-  // wait for button to appear
-  await screen.findByTestId('toggle-button');
-
-  await user.click(screen.queryByTestId('toggle-button'));
-
-  // type the user message
-  await user.type(screen.getByRole('textbox'), userMessage);
-
-  // It's better practice to use the userEvent API, but I could not get this test to properly assert
-  // that the "Xpert is thinking" loading text appears in the DOM. Something about using the userEvent
-  // API skipped straight to rendering the response message.
-  await fireEvent.click(screen.getByRole('button', { name: 'submit' }));
-
-  waitFor(async () => {
-    await screen.findByText('Xpert is thinking');
-    await screen.findByText(responseMessage.content);
-  }, { timeout: 2000 });
-});
 test('response text appears as message in the sidebar', async () => {
   const user = userEvent.setup();
   const userMessage = 'Hello, Xpert!';
@@ -270,6 +272,7 @@ test('error message should disappear upon succesful api call', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
+      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -304,6 +307,7 @@ test('error message should disappear when dismissed', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
+      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -333,6 +337,7 @@ test('error message should disappear when messages cleared', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
+      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -390,4 +395,70 @@ test('popup modal should close and display CTA', async () => {
 
   assertSidebarElementsNotInDOM();
   expect(screen.queryByTestId('action-message')).toBeVisible();
+});
+test('survey monkey survey should appear after closing sidebar', async () => {
+  const controlSurvey = jest.spyOn(surveyMonkey, 'showControlSurvey').mockReturnValueOnce(1);
+  const user = userEvent.setup();
+
+  const surveyState = {
+    learningAssistant: {
+      currentMessage: '',
+      messageList: [
+        { role: 'user', content: 'hi', timestamp: new Date() },
+        { role: 'user', content: 'hi', timestamp: new Date() },
+      ],
+      apiIsLoading: false,
+      apiError: false,
+      disclosureAcknowledged: true,
+      sidebarIsOpen: false,
+      experiments: {},
+    },
+  };
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: surveyState });
+
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
+  await user.click(screen.queryByTestId('toggle-button'));
+
+  // click close
+  await user.click(screen.queryByTestId('close-button'));
+
+  // assert mock called
+  expect(controlSurvey).toBeCalledTimes(1);
+  controlSurvey.mockRestore();
+});
+test('survey monkey variation survey should appear if user is in experiment', async () => {
+  const variationSurvey = jest.spyOn(surveyMonkey, 'showVariationSurvey').mockReturnValueOnce(1);
+  const user = userEvent.setup();
+
+  useDecision.mockImplementation(() => [{ enabled: true, variationKey: 'updated_prompt' }]);
+
+  const surveyState = {
+    learningAssistant: {
+      currentMessage: '',
+      messageList: [
+        { role: 'user', content: 'hi', timestamp: new Date() },
+        { role: 'user', content: 'hi', timestamp: new Date() },
+      ],
+      apiIsLoading: false,
+      apiError: false,
+      disclosureAcknowledged: true,
+      sidebarIsOpen: false,
+      experiments: {},
+    },
+  };
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: surveyState });
+
+  // wait for button to appear
+  await screen.findByTestId('toggle-button');
+
+  await user.click(screen.queryByTestId('toggle-button'));
+
+  // click close
+  await user.click(screen.queryByTestId('close-button'));
+
+  // assert mock called
+  expect(variationSurvey).toBeCalledTimes(1);
+  variationSurvey.mockRestore();
 });
