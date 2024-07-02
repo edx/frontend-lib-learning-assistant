@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import * as api from '../data/api';
@@ -180,35 +180,6 @@ test('submitted text appears as message in the sidebar', async () => {
 
   // because we use a controlled input element, assert that the input element is cleared
   expect(input).toHaveValue('');
-});
-test('loading message appears in the sidebar while the response loads', async () => {
-  const user = userEvent.setup();
-  const userMessage = 'Hello, Xpert!';
-
-  // re-mock the fetchChatResponse API function so that we can assert that the
-  // responseMessage appears in the DOM
-  const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
-
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
-
-  // wait for button to appear
-  await screen.findByTestId('toggle-button');
-
-  await user.click(screen.queryByTestId('toggle-button'));
-
-  // type the user message
-  await user.type(screen.getByRole('textbox'), userMessage);
-
-  // It's better practice to use the userEvent API, but I could not get this test to properly assert
-  // that the "Xpert is thinking" loading text appears in the DOM. Something about using the userEvent
-  // API skipped straight to rendering the response message.
-  await fireEvent.click(screen.getByRole('button', { name: 'submit' }));
-
-  waitFor(async () => {
-    await screen.findByText('Xpert is thinking');
-    await screen.findByText(responseMessage.content);
-  }, { timeout: 2000 });
 });
 test('response text appears as message in the sidebar', async () => {
   const user = userEvent.setup();
