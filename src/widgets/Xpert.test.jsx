@@ -2,7 +2,6 @@ import React from 'react';
 
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import * as optimizely from '@optimizely/react-sdk';
 
 import * as api from '../data/api';
 import Xpert from './Xpert';
@@ -433,7 +432,10 @@ test('survey monkey survey should appear after closing sidebar', async () => {
   const surveyState = {
     learningAssistant: {
       currentMessage: '',
-      messageList: [{role: 'user', content: 'hi', timestamp: new Date()}, {role: 'user', content: 'hi', timestamp: new Date()}],
+      messageList: [
+        { role: 'user', content: 'hi', timestamp: new Date() },
+        { role: 'user', content: 'hi', timestamp: new Date() },
+      ],
       apiIsLoading: false,
       apiError: false,
       disclosureAcknowledged: true,
@@ -464,7 +466,10 @@ test('survey monkey variation survey should appear if user is in experiment', as
   const surveyState = {
     learningAssistant: {
       currentMessage: '',
-      messageList: [{role: 'user', content: 'hi', timestamp: new Date()}, {role: 'user', content: 'hi', timestamp: new Date()}],
+      messageList: [
+        { role: 'user', content: 'hi', timestamp: new Date() },
+        { role: 'user', content: 'hi', timestamp: new Date() },
+      ],
       apiIsLoading: false,
       apiError: false,
       disclosureAcknowledged: true,

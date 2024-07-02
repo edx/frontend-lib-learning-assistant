@@ -73,7 +73,6 @@ const Sidebar = ({
   const handleClick = () => {
     setIsOpen(false);
 
-    console.log(variationKey);
     if (messageList.length >= 2) {
       if (variationKey === PROMPT_EXPERIMENT_KEY) {
         showVariationSurvey();
