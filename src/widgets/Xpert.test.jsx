@@ -13,6 +13,32 @@ jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(() => ({ userId: 1 })),
 }));
 
+jest.mock(
+  '@optimizely/react-sdk',
+  () => {
+    const originalModule = jest.requireActual('@optimizely/react-sdk');
+    return {
+      __esModule: true,
+      ...originalModule,
+      createInstance: jest.fn(() => ({
+        track: jest.fn(),
+      })),
+      useDecision: jest.fn(() => [{ enabled: true, variationKey: 'control' }]),
+      withOptimizely: jest.fn(
+        (Component) => (
+          function HOC(props) {
+            const newProps = {
+              ...props, optimizely: { track: jest.fn() },
+            };
+            return (<Component {...newProps} />);
+          }
+        ),
+      ),
+    };
+  },
+  { virtual: true },
+);
+
 const initialState = {
   learningAssistant: {
     currentMessage: '',
@@ -23,6 +49,7 @@ const initialState = {
     //            I will remove this and write tests in a future pull request.
     disclosureAcknowledged: true,
     sidebarIsOpen: false,
+    experiments: {},
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -270,6 +297,7 @@ test('error message should disappear upon succesful api call', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
+      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -304,6 +332,7 @@ test('error message should disappear when dismissed', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
+      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -333,6 +362,7 @@ test('error message should disappear when messages cleared', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
+      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });

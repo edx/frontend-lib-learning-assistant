@@ -30,8 +30,9 @@ const Sidebar = ({
     apiError,
     disclosureAcknowledged,
     messageList,
+    experiments,
   } = useSelector(state => state.learningAssistant);
-  const { variationKey } = useSelector(state => state.experiments?.[PROMPT_EXPERIMENT_FLAG]) || {};
+  const { variationKey } = experiments ? experiments[PROMPT_EXPERIMENT_FLAG] : {};
   const chatboxContainerRef = useRef(null);
   const dispatch = useDispatch();
 
