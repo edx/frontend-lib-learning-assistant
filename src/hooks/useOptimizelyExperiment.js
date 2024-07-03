@@ -10,6 +10,7 @@ import optimizelyInstance from '../data/optimizely'; // eslint-disable-line no-u
 const useOptimizelyExperiment = (flag) => {
   const dispatch = useDispatch();
   const { userId } = getAuthenticatedUser();
+
   const [decision] = useDecision(flag, { autoUpdate: true }, { id: userId });
   const { active, variationKey } = decision || {};
 
