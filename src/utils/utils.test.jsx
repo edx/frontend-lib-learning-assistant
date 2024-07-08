@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
@@ -51,4 +51,13 @@ const createRandomResponseForTesting = () => {
   return { role: 'assistant', content: message.join(' ') };
 };
 
-export { renderWithProviders as render, createRandomResponseForTesting };
+// Helper, that is used to forcibly finalize all promises
+// in thunk before running matcher against state.
+const executeThunk = async (thunk, dispatch, getState) => {
+  await thunk(dispatch, getState);
+  await new Promise(setImmediate);
+};
+
+export {
+  renderWithProviders as render, act, createRandomResponseForTesting, executeThunk,
+};

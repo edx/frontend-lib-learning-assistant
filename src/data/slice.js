@@ -2,19 +2,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
+export const initialState = {
+  currentMessage: '',
+  messageList: [],
+  apiError: false,
+  apiIsLoading: false,
+  conversationId: uuidv4(),
+  disclosureAcknowledged: false,
+  sidebarIsOpen: false,
+  isEnabled: false,
+  experiments: {},
+};
+
 export const learningAssistantSlice = createSlice({
   name: 'learning-assistant',
-  initialState: {
-    currentMessage: '',
-    messageList: [],
-    apiError: false,
-    apiIsLoading: false,
-    conversationId: uuidv4(),
-    disclosureAcknowledged: false,
-    sidebarIsOpen: false,
-    isEnabled: false,
-    experiments: {},
-  },
+  initialState,
   reducers: {
     setCurrentMessage: (state, { payload }) => {
       state.currentMessage = payload.currentMessage;

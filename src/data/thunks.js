@@ -20,7 +20,7 @@ import { PROMPT_EXPERIMENT_FLAG } from '../constants/experiments';
 export function addChatMessage(role, content, courseId) {
   return (dispatch, getState) => {
     const { messageList, conversationId, experiments } = getState().learningAssistant;
-    const { variationKey } = experiments ? experiments[PROMPT_EXPERIMENT_FLAG] : {};
+    const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
 
     // Redux recommends only serializable values in the store, so we'll stringify the timestap to store in Redux.
     // When we need to operate on the Date object, we'll deserialize the string.

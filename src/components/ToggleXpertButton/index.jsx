@@ -23,7 +23,7 @@ const ToggleXpert = ({
   contentToolsEnabled,
 }) => {
   const { experiments } = useSelector(state => state.learningAssistant);
-  const { variationKey } = experiments ? experiments[PROMPT_EXPERIMENT_FLAG] : {};
+  const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
   const [hasDismissedCTA, setHasDismissedCTA] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [target, setTarget] = useState(null);

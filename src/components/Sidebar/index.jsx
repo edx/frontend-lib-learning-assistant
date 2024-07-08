@@ -32,7 +32,7 @@ const Sidebar = ({
     messageList,
     experiments,
   } = useSelector(state => state.learningAssistant);
-  const { variationKey } = experiments ? experiments[PROMPT_EXPERIMENT_FLAG] : {};
+  const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
   const chatboxContainerRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -95,7 +95,7 @@ const Sidebar = ({
   );
 
   const getSidebar = () => (
-    <div className="h-100 d-flex flex-column justify-content-stretch">
+    <div className="h-100 d-flex flex-column justify-content-stretch" data-testid="sidebar-xpert">
       <div className="d-flex flex-column align-items-center p-3">
         <h1 className="font-weight-bold mb-3">
           Hi, I&apos;m Xpert!
@@ -137,16 +137,18 @@ const Sidebar = ({
     isOpen && (
       <div
         className="sidebar position-fixed"
+        data-testid="sidebar"
       >
         <IconButton
           className="chat-close position-absolute m-2 border-0"
           src={Close}
           iconAs={Icon}
-          data-testid="close-button"
           onClick={handleClick}
+          alt="close"
           aria-label="close"
           variant="primary"
           invertColors={!disclosureAcknowledged}
+          data-testid="close-button"
         />
         {disclosureAcknowledged ? (getSidebar()) : (<Disclosure>{getMessageForm()}</Disclosure>)}
       </div>
