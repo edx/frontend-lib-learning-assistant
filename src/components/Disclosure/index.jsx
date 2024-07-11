@@ -3,9 +3,11 @@ import React from 'react';
 
 import { Hyperlink, Icon } from '@openedx/paragon';
 import { Chat } from '@openedx/paragon/icons';
-import { getConfig } from '@edx/frontend-platform/config';
+import { ensureConfig, getConfig } from '@edx/frontend-platform/config';
 
 import './Disclosure.scss';
+
+ensureConfig(['PRIVACY_POLICY_URL']);
 
 const Disclosure = ({ children }) => (
   <div className="disclosure d-flex flex-column align-items-stretch px-4 py-3">
@@ -30,21 +32,19 @@ const Disclosure = ({ children }) => (
         </ul>
       </div>
     </div>
-    {getConfig().PRIVACY_POLICY_URL ? (
-      <p className="disclaimer text-light-100 py-3">
-        <strong>Note: </strong>
-        This chat is AI generated (powered by ChatGPT). Mistakes are possible.
-        By using it you agree that edX may create a record of this chat.
-        Your personal data will be used as described in our&nbsp;
-        <Hyperlink
-          className="privacy-policy-link text-light-100"
-          destination={getConfig().PRIVACY_POLICY_URL}
-        >
-          privacy policy
-        </Hyperlink>
-        .
-      </p>
-    ) : null }
+    <p className="disclaimer text-light-100 py-3">
+      <strong>Note: </strong>
+      This chat is AI generated (powered by ChatGPT). Mistakes are possible.
+      By using it you agree that edX may create a record of this chat.
+      Your personal data will be used as described in our&nbsp;
+      <Hyperlink
+        className="privacy-policy-link text-light-100"
+        destination={getConfig().PRIVACY_POLICY_URL}
+      >
+        privacy policy
+      </Hyperlink>
+      .
+    </p>
     {children}
   </div>
 );
