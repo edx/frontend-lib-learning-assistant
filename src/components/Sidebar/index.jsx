@@ -9,16 +9,15 @@ import {
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
+import { clearMessages } from '../../data/thunks';
+import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
+import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
+
 import APIError from '../APIError';
 import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
 import MessageForm from '../MessageForm';
 import './Sidebar.scss';
-import {
-  clearMessages,
-} from '../../data/thunks';
-import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
-import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
 
 const Sidebar = ({
   courseId,
@@ -126,6 +125,7 @@ const Sidebar = ({
           aria-label="clear"
           variant="primary"
           type="button"
+          data-testid="sidebar-clear-btn"
         >
           Clear
         </Button>

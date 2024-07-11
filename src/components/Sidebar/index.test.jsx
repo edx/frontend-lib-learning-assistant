@@ -1,6 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { render, act } from '../../utils/utils.test';
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { render as renderComponent, act } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
 import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
@@ -12,6 +13,21 @@ jest.mock('../../utils/surveyMonkey', () => ({
   showVariationSurvey: jest.fn(),
 }));
 
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendTrackEvent: jest.fn(),
+}));
+
+const mockDispatch = jest.fn();
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useDispatch: () => mockDispatch,
+}));
+
+const clearMessagesAction = 'clear-messages-action';
+jest.mock('../../data/thunks', () => ({
+  clearMessages: () => 'clear-messages-action',
+}));
+
 const defaultProps = {
   courseId: 'some-course-id',
   isOpen: true,
@@ -19,7 +35,7 @@ const defaultProps = {
   unitId: 'some-unit-id',
 };
 
-const renderSidebar = async (props = {}, sliceState = {}) => {
+const render = async (props = {}, sliceState = {}) => {
   const componentProps = {
     ...defaultProps,
     ...props,
@@ -33,7 +49,7 @@ const renderSidebar = async (props = {}, sliceState = {}) => {
       },
     },
   };
-  return act(async () => render(
+  return act(async () => renderComponent(
     <Sidebar {...componentProps} />,
     initState,
   ));
@@ -46,24 +62,35 @@ describe('<Sidebar />', () => {
 
   describe('when it\'s open', () => {
     it('should render normally', () => {
-      renderSidebar();
+      render();
       expect(screen.queryByTestId('sidebar')).toBeInTheDocument();
     });
 
     it('should not render xpert if no disclosureAcknowledged', () => {
-      renderSidebar();
+      render();
       expect(screen.queryByTestId('sidebar-xpert')).not.toBeInTheDocument();
     });
 
     it('should render xpert if disclosureAcknowledged', () => {
-      renderSidebar(undefined, { disclosureAcknowledged: true });
+      render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
+    });
+
+    it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
+      render(undefined, { disclosureAcknowledged: true });
+
+      act(() => {
+        screen.queryByTestId('sidebar-clear-btn').click();
+      });
+
+      expect(mockDispatch).toHaveBeenCalledWith(clearMessagesAction);
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.clear', { course_id: defaultProps.courseId });
     });
   });
 
   describe('when it\'s not open', () => {
     it('should not render', () => {
-      renderSidebar({ isOpen: false });
+      render({ isOpen: false });
       expect(screen.queryByTestId('sidebar')).not.toBeInTheDocument();
     });
   });
@@ -77,7 +104,7 @@ describe('<Sidebar />', () => {
       }, {
         role: 'user',
         content: 'Testing message 2',
-        timestamp: +Date.now(),
+        timestamp: +Date.now() + 1,
       }],
       experiments: {
         [PROMPT_EXPERIMENT_FLAG]: {
@@ -87,10 +114,10 @@ describe('<Sidebar />', () => {
       },
     };
 
-    it('should call showVariationSurvey if experiment is active', async () => {
-      renderSidebar(undefined, defaultState);
+    it('should call showVariationSurvey if experiment is active', () => {
+      render(undefined, defaultState);
 
-      await act(() => {
+      act(() => {
         screen.queryByTestId('close-button').click();
       });
 
@@ -98,18 +125,36 @@ describe('<Sidebar />', () => {
       expect(showControlSurvey).not.toHaveBeenCalled();
     });
 
-    it('should call showControlSurvey if experiment is not active', async () => {
-      renderSidebar(undefined, {
+    it('should call showControlSurvey if experiment is not active', () => {
+      render(undefined, {
         ...defaultState,
         experiments: {},
       });
 
-      await act(() => {
+      act(() => {
         screen.queryByTestId('close-button').click();
       });
 
       expect(showControlSurvey).toHaveBeenCalled();
       expect(showVariationSurvey).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
+      render(undefined, {
+        ...defaultState,
+        disclosureAcknowledged: true,
+      });
+
+      act(() => {
+        screen.queryByTestId('sidebar-clear-btn').click();
+      });
+
+      expect(mockDispatch).toHaveBeenCalledWith(clearMessagesAction);
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.clear', {
+        course_id: defaultProps.courseId,
+        experiment_name: PROMPT_EXPERIMENT_FLAG,
+        variation_key: PROMPT_EXPERIMENT_KEY,
+      });
     });
   });
 });
