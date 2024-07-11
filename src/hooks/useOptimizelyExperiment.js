@@ -11,7 +11,7 @@ const useOptimizelyExperiment = (flag) => {
   const dispatch = useDispatch();
   const { userId } = getAuthenticatedUser();
 
-  const [decision] = useDecision(flag, { autoUpdate: true }, { id: userId });
+  const [decision] = useDecision(flag, { autoUpdate: true }, { id: userId.toString() });
   const { active, variationKey } = decision || {};
 
   useEffect(() => {
