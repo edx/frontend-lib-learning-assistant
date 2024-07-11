@@ -41,7 +41,7 @@ describe('useOptimizelyExperiment()', () => {
     });
 
     it('should call useDecision() with the expected parameters', () => {
-      expect(useDecision).toHaveBeenCalledWith(optimizelyFlag, { autoUpdate: true }, { id: userId });
+      expect(useDecision).toHaveBeenCalledWith(optimizelyFlag, { autoUpdate: true }, { id: userId.toString() });
     });
 
     it('should call setExperiment() with the expected parameters', () => {
