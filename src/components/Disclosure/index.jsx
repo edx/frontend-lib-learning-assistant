@@ -30,19 +30,21 @@ const Disclosure = ({ children }) => (
         </ul>
       </div>
     </div>
-    <p className="disclaimer text-light-100 py-3">
-      <strong>Note: </strong>
-      This chat is AI generated (powered by ChatGPT). Mistakes are possible.
-      By using it you agree that edX may create a record of this chat.
-      Your personal data will be used as described in our&nbsp;
-      <Hyperlink
-        className="privacy-policy-link text-light-100"
-        destination={getConfig().PRIVACY_POLICY_URL ?? ''}
-      >
-        privacy policy
-      </Hyperlink>
-      .
-    </p>
+    {getConfig().PRIVACY_POLICY_URL ? (
+      <p className="disclaimer text-light-100 py-3">
+        <strong>Note: </strong>
+        This chat is AI generated (powered by ChatGPT). Mistakes are possible.
+        By using it you agree that edX may create a record of this chat.
+        Your personal data will be used as described in our&nbsp;
+        <Hyperlink
+          className="privacy-policy-link text-light-100"
+          destination={getConfig().PRIVACY_POLICY_URL}
+        >
+          privacy policy
+        </Hyperlink>
+        .
+      </p>
+    ) : null }
     {children}
   </div>
 );
