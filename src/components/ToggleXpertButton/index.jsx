@@ -87,6 +87,7 @@ const ToggleXpert = ({
           `toggle position-fixed closed d-flex flex-column justify-content-end align-items-end mx-3 border-0
            ${chatMargin}`
         }
+        data-testid="xpert-toggle"
       >
         <div
           className="position-fixed learning-assistant-popup-modal mb-7"
@@ -133,6 +134,7 @@ const ToggleXpert = ({
               variant="light"
               className="dismiss-button mx-2 mt-1 bg-gray"
               size="sm"
+              data-testid="dismiss-button"
             />
             <button
               className="action-message open-negative-margin p-3 mb-4.5"

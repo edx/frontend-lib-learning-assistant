@@ -1,7 +1,7 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, act } from '@testing-library/react';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { render as renderComponent, act } from '../../utils/utils.test';
+import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
 import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
