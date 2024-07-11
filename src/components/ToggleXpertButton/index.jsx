@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-
+import { useSelector } from 'react-redux';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import {
@@ -14,6 +14,7 @@ import { Close } from '@openedx/paragon/icons';
 
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './index.scss';
+import { PROMPT_EXPERIMENT_FLAG } from '../../constants/experiments';
 
 const ToggleXpert = ({
   isOpen,
@@ -21,6 +22,8 @@ const ToggleXpert = ({
   courseId,
   contentToolsEnabled,
 }) => {
+  const { experiments } = useSelector(state => state.learningAssistant);
+  const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
   const [hasDismissedCTA, setHasDismissedCTA] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [target, setTarget] = useState(null);
@@ -35,6 +38,7 @@ const ToggleXpert = ({
           course_id: courseId,
           user_id: userId,
           source: event.target.id === 'toggle-button' ? 'toggle' : 'cta',
+          ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
         },
       );
     }
@@ -51,6 +55,7 @@ const ToggleXpert = ({
     localStorage.setItem('dismissedLearningAssistantCallToAction', 'true');
     sendTrackEvent('edx.ui.lms.learning_assistant.dismiss_action_message', {
       course_id: courseId,
+      ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
     });
   };
 
@@ -63,6 +68,7 @@ const ToggleXpert = ({
         course_id: courseId,
         user_id: userId,
         source: 'product-tour',
+        ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
       },
     );
   };
@@ -78,9 +84,10 @@ const ToggleXpert = ({
     (!isOpen && (
       <div
         className={
-          `toggle position-fixed closed d-flex flex-column justify-content-end align-items-end mx-3 border-0 
+          `toggle position-fixed closed d-flex flex-column justify-content-end align-items-end mx-3 border-0
            ${chatMargin}`
         }
+        data-testid="xpert-toggle"
       >
         <div
           className="position-fixed learning-assistant-popup-modal mb-7"
@@ -127,6 +134,7 @@ const ToggleXpert = ({
               variant="light"
               className="dismiss-button mx-2 mt-1 bg-gray"
               size="sm"
+              data-testid="dismiss-button"
             />
             <button
               className="action-message open-negative-margin p-3 mb-4.5"
