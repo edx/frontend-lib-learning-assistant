@@ -1,7 +1,5 @@
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-
-import { trackChatBotMessageOptimizely } from '../utils/optimizelyExperiment';
 import fetchChatResponse, { fetchLearningAssistantEnabled } from './api';
 import {
   setCurrentMessage,
@@ -15,12 +13,10 @@ import {
   setSidebarIsOpen,
   setIsEnabled,
 } from './slice';
-import { PROMPT_EXPERIMENT_FLAG } from '../constants/experiments';
 
 export function addChatMessage(role, content, courseId) {
   return (dispatch, getState) => {
-    const { messageList, conversationId, experiments } = getState().learningAssistant;
-    const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
+    const { messageList, conversationId } = getState().learningAssistant;
 
     // Redux recommends only serializable values in the store, so we'll stringify the timestap to store in Redux.
     // When we need to operate on the Date object, we'll deserialize the string.
@@ -37,7 +33,6 @@ export function addChatMessage(role, content, courseId) {
     dispatch(resetApiError());
 
     const { userId } = getAuthenticatedUser();
-
     sendTrackEvent('edx.ui.lms.learning_assistant.message', {
       id: conversationId,
       course_id: courseId,
@@ -45,26 +40,17 @@ export function addChatMessage(role, content, courseId) {
       timestamp: message.timestamp,
       role: message.role,
       content: message.content,
-      ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
     });
   };
 }
 
 export function getChatResponse(courseId, unitId) {
   return async (dispatch, getState) => {
-    const { userId } = getAuthenticatedUser();
     const { messageList } = getState().learningAssistant;
-
-    const { enabled, variationKey } = getState().experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
 
     dispatch(setApiIsLoading(true));
     try {
-      if (enabled) {
-        trackChatBotMessageOptimizely(userId);
-      }
-      const customQueryParams = variationKey ? { responseVariation: variationKey } : {};
-      const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
-
+      const message = await fetchChatResponse(courseId, messageList, unitId);
       dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId));
     } catch (error) {

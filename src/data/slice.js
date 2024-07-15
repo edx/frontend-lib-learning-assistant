@@ -2,21 +2,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
-export const initialState = {
-  currentMessage: '',
-  messageList: [],
-  apiError: false,
-  apiIsLoading: false,
-  conversationId: uuidv4(),
-  disclosureAcknowledged: false,
-  sidebarIsOpen: false,
-  isEnabled: false,
-  experiments: {},
-};
-
 export const learningAssistantSlice = createSlice({
   name: 'learning-assistant',
-  initialState,
+  initialState: {
+    currentMessage: '',
+    messageList: [],
+    apiError: false,
+    apiIsLoading: false,
+    conversationId: uuidv4(),
+    disclosureAcknowledged: false,
+    sidebarIsOpen: false,
+    isEnabled: false,
+  },
   reducers: {
     setCurrentMessage: (state, { payload }) => {
       state.currentMessage = payload.currentMessage;
@@ -50,13 +47,6 @@ export const learningAssistantSlice = createSlice({
     setIsEnabled: (state, { payload }) => {
       state.isEnabled = payload;
     },
-    setExperiment: (state, { payload }) => {
-      const { flag, active, variationKey } = payload;
-      state.experiments[flag] = { active, variationKey };
-    },
-    clearExperiment: (state, { payload: flag }) => {
-      delete state.experiments[flag];
-    },
   },
 });
 
@@ -71,8 +61,6 @@ export const {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
-  setExperiment,
-  clearExperiment,
 } = learningAssistantSlice.actions;
 
 export const {

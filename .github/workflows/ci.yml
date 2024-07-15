@@ -1,5 +1,5 @@
 name: Default CI
-on:
+on: 
   push:
     branches:
       - 'main'
@@ -28,7 +28,7 @@ jobs:
     - name: Lint
       run: npm run lint
     - name: Test
-      run: npm run test:ci
+      run: npm run test
     - name: Build
       run: npm run build
     - name: i18n_extract

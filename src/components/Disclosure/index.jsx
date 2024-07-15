@@ -3,11 +3,9 @@ import React from 'react';
 
 import { Hyperlink, Icon } from '@openedx/paragon';
 import { Chat } from '@openedx/paragon/icons';
-import { ensureConfig, getConfig } from '@edx/frontend-platform/config';
+import { getConfig } from '@edx/frontend-platform/config';
 
 import './Disclosure.scss';
-
-ensureConfig(['PRIVACY_POLICY_URL']);
 
 const Disclosure = ({ children }) => (
   <div className="disclosure d-flex flex-column align-items-stretch px-4 py-3">
