@@ -50,12 +50,15 @@ export const learningAssistantSlice = createSlice({
     setIsEnabled: (state, { payload }) => {
       state.isEnabled = payload;
     },
-    setExperiment: (state, { payload }) => {
-      const { flag, active, variationKey } = payload;
-      state.experiments[flag] = { active, variationKey };
-    },
-    clearExperiment: (state, { payload: flag }) => {
-      delete state.experiments[flag];
+    setExperiments: (state, { payload }) => {
+      const { decisions } = payload;
+      const experiments = {};
+      decisions
+        .filter(({ flagKey, enabled, variationKey }) => flagKey && enabled && variationKey)
+        .foreach(({ flagKey, enabled, variationKey }) => {
+          experiments[flagKey] = { enabled, variationKey };
+        });
+      state.experiments = experiments;
     },
   },
 });
@@ -71,7 +74,7 @@ export const {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
-  setExperiment,
+  setExperiments,
   clearExperiment,
 } = learningAssistantSlice.actions;
 

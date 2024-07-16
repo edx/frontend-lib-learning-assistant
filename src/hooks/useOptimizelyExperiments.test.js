@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks';
 // import { useDispatch } from 'react-redux';
 import { useDecision } from '@optimizely/react-sdk';
-import { setExperiment } from '../data/slice';
+import { setExperiments } from '../data/slice';
 
-import useOptimizelyExperiment from './useOptimizelyExperiment';
+import useOptimizelyExperiment from './useOptimizelyExperiments';
 
 const optimizelyFlag = 'some-optimizely-flag';
 const userId = 123;
@@ -46,7 +46,7 @@ describe('useOptimizelyExperiment()', () => {
 
     it('should call setExperiment() with the expected parameters', () => {
       renderHook(() => useOptimizelyExperiment(optimizelyFlag));
-      expect(setExperiment).toHaveBeenCalledWith({ flag: optimizelyFlag, ...mockedDecision });
+      expect(setExperiments).toHaveBeenCalledWith({ flag: optimizelyFlag, ...mockedDecision });
     });
   });
 
@@ -58,7 +58,7 @@ describe('useOptimizelyExperiment()', () => {
 
     it('should call setExperiment() with undefined flag and variationKey', () => {
       renderHook(() => useOptimizelyExperiment(optimizelyFlag));
-      expect(setExperiment).toHaveBeenCalledWith({ flag: optimizelyFlag, active: undefined, variationKey: undefined });
+      expect(setExperiments).toHaveBeenCalledWith({ flag: optimizelyFlag, active: undefined, variationKey: undefined });
     });
   });
 });

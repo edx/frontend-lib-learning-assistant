@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSidebarIsOpen, getIsEnabled } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
-import useOptimizelyExperiment from '../hooks/useOptimizelyExperiment';
-import { PROMPT_EXPERIMENT_FLAG } from '../constants/experiments';
+import useOptimizelyExperiments from '../hooks/useOptimizelyExperiments';
 
 const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const dispatch = useDispatch();
@@ -15,7 +14,7 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
     sidebarIsOpen,
   } = useSelector(state => state.learningAssistant);
 
-  useOptimizelyExperiment(PROMPT_EXPERIMENT_FLAG);
+  useOptimizelyExperiments();
 
   const setSidebarIsOpen = (isOpen) => {
     dispatch(updateSidebarIsOpen(isOpen));
