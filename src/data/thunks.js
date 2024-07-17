@@ -15,12 +15,11 @@ import {
   setSidebarIsOpen,
   setIsEnabled,
 } from './slice';
-import { PROMPT_EXPERIMENT_FLAG } from '../constants/experiments';
+import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 
-export function addChatMessage(role, content, courseId) {
+export function addChatMessage(role, content, courseId, promptExperimentVariationKey = undefined) {
   return (dispatch, getState) => {
-    const { messageList, conversationId, experiments } = getState().learningAssistant;
-    const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
+    const { messageList, conversationId } = getState().learningAssistant;
 
     // Redux recommends only serializable values in the store, so we'll stringify the timestap to store in Redux.
     // When we need to operate on the Date object, we'll deserialize the string.
@@ -45,28 +44,29 @@ export function addChatMessage(role, content, courseId) {
       timestamp: message.timestamp,
       role: message.role,
       content: message.content,
-      ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
+      ...(promptExperimentVariationKey ? {
+        experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
+        variation_key: promptExperimentVariationKey,
+      } : {}),
     });
   };
 }
 
-export function getChatResponse(courseId, unitId) {
+export function getChatResponse(courseId, unitId, promptExperimentVariationKey = undefined) {
   return async (dispatch, getState) => {
     const { userId } = getAuthenticatedUser();
     const { messageList } = getState().learningAssistant;
 
-    const { enabled, variationKey } = getState().experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
-
     dispatch(setApiIsLoading(true));
     try {
-      if (enabled) {
+      if (promptExperimentVariationKey) {
         trackChatBotMessageOptimizely(userId);
       }
-      const customQueryParams = variationKey ? { responseVariation: variationKey } : {};
+      const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
       const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
 
       dispatch(setApiIsLoading(false));
-      dispatch(addChatMessage(message.role, message.content, courseId));
+      dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
     } catch (error) {
       dispatch(setApiError());
       dispatch(setApiIsLoading(false));

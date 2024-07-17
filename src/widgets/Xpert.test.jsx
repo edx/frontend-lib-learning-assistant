@@ -8,37 +8,18 @@ import Xpert from './Xpert';
 
 import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
+import { OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../data/optimizely';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(() => ({ userId: 1 })),
 }));
 
-jest.mock(
-  '@optimizely/react-sdk',
-  () => {
-    const originalModule = jest.requireActual('@optimizely/react-sdk');
-    return {
-      __esModule: true,
-      ...originalModule,
-      createInstance: jest.fn(() => ({
-        track: jest.fn(),
-      })),
-      useDecision: jest.fn(() => [{ enabled: true, variationKey: 'control' }]),
-      withOptimizely: jest.fn(
-        (Component) => (
-          function HOC(props) {
-            const newProps = {
-              ...props, optimizely: { track: jest.fn() },
-            };
-            return (<Component {...newProps} />);
-          }
-        ),
-      ),
-    };
-  },
-  { virtual: true },
-);
+jest.mock('@optimizely/react-sdk', () => ({
+  useDecision: jest.fn(),
+}));
+
+jest.mock('../optimizely', () => ({ children }) => children);
 
 // import useDecision here, after mocking, so that it can be used in tests
 import { useDecision } from '@optimizely/react-sdk'; // eslint-disable-line
@@ -72,6 +53,7 @@ beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
   jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: true });
+  useDecision.mockReturnValue([]);
 
   window.localStorage.clear();
   // Popup modal should be ignored for all tests unless explicitly enabled. This is because
@@ -428,11 +410,15 @@ test('survey monkey survey should appear after closing sidebar', async () => {
   expect(controlSurvey).toBeCalledTimes(1);
   controlSurvey.mockRestore();
 });
+
 test('survey monkey variation survey should appear if user is in experiment', async () => {
   const variationSurvey = jest.spyOn(surveyMonkey, 'showVariationSurvey').mockReturnValueOnce(1);
   const user = userEvent.setup();
 
-  useDecision.mockImplementation(() => [{ enabled: true, variationKey: 'updated_prompt' }]);
+  useDecision.mockReturnValue([{
+    active: true,
+    variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
+  }]);
 
   const surveyState = {
     learningAssistant: {

@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useDecision } from '@optimizely/react-sdk';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import {
   Button,
   Icon,
@@ -10,7 +12,7 @@ import {
 import { Close } from '@openedx/paragon/icons';
 
 import { clearMessages } from '../../data/thunks';
-import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
+import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
 import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
 
 import APIError from '../APIError';
@@ -29,11 +31,17 @@ const Sidebar = ({
     apiError,
     disclosureAcknowledged,
     messageList,
-    experiments,
   } = useSelector(state => state.learningAssistant);
-  const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
   const chatboxContainerRef = useRef(null);
   const dispatch = useDispatch();
+
+  const { userId } = getAuthenticatedUser();
+  const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
+  const { active: activeExperiment, variationKey } = decision || {};
+  const experimentPayload = activeExperiment ? {
+    experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
+    variation_key: variationKey,
+  } : {};
 
   // this use effect is intended to scroll to the bottom of the chat window, in the case
   // that a message is larger than the chat window height.
@@ -73,7 +81,7 @@ const Sidebar = ({
     setIsOpen(false);
 
     if (messageList.length >= 2) {
-      if (variationKey === PROMPT_EXPERIMENT_KEY) {
+      if (activeExperiment && variationKey === OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT) {
         showVariationSurvey();
       } else {
         showControlSurvey();
@@ -85,7 +93,7 @@ const Sidebar = ({
     dispatch(clearMessages());
     sendTrackEvent('edx.ui.lms.learning_assistant.clear', {
       course_id: courseId,
-      ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
+      ...experimentPayload,
     });
   };
 

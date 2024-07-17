@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDecision } from '@optimizely/react-sdk';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import {
@@ -12,9 +12,9 @@ import {
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
+import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from '../../data/optimizely';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './index.scss';
-import { PROMPT_EXPERIMENT_FLAG } from '../../constants/experiments';
 
 const ToggleXpert = ({
   isOpen,
@@ -22,12 +22,17 @@ const ToggleXpert = ({
   courseId,
   contentToolsEnabled,
 }) => {
-  const { experiments } = useSelector(state => state.learningAssistant);
-  const { variationKey } = experiments?.[PROMPT_EXPERIMENT_FLAG] || {};
   const [hasDismissedCTA, setHasDismissedCTA] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [target, setTarget] = useState(null);
   const { userId } = getAuthenticatedUser();
+
+  const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
+  const { active, variationKey } = decision || {};
+  const experimentPayload = active ? {
+    experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
+    variation_key: variationKey,
+  } : {};
 
   const handleClick = (event) => {
     // log event if the tool is opened
@@ -38,7 +43,7 @@ const ToggleXpert = ({
           course_id: courseId,
           user_id: userId,
           source: event.target.id === 'toggle-button' ? 'toggle' : 'cta',
-          ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
+          ...experimentPayload,
         },
       );
     }
@@ -55,7 +60,7 @@ const ToggleXpert = ({
     localStorage.setItem('dismissedLearningAssistantCallToAction', 'true');
     sendTrackEvent('edx.ui.lms.learning_assistant.dismiss_action_message', {
       course_id: courseId,
-      ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
+      ...experimentPayload,
     });
   };
 
@@ -68,7 +73,7 @@ const ToggleXpert = ({
         course_id: courseId,
         user_id: userId,
         source: 'product-tour',
-        ...(variationKey ? { experiment_name: PROMPT_EXPERIMENT_FLAG, variation_key: variationKey } : {}),
+        ...experimentPayload,
       },
     );
   };

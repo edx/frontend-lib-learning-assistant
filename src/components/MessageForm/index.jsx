@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useDecision } from '@optimizely/react-sdk';
 import { Button, Form, Icon } from '@openedx/paragon';
 import { Send } from '@openedx/paragon/icons';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
+import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from '../../data/optimizely';
 import {
   acknowledgeDisclosure,
   addChatMessage,
@@ -17,6 +19,11 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
   const dispatch = useDispatch();
   const inputRef = useRef();
 
+  const { userId } = getAuthenticatedUser();
+  const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
+  const { active, variationKey } = decision || {};
+  const promptExperimentVariationKey = active ? variationKey : undefined;
+
   useEffect(() => {
     if (inputRef.current && !apiError && !apiIsLoading && shouldAutofocus) {
       inputRef.current.focus();
@@ -25,10 +32,11 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
 
   const handleSubmitMessage = (event) => {
     event.preventDefault();
+
     if (currentMessage) {
       dispatch(acknowledgeDisclosure(true));
-      dispatch(addChatMessage('user', currentMessage, courseId));
-      dispatch(getChatResponse(courseId, unitId));
+      dispatch(addChatMessage('user', currentMessage, courseId, promptExperimentVariationKey));
+      dispatch(getChatResponse(courseId, unitId, promptExperimentVariationKey));
     }
   };
 
@@ -43,13 +51,14 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
       onClick={handleSubmitMessage}
       size="inline"
       variant="tertiary"
+      data-testid="message-form-submit"
     >
       <Icon src={Send} />
     </Button>
   );
 
   return (
-    <Form className="w-100 pl-2" onSubmit={handleSubmitMessage}>
+    <Form className="w-100 pl-2" onSubmit={handleSubmitMessage} data-testid="message-form">
       <Form.Group>
         <Form.Control
           data-hj-suppress

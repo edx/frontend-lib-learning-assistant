@@ -1,9 +1,10 @@
 import React from 'react';
 import { screen, act } from '@testing-library/react';
+import { useDecision } from '@optimizely/react-sdk';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
-import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
+import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
 import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
 
 import Sidebar from '.';
@@ -17,10 +18,23 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
   sendTrackEvent: jest.fn(),
 }));
 
+const mockedAuthenticatedUser = { userId: 123 };
+jest.mock('@edx/frontend-platform/auth', () => ({
+  getAuthenticatedUser: () => mockedAuthenticatedUser,
+}));
+
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendTrackEvent: jest.fn(),
+}));
+
 const mockDispatch = jest.fn();
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
   useDispatch: () => mockDispatch,
+}));
+
+jest.mock('@optimizely/react-sdk', () => ({
+  useDecision: jest.fn(),
 }));
 
 const clearMessagesAction = 'clear-messages-action';
@@ -58,6 +72,7 @@ const render = async (props = {}, sliceState = {}) => {
 describe('<Sidebar />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
+    useDecision.mockReturnValue([]);
   });
 
   describe('when it\'s open', () => {
@@ -106,15 +121,14 @@ describe('<Sidebar />', () => {
         content: 'Testing message 2',
         timestamp: +Date.now() + 1,
       }],
-      experiments: {
-        [PROMPT_EXPERIMENT_FLAG]: {
-          enabled: true,
-          variationKey: PROMPT_EXPERIMENT_KEY,
-        },
-      },
     };
 
     it('should call showVariationSurvey if experiment is active', () => {
+      useDecision.mockReturnValue([{
+        active: true,
+        variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
+      }]);
+
       render(undefined, defaultState);
 
       act(() => {
@@ -140,6 +154,11 @@ describe('<Sidebar />', () => {
     });
 
     it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
+      useDecision.mockReturnValue([{
+        active: true,
+        variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
+      }]);
+
       render(undefined, {
         ...defaultState,
         disclosureAcknowledged: true,
@@ -152,8 +171,8 @@ describe('<Sidebar />', () => {
       expect(mockDispatch).toHaveBeenCalledWith(clearMessagesAction);
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.clear', {
         course_id: defaultProps.courseId,
-        experiment_name: PROMPT_EXPERIMENT_FLAG,
-        variation_key: PROMPT_EXPERIMENT_KEY,
+        experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
+        variation_key: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       });
     });
   });
