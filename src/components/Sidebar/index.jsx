@@ -37,8 +37,8 @@ const Sidebar = ({
 
   const { userId } = getAuthenticatedUser();
   const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
-  const { active: activeExperiment, variationKey } = decision || {};
-  const experimentPayload = activeExperiment ? {
+  const { enabled: enabledExperiment, variationKey } = decision || {};
+  const experimentPayload = enabledExperiment ? {
     experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
     variation_key: variationKey,
   } : {};
@@ -81,7 +81,7 @@ const Sidebar = ({
     setIsOpen(false);
 
     if (messageList.length >= 2) {
-      if (activeExperiment && variationKey === OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT) {
+      if (enabledExperiment && variationKey === OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT) {
         showVariationSurvey();
       } else {
         showControlSurvey();

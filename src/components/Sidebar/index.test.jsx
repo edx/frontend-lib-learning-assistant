@@ -123,9 +123,9 @@ describe('<Sidebar />', () => {
       }],
     };
 
-    it('should call showVariationSurvey if experiment is active', () => {
+    it('should call showVariationSurvey if experiment is enabled', () => {
       useDecision.mockReturnValue([{
-        active: true,
+        enabled: true,
         variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       }]);
 
@@ -139,7 +139,7 @@ describe('<Sidebar />', () => {
       expect(showControlSurvey).not.toHaveBeenCalled();
     });
 
-    it('should call showControlSurvey if experiment is not active', () => {
+    it('should call showControlSurvey if experiment disabled', () => {
       render(undefined, {
         ...defaultState,
         experiments: {},
@@ -155,7 +155,7 @@ describe('<Sidebar />', () => {
 
     it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
       useDecision.mockReturnValue([{
-        active: true,
+        enabled: true,
         variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       }]);
 

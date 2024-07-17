@@ -21,8 +21,8 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
 
   const { userId } = getAuthenticatedUser();
   const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
-  const { active, variationKey } = decision || {};
-  const promptExperimentVariationKey = active ? variationKey : undefined;
+  const { enabled, variationKey } = decision || {};
+  const promptExperimentVariationKey = enabled ? variationKey : undefined;
 
   useEffect(() => {
     if (inputRef.current && !apiError && !apiIsLoading && shouldAutofocus) {

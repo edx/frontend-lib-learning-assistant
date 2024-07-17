@@ -158,7 +158,7 @@ describe('<MessageForm />', () => {
   describe('prmpt experiment', () => {
     beforeEach(() => {
       useDecision.mockReturnValue([{
-        active: true,
+        enabled: true,
         variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       }]);
     });

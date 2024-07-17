@@ -28,8 +28,8 @@ const ToggleXpert = ({
   const { userId } = getAuthenticatedUser();
 
   const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
-  const { active, variationKey } = decision || {};
-  const experimentPayload = active ? {
+  const { enabled, variationKey } = decision || {};
+  const experimentPayload = enabled ? {
     experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
     variation_key: variationKey,
   } : {};

@@ -416,7 +416,7 @@ test('survey monkey variation survey should appear if user is in experiment', as
   const user = userEvent.setup();
 
   useDecision.mockReturnValue([{
-    active: true,
+    enabled: true,
     variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
   }]);
 
