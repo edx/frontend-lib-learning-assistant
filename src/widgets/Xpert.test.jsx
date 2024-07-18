@@ -9,20 +9,17 @@ import Xpert from './Xpert';
 import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../data/optimizely';
+import { usePromptExperimentDecision } from '../experiments';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(() => ({ userId: 1 })),
 }));
 
-jest.mock('@optimizely/react-sdk', () => ({
-  useDecision: jest.fn(),
+jest.mock('../experiments', () => ({
+  ExperimentsProvider: ({ children }) => children,
+  usePromptExperimentDecision: jest.fn(),
 }));
-
-jest.mock('../optimizely', () => ({ children }) => children);
-
-// import useDecision here, after mocking, so that it can be used in tests
-import { useDecision } from '@optimizely/react-sdk'; // eslint-disable-line
 
 const initialState = {
   learningAssistant: {
@@ -34,7 +31,6 @@ const initialState = {
     //            I will remove this and write tests in a future pull request.
     disclosureAcknowledged: true,
     sidebarIsOpen: false,
-    experiments: {},
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -53,7 +49,7 @@ beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
   jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: true });
-  useDecision.mockReturnValue([]);
+  usePromptExperimentDecision.mockReturnValue([]);
 
   window.localStorage.clear();
   // Popup modal should be ignored for all tests unless explicitly enabled. This is because
@@ -254,7 +250,6 @@ test('error message should disappear upon succesful api call', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
-      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -289,7 +284,6 @@ test('error message should disappear when dismissed', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
-      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -319,7 +313,6 @@ test('error message should disappear when messages cleared', async () => {
       //            I will remove this and write tests in a future pull request.
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
-      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
@@ -387,13 +380,12 @@ test('survey monkey survey should appear after closing sidebar', async () => {
       currentMessage: '',
       messageList: [
         { role: 'user', content: 'hi', timestamp: new Date() },
-        { role: 'user', content: 'hi', timestamp: new Date() },
+        { role: 'user', content: 'hi', timestamp: new Date() + 1 },
       ],
       apiIsLoading: false,
       apiError: false,
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
-      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: surveyState });
@@ -415,7 +407,7 @@ test('survey monkey variation survey should appear if user is in experiment', as
   const variationSurvey = jest.spyOn(surveyMonkey, 'showVariationSurvey').mockReturnValueOnce(1);
   const user = userEvent.setup();
 
-  useDecision.mockReturnValue([{
+  usePromptExperimentDecision.mockReturnValue([{
     enabled: true,
     variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
   }]);
@@ -425,13 +417,12 @@ test('survey monkey variation survey should appear if user is in experiment', as
       currentMessage: '',
       messageList: [
         { role: 'user', content: 'hi', timestamp: new Date() },
-        { role: 'user', content: 'hi', timestamp: new Date() },
+        { role: 'user', content: 'hi', timestamp: new Date() + 1 },
       ],
       apiIsLoading: false,
       apiError: false,
       disclosureAcknowledged: true,
       sidebarIsOpen: false,
-      experiments: {},
     },
   };
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: surveyState });

@@ -1,7 +1,8 @@
 import React from 'react';
 import { screen, act } from '@testing-library/react';
-import { useDecision } from '@optimizely/react-sdk';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
+import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
@@ -33,8 +34,8 @@ jest.mock('react-redux', () => ({
   useDispatch: () => mockDispatch,
 }));
 
-jest.mock('@optimizely/react-sdk', () => ({
-  useDecision: jest.fn(),
+jest.mock('../../experiments', () => ({
+  usePromptExperimentDecision: jest.fn(),
 }));
 
 const clearMessagesAction = 'clear-messages-action';
@@ -72,7 +73,7 @@ const render = async (props = {}, sliceState = {}) => {
 describe('<Sidebar />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    useDecision.mockReturnValue([]);
+    usePromptExperimentDecision.mockReturnValue([]);
   });
 
   describe('when it\'s open', () => {
@@ -124,7 +125,7 @@ describe('<Sidebar />', () => {
     };
 
     it('should call showVariationSurvey if experiment is enabled', () => {
-      useDecision.mockReturnValue([{
+      usePromptExperimentDecision.mockReturnValue([{
         enabled: true,
         variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       }]);
@@ -154,7 +155,7 @@ describe('<Sidebar />', () => {
     });
 
     it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
-      useDecision.mockReturnValue([{
+      usePromptExperimentDecision.mockReturnValue([{
         enabled: true,
         variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       }]);

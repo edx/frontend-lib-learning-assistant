@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useDecision } from '@optimizely/react-sdk';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import {
@@ -15,6 +14,7 @@ import { Close } from '@openedx/paragon/icons';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from '../../data/optimizely';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './index.scss';
+import { usePromptExperimentDecision } from '../../experiments';
 
 const ToggleXpert = ({
   isOpen,
@@ -27,7 +27,7 @@ const ToggleXpert = ({
   const [target, setTarget] = useState(null);
   const { userId } = getAuthenticatedUser();
 
-  const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
+  const [decision] = usePromptExperimentDecision();
   const { enabled, variationKey } = decision || {};
   const experimentPayload = enabled ? {
     experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,

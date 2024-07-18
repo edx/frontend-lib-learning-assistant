@@ -1,26 +1,23 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useDecision } from '@optimizely/react-sdk';
 import { Button, Form, Icon } from '@openedx/paragon';
 import { Send } from '@openedx/paragon/icons';
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
-import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from '../../data/optimizely';
 import {
   acknowledgeDisclosure,
   addChatMessage,
   getChatResponse,
   updateCurrentMessage,
 } from '../../data/thunks';
+import { usePromptExperimentDecision } from '../../experiments';
 
 const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
   const { apiIsLoading, currentMessage, apiError } = useSelector(state => state.learningAssistant);
   const dispatch = useDispatch();
   const inputRef = useRef();
 
-  const { userId } = getAuthenticatedUser();
-  const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
+  const [decision] = usePromptExperimentDecision();
   const { enabled, variationKey } = decision || {};
   const promptExperimentVariationKey = enabled ? variationKey : undefined;
 

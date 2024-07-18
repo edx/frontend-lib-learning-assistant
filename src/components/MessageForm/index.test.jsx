@@ -2,7 +2,7 @@ import React from 'react';
 import {
   screen, act, fireEvent, waitFor,
 } from '@testing-library/react';
-import { useDecision } from '@optimizely/react-sdk';
+import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
@@ -39,8 +39,8 @@ jest.mock('react-redux', () => ({
   useDispatch: () => mockDispatch,
 }));
 
-jest.mock('@optimizely/react-sdk', () => ({
-  useDecision: jest.fn(),
+jest.mock('../../experiments', () => ({
+  usePromptExperimentDecision: jest.fn(),
 }));
 
 jest.mock('../../data/thunks', () => ({
@@ -80,7 +80,7 @@ const render = async (props = {}, sliceState = {}) => {
 describe('<MessageForm />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    useDecision.mockReturnValue([]);
+    usePromptExperimentDecision.mockReturnValue([]);
   });
 
   describe('when rendered', () => {
@@ -157,7 +157,7 @@ describe('<MessageForm />', () => {
 
   describe('prmpt experiment', () => {
     beforeEach(() => {
-      useDecision.mockReturnValue([{
+      usePromptExperimentDecision.mockReturnValue([{
         enabled: true,
         variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       }]);

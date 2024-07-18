@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { updateSidebarIsOpen, getIsEnabled } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
-import ExperimentsProvider from '../optimizely';
+import { ExperimentsProvider } from '../experiments';
 
 const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const dispatch = useDispatch();

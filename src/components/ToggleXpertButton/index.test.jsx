@@ -1,7 +1,8 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
-import { useDecision } from '@optimizely/react-sdk';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
+import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
@@ -17,8 +18,8 @@ jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: () => mockedAuthenticatedUser,
 }));
 
-jest.mock('@optimizely/react-sdk', () => ({
-  useDecision: jest.fn(),
+jest.mock('../../experiments', () => ({
+  usePromptExperimentDecision: jest.fn(),
 }));
 
 const defaultProps = {
@@ -52,7 +53,7 @@ describe('<ToggleXpert />', () => {
   beforeEach(() => {
     window.localStorage.clear();
     jest.clearAllMocks();
-    useDecision.mockReturnValue([]);
+    usePromptExperimentDecision.mockReturnValue([]);
   });
 
   describe('when it\'s closed', () => {
@@ -120,7 +121,7 @@ describe('<ToggleXpert />', () => {
 
   describe('prompt experiment', () => {
     beforeEach(() => {
-      useDecision.mockReturnValue([{
+      usePromptExperimentDecision.mockReturnValue([{
         enabled: true,
         variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       }]);

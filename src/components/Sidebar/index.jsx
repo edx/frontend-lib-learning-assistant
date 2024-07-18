@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { useDecision } from '@optimizely/react-sdk';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import {
   Button,
   Icon,
@@ -20,6 +18,7 @@ import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
 import MessageForm from '../MessageForm';
 import './Sidebar.scss';
+import { usePromptExperimentDecision } from '../../experiments';
 
 const Sidebar = ({
   courseId,
@@ -35,8 +34,7 @@ const Sidebar = ({
   const chatboxContainerRef = useRef(null);
   const dispatch = useDispatch();
 
-  const { userId } = getAuthenticatedUser();
-  const [decision] = useDecision(OPTIMIZELY_PROMPT_EXPERIMENT_KEY, { autoUpdate: true }, { id: userId.toString() });
+  const [decision] = usePromptExperimentDecision();
   const { enabled: enabledExperiment, variationKey } = decision || {};
   const experimentPayload = enabledExperiment ? {
     experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
