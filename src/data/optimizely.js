@@ -6,7 +6,7 @@ ensureConfig([
 ], 'Frontend Lib Learning Assistant Optimizely module');
 
 /**
- * Initializing the Optimizely instance at the top-level will not work, becaused it may be initialized before
+ * Initializing the Optimizely instance at the top-level will not work, because it may be initialized before
  * the OPTIMIZELY_FULL_STACK_SDK_KEY is available and will not be reinitialized afterward. Wrapping the initialization
  * in a function allows components to request the instance as-needed.
  */
