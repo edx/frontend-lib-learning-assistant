@@ -9,8 +9,8 @@ export function usePromptExperimentDecision() {
 
   const [decision] = useDecision(
     OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
-    { autoUpdate: true },
-    { overrideUserId: userId.toString() },
+    { autoUpdate: true }, // This should make the decision reactive to changes on the experiment dashboard.
+    { overrideUserId: userId.toString() }, // This override is just to make sure the userId is up to date.
   );
 
   return [decision];
