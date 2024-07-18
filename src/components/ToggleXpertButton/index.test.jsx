@@ -1,9 +1,11 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
+import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
-import { PROMPT_EXPERIMENT_FLAG, PROMPT_EXPERIMENT_KEY } from '../../constants/experiments';
+import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
 
 import ToggleXpert from '.';
 
@@ -14,6 +16,10 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 const mockedAuthenticatedUser = { userId: 123 };
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: () => mockedAuthenticatedUser,
+}));
+
+jest.mock('../../experiments', () => ({
+  usePromptExperimentDecision: jest.fn(),
 }));
 
 const defaultProps = {
@@ -47,6 +53,7 @@ describe('<ToggleXpert />', () => {
   beforeEach(() => {
     window.localStorage.clear();
     jest.clearAllMocks();
+    usePromptExperimentDecision.mockReturnValue([]);
   });
 
   describe('when it\'s closed', () => {
@@ -113,14 +120,12 @@ describe('<ToggleXpert />', () => {
   });
 
   describe('prompt experiment', () => {
-    const defaultState = {
-      experiments: {
-        [PROMPT_EXPERIMENT_FLAG]: {
-          enabled: true,
-          variationKey: PROMPT_EXPERIMENT_KEY,
-        },
-      },
-    };
+    beforeEach(() => {
+      usePromptExperimentDecision.mockReturnValue([{
+        enabled: true,
+        variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
+      }]);
+    });
 
     it('should render the component', () => {
       render();
@@ -128,7 +133,7 @@ describe('<ToggleXpert />', () => {
     });
 
     it('should track the "Check it out" action', () => {
-      render(undefined, defaultState);
+      render();
 
       screen.queryByTestId('check-button').click();
 
@@ -138,14 +143,14 @@ describe('<ToggleXpert />', () => {
           course_id: defaultProps.courseId,
           user_id: mockedAuthenticatedUser.userId,
           source: 'cta',
-          experiment_name: PROMPT_EXPERIMENT_FLAG,
-          variation_key: PROMPT_EXPERIMENT_KEY,
+          experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
+          variation_key: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
         },
       );
     });
 
     it('should track the toggle action', () => {
-      render(undefined, defaultState);
+      render();
 
       screen.queryByTestId('toggle-button').click();
 
@@ -155,14 +160,14 @@ describe('<ToggleXpert />', () => {
           course_id: defaultProps.courseId,
           user_id: mockedAuthenticatedUser.userId,
           source: 'toggle',
-          experiment_name: PROMPT_EXPERIMENT_FLAG,
-          variation_key: PROMPT_EXPERIMENT_KEY,
+          experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
+          variation_key: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
         },
       );
     });
 
     it('should track the dismiss action', async () => {
-      render(undefined, defaultState);
+      render();
 
       // Show CTA
       await screen.queryByTestId('check-button').click();
@@ -176,8 +181,8 @@ describe('<ToggleXpert />', () => {
         'edx.ui.lms.learning_assistant.dismiss_action_message',
         {
           course_id: defaultProps.courseId,
-          experiment_name: PROMPT_EXPERIMENT_FLAG,
-          variation_key: PROMPT_EXPERIMENT_KEY,
+          experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
+          variation_key: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
         },
       );
     });

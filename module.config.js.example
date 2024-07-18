@@ -27,5 +27,6 @@ module.exports = {
     // { moduleName: '@openedx/paragon/icons', dir: '../paragon', dist: 'icons' },
     // { moduleName: '@openedx/paragon', dir: '../paragon', dist: 'dist' },
     // { moduleName: '@edx/frontend-platform', dir: '../frontend-platform', dist: 'dist' },
+    // { moduleName: '@optimizely/react-sdk', dir: '../src/frontend-lib-learning-assistant/src/mocks/optimizely', dist: '.' },
   ],
 };

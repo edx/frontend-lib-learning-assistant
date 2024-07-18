@@ -11,7 +11,6 @@ export const initialState = {
   disclosureAcknowledged: false,
   sidebarIsOpen: false,
   isEnabled: false,
-  experiments: {},
 };
 
 export const learningAssistantSlice = createSlice({
@@ -50,13 +49,6 @@ export const learningAssistantSlice = createSlice({
     setIsEnabled: (state, { payload }) => {
       state.isEnabled = payload;
     },
-    setExperiment: (state, { payload }) => {
-      const { flag, active, variationKey } = payload;
-      state.experiments[flag] = { active, variationKey };
-    },
-    clearExperiment: (state, { payload: flag }) => {
-      delete state.experiments[flag];
-    },
   },
 });
 
@@ -71,8 +63,6 @@ export const {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
-  setExperiment,
-  clearExperiment,
 } = learningAssistantSlice.actions;
 
 export const {

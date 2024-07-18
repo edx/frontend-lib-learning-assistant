@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Button, Form, Icon } from '@openedx/paragon';
 import { Send } from '@openedx/paragon/icons';
 
@@ -11,11 +10,16 @@ import {
   getChatResponse,
   updateCurrentMessage,
 } from '../../data/thunks';
+import { usePromptExperimentDecision } from '../../experiments';
 
 const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
   const { apiIsLoading, currentMessage, apiError } = useSelector(state => state.learningAssistant);
   const dispatch = useDispatch();
   const inputRef = useRef();
+
+  const [decision] = usePromptExperimentDecision();
+  const { enabled, variationKey } = decision || {};
+  const promptExperimentVariationKey = enabled ? variationKey : undefined;
 
   useEffect(() => {
     if (inputRef.current && !apiError && !apiIsLoading && shouldAutofocus) {
@@ -25,10 +29,11 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
 
   const handleSubmitMessage = (event) => {
     event.preventDefault();
+
     if (currentMessage) {
       dispatch(acknowledgeDisclosure(true));
-      dispatch(addChatMessage('user', currentMessage, courseId));
-      dispatch(getChatResponse(courseId, unitId));
+      dispatch(addChatMessage('user', currentMessage, courseId, promptExperimentVariationKey));
+      dispatch(getChatResponse(courseId, unitId, promptExperimentVariationKey));
     }
   };
 
@@ -43,13 +48,14 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
       onClick={handleSubmitMessage}
       size="inline"
       variant="tertiary"
+      data-testid="message-form-submit"
     >
       <Icon src={Send} />
     </Button>
   );
 
   return (
-    <Form className="w-100 pl-2" onSubmit={handleSubmitMessage}>
+    <Form className="w-100 pl-2" onSubmit={handleSubmitMessage} data-testid="message-form">
       <Form.Group>
         <Form.Control
           data-hj-suppress
