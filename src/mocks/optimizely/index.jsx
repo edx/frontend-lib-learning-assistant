@@ -3,7 +3,7 @@
 
 const useDecision = (experimentKey) => (
   // To mock optimizely for local smoke testing, set the value of "enabled" to "true" and
-  // replace "replace_me" with the desired value from OPTIMIZELY_VTR_EXPERIMENT_VARIATION_KEYS
+  // replace "replace_me" with the desired value from OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS
   // which can be found in src/data/optimizely.js
   [{ enabled: true, variationKey: 'replace_me' }]
 );
