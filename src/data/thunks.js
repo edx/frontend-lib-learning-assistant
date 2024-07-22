@@ -1,7 +1,7 @@
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
-import { trackChatBotMessageOptimizely } from '../utils/optimizelyExperiment';
+import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
 import fetchChatResponse, { fetchLearningAssistantEnabled } from './api';
 import {
   setCurrentMessage,
@@ -60,7 +60,7 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
     dispatch(setApiIsLoading(true));
     try {
       if (promptExperimentVariationKey) {
-        trackChatBotMessageOptimizely(userId);
+        trackChatBotMessageOptimizely(userId.toString());
       }
       const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
       const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
