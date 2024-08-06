@@ -9,15 +9,18 @@ const ExperimentsProvider = ({ children }) => {
   const { userId } = getAuthenticatedUser();
   const optimizely = getOptimizely();
 
-  return (
+  return optimizely ? (
     <OptimizelyProvider
       optimizely={optimizely}
       user={{
         id: userId.toString(),
         attributes: { lms_language_preference: getLocale() },
       }}
-    >{children}
+    >
+      {children}
     </OptimizelyProvider>
+  ) : (
+    children
   );
 };
 

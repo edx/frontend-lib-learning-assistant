@@ -10,16 +10,17 @@ ensureConfig([
  * the OPTIMIZELY_FULL_STACK_SDK_KEY is available and will not be reinitialized afterward. Wrapping the initialization
  * in a function allows components to request the instance as-needed.
  */
+let instance = null;
 const getOptimizely = () => {
   const OPTIMIZELY_SDK_KEY = getConfig().OPTIMIZELY_FULL_STACK_SDK_KEY;
 
-  if (OPTIMIZELY_SDK_KEY) {
-    return createInstance({
+  if (!instance && OPTIMIZELY_SDK_KEY) {
+    instance = createInstance({
       sdkKey: OPTIMIZELY_SDK_KEY,
     });
   }
 
-  return null;
+  return instance;
 };
 
 const OPTIMIZELY_PROMPT_EXPERIMENT_KEY = '_cosmo__xpert_gpt_4_0_prompt';
