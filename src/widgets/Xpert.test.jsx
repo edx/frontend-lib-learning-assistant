@@ -8,7 +8,6 @@ import Xpert from './Xpert';
 
 import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
-import { OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../data/optimizely';
 import { usePromptExperimentDecision } from '../experiments';
 
 jest.mock('@edx/frontend-platform/analytics');
@@ -372,7 +371,7 @@ test('popup modal should close and display CTA', async () => {
   expect(screen.queryByTestId('action-message')).toBeVisible();
 });
 test('survey monkey survey should appear after closing sidebar', async () => {
-  const controlSurvey = jest.spyOn(surveyMonkey, 'showControlSurvey').mockReturnValueOnce(1);
+  const survey = jest.spyOn(surveyMonkey, 'default').mockReturnValueOnce(1);
   const user = userEvent.setup();
 
   const surveyState = {
@@ -399,43 +398,6 @@ test('survey monkey survey should appear after closing sidebar', async () => {
   await user.click(screen.queryByTestId('close-button'));
 
   // assert mock called
-  expect(controlSurvey).toBeCalledTimes(1);
-  controlSurvey.mockRestore();
-});
-
-test('survey monkey variation survey should appear if user is in experiment', async () => {
-  const variationSurvey = jest.spyOn(surveyMonkey, 'showVariationSurvey').mockReturnValueOnce(1);
-  const user = userEvent.setup();
-
-  usePromptExperimentDecision.mockReturnValue([{
-    enabled: true,
-    variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
-  }]);
-
-  const surveyState = {
-    learningAssistant: {
-      currentMessage: '',
-      messageList: [
-        { role: 'user', content: 'hi', timestamp: new Date() },
-        { role: 'user', content: 'hi', timestamp: new Date() + 1 },
-      ],
-      apiIsLoading: false,
-      apiError: false,
-      disclosureAcknowledged: true,
-      sidebarIsOpen: false,
-    },
-  };
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: surveyState });
-
-  // wait for button to appear
-  await screen.findByTestId('toggle-button');
-
-  await user.click(screen.queryByTestId('toggle-button'));
-
-  // click close
-  await user.click(screen.queryByTestId('close-button'));
-
-  // assert mock called
-  expect(variationSurvey).toBeCalledTimes(1);
-  variationSurvey.mockRestore();
+  expect(survey).toBeCalledTimes(1);
+  survey.mockRestore();
 });

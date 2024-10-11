@@ -10,8 +10,8 @@ import {
 import { Close } from '@openedx/paragon/icons';
 
 import { clearMessages } from '../../data/thunks';
-import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
-import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
+import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from '../../data/optimizely';
+import showSurvey from '../../utils/surveyMonkey';
 
 import APIError from '../APIError';
 import ChatBox from '../ChatBox';
@@ -79,11 +79,7 @@ const Sidebar = ({
     setIsOpen(false);
 
     if (messageList.length >= 2) {
-      if (enabledExperiment && variationKey === OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT) {
-        showVariationSurvey();
-      } else {
-        showControlSurvey();
-      }
+      showSurvey();
     }
   };
 
