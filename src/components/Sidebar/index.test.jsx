@@ -6,14 +6,11 @@ import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
-import { showControlSurvey, showVariationSurvey } from '../../utils/surveyMonkey';
+import showSurvey from '../../utils/surveyMonkey';
 
 import Sidebar from '.';
 
-jest.mock('../../utils/surveyMonkey', () => ({
-  showControlSurvey: jest.fn(),
-  showVariationSurvey: jest.fn(),
-}));
+jest.mock('../../utils/surveyMonkey', () => jest.fn());
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendTrackEvent: jest.fn(),
@@ -124,23 +121,7 @@ describe('<Sidebar />', () => {
       }],
     };
 
-    it('should call showVariationSurvey if experiment is enabled', () => {
-      usePromptExperimentDecision.mockReturnValue([{
-        enabled: true,
-        variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
-      }]);
-
-      render(undefined, defaultState);
-
-      act(() => {
-        screen.queryByTestId('close-button').click();
-      });
-
-      expect(showVariationSurvey).toHaveBeenCalled();
-      expect(showControlSurvey).not.toHaveBeenCalled();
-    });
-
-    it('should call showControlSurvey if experiment disabled', () => {
+    it('should call showSurvey', () => {
       render(undefined, {
         ...defaultState,
         experiments: {},
@@ -150,8 +131,7 @@ describe('<Sidebar />', () => {
         screen.queryByTestId('close-button').click();
       });
 
-      expect(showControlSurvey).toHaveBeenCalled();
-      expect(showVariationSurvey).not.toHaveBeenCalled();
+      expect(showSurvey).toHaveBeenCalled();
     });
 
     it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
