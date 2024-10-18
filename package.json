@@ -40,7 +40,7 @@
     "url": "https://github.com/edx/frontend-lib-learning-assistant/issues"
   },
   "dependencies": {
-    "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
+    "@edx/brand": "npm:@openedx/brand-openedx@^1.2.2",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
     "@fortawesome/free-brands-svg-icons": "5.15.4",
     "@fortawesome/free-regular-svg-icons": "5.15.4",
