@@ -6,9 +6,11 @@ import { updateSidebarIsOpen, getIsEnabled } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 import { ExperimentsProvider } from '../experiments';
+import { useMessageHistory } from '../hooks';
 
 const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const dispatch = useDispatch();
+  useMessageHistory(courseId);
 
   const {
     isEnabled,
