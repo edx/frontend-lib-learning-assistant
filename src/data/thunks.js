@@ -83,7 +83,6 @@ export function clearMessages() {
 
 export function getLearningAssistantMessageHistory(courseId) {
   return async (dispatch) => {
-    dispatch(resetApiError());
     dispatch(setApiIsLoading(true));
 
     try {
@@ -102,7 +101,7 @@ export function getLearningAssistantMessageHistory(courseId) {
         dispatch(setDisclosureAcknowledged(true));
       }
     } catch (e) {
-      dispatch(setApiError());
+      // If fetching the messages fail, we just won't show it.
     }
 
     dispatch(setApiIsLoading(false));
