@@ -9,6 +9,7 @@ import Xpert from './Xpert';
 import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
 import { usePromptExperimentDecision } from '../experiments';
+import { useMessageHistory } from '../hooks';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
@@ -19,6 +20,8 @@ jest.mock('../experiments', () => ({
   ExperimentsProvider: ({ children }) => children,
   usePromptExperimentDecision: jest.fn(),
 }));
+
+jest.mock('../hooks');
 
 const initialState = {
   learningAssistant: {
@@ -75,6 +78,11 @@ test('initial load displays correct elements', async () => {
 
   // assert that UI elements in the sidebar are not in the DOM
   assertSidebarElementsNotInDOM();
+});
+test('calls useMessageHistory() hook', () => {
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
+
+  expect(useMessageHistory).toHaveBeenCalledWith(courseId);
 });
 test('clicking the call to action dismiss button removes the message', async () => {
   const user = userEvent.setup();
