@@ -11,7 +11,10 @@ jest.mock('react-redux', () => ({
   useDispatch: () => mockDispatch,
 }));
 
-jest.mock('../data/thunks');
+const getLearningAssistantMessageHistorySignature = { getLearningAssistantMessageHistory: 'getLearningAssistantMessageHistory' };
+jest.mock('../data/thunks', () => ({
+  getLearningAssistantMessageHistory: jest.fn().mockReturnValue(getLearningAssistantMessageHistorySignature),
+}));
 
 describe('Learning Assistant Message History Hooks', () => {
   afterEach(() => {
@@ -33,6 +36,7 @@ describe('Learning Assistant Message History Hooks', () => {
       renderTestHook(fakeCourseId, true);
 
       expect(mockDispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatch).toHaveBeenCalledWith(getLearningAssistantMessageHistorySignature);
       expect(getLearningAssistantMessageHistory).toHaveBeenCalledWith(fakeCourseId);
     });
 
