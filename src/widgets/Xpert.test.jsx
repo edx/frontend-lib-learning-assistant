@@ -9,6 +9,7 @@ import Xpert from './Xpert';
 import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
 import { usePromptExperimentDecision } from '../experiments';
+import { useMessageHistory } from '../hooks';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
@@ -19,6 +20,8 @@ jest.mock('../experiments', () => ({
   ExperimentsProvider: ({ children }) => children,
   usePromptExperimentDecision: jest.fn(),
 }));
+
+jest.mock('../hooks');
 
 const initialState = {
   learningAssistant: {
@@ -46,7 +49,7 @@ const assertSidebarElementsNotInDOM = () => {
 
 beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
+  jest.spyOn(api, 'fetchChatResponse').mockResolvedValue(responseMessage);
   jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: true });
   usePromptExperimentDecision.mockReturnValue([]);
 
@@ -75,6 +78,11 @@ test('initial load displays correct elements', async () => {
 
   // assert that UI elements in the sidebar are not in the DOM
   assertSidebarElementsNotInDOM();
+});
+test('calls useMessageHistory() hook', () => {
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
+
+  expect(useMessageHistory).toHaveBeenCalledWith(courseId);
 });
 test('clicking the call to action dismiss button removes the message', async () => {
   const user = userEvent.setup();
@@ -165,7 +173,7 @@ test('response text appears as message in the sidebar', async () => {
   // re-mock the fetchChatResponse API function so that we can assert that the
   // responseMessage appears in the DOM
   const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'default').mockResolvedValue(responseMessage);
+  jest.spyOn(api, 'fetchChatResponse').mockResolvedValue(responseMessage);
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
 
@@ -189,7 +197,7 @@ test('clicking the clear button clears messages in the sidebar', async () => {
   // re-mock the fetchChatResponse API function so that we can assert that the
   // responseMessage appears in the DOM and then is successfully cleared
   const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'default').mockImplementation(() => responseMessage);
+  jest.spyOn(api, 'fetchChatResponse').mockImplementation(() => responseMessage);
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
 

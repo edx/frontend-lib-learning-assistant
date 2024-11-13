@@ -2,7 +2,7 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
-import fetchChatResponse, { fetchLearningAssistantEnabled } from './api';
+import { fetchChatResponse, fetchLearningAssistantMessageHistory, fetchLearningAssistantEnabled } from './api';
 import {
   setCurrentMessage,
   clearCurrentMessage,
@@ -78,6 +78,33 @@ export function clearMessages() {
   return (dispatch) => {
     dispatch(resetMessages());
     dispatch(resetApiError());
+  };
+}
+
+export function getLearningAssistantMessageHistory(courseId) {
+  return async (dispatch) => {
+    dispatch(setApiIsLoading(true));
+
+    try {
+      const rawMessageList = await fetchLearningAssistantMessageHistory(courseId);
+
+      if (rawMessageList.length) {
+        const messageList = rawMessageList
+          .map(({ timestamp, ...msg }) => ({
+            ...msg,
+            timestamp: new Date(timestamp), // Parse ISO time to Date()
+          }));
+
+        dispatch(setMessageList({ messageList }));
+
+        // If it has chat history, then we assume the user already aknowledged.
+        dispatch(setDisclosureAcknowledged(true));
+      }
+    } catch (e) {
+      // If fetching the messages fail, we just won't show it.
+    }
+
+    dispatch(setApiIsLoading(false));
   };
 }
 

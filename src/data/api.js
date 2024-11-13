@@ -30,5 +30,15 @@ async function fetchLearningAssistantEnabled(courseId) {
   return data;
 }
 
-export default fetchChatResponse;
-export { fetchLearningAssistantEnabled };
+async function fetchLearningAssistantMessageHistory(courseId) {
+  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/history`);
+
+  const { data } = await getAuthenticatedHttpClient().get(url.href);
+  return data;
+}
+
+export {
+  fetchChatResponse,
+  fetchLearningAssistantEnabled,
+  fetchLearningAssistantMessageHistory,
+};
