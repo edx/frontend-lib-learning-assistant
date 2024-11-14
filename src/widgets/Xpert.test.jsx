@@ -44,7 +44,6 @@ const assertSidebarElementsNotInDOM = () => {
 
   expect(screen.queryByRole('button', { name: 'submit' })).not.toBeInTheDocument();
   expect(screen.queryByTestId('close-button')).not.toBeInTheDocument();
-  expect(screen.queryByRole('button', { name: 'clear' })).not.toBeInTheDocument();
 };
 
 beforeEach(() => {
@@ -115,7 +114,6 @@ test('clicking the call to action opens the sidebar', async () => {
   expect(screen.getByRole('textbox')).toBeVisible();
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
-  expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
 
   // assert that text input has focus
   expect(screen.getByRole('textbox')).toHaveFocus();
@@ -135,7 +133,6 @@ test('clicking the toggle button opens the sidebar', async () => {
   expect(screen.getByRole('textbox')).toBeVisible();
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
-  expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
 
   // assert that text input has focus
   expect(screen.getByRole('textbox')).toHaveFocus();
@@ -189,34 +186,6 @@ test('response text appears as message in the sidebar', async () => {
 
   await screen.findByText(responseMessage.content);
   expect(screen.getByText(responseMessage.content)).toBeInTheDocument();
-});
-test('clicking the clear button clears messages in the sidebar', async () => {
-  const user = userEvent.setup();
-  const userMessage = 'Hello, Xpert!';
-
-  // re-mock the fetchChatResponse API function so that we can assert that the
-  // responseMessage appears in the DOM and then is successfully cleared
-  const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'fetchChatResponse').mockImplementation(() => responseMessage);
-
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
-
-  // wait for button to appear
-  await screen.findByTestId('toggle-button');
-
-  await user.click(screen.queryByTestId('toggle-button'));
-
-  // type the user message
-  const input = screen.getByRole('textbox');
-  await user.type(input, userMessage);
-  await user.click(screen.getByRole('button', { name: 'submit' }));
-
-  await screen.findByText(responseMessage.content);
-
-  await user.click(screen.getByRole('button', { name: 'clear' }));
-
-  expect(screen.queryByText(userMessage)).not.toBeInTheDocument();
-  expect(screen.queryByText(responseMessage.content)).not.toBeInTheDocument();
 });
 test('clicking the close button closes the sidebar', async () => {
   const user = userEvent.setup();
@@ -307,35 +276,6 @@ test('error message should disappear when dismissed', async () => {
   await user.click(screen.getByText('Dismiss'));
   expect(screen.queryByText('Please try again by sending another question.')).not.toBeInTheDocument();
 });
-test('error message should disappear when messages cleared', async () => {
-  const user = userEvent.setup();
-
-  const errorState = {
-    learningAssistant: {
-      currentMessage: '',
-      messageList: [],
-      apiIsLoading: false,
-      apiError: true,
-      // TEMPORARY: This is simply to ensure that the tests pass by hiding the disclosure.
-      //            I will remove this and write tests in a future pull request.
-      disclosureAcknowledged: true,
-      sidebarIsOpen: false,
-    },
-  };
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: errorState });
-
-  // wait for button to appear
-  await screen.findByTestId('toggle-button');
-
-  await user.click(screen.queryByTestId('toggle-button'));
-
-  // assert that error message exists
-  expect(screen.queryByText('Please try again by sending another question.')).toBeInTheDocument();
-
-  // clear messages, assert that error message disappears
-  await user.click(screen.getByText('Clear'));
-  expect(screen.queryByText('Please try again by sending another question.')).not.toBeInTheDocument();
-});
 test('popup modal should open chat', async () => {
   const user = userEvent.setup();
   window.localStorage.clear();
@@ -357,7 +297,6 @@ test('popup modal should open chat', async () => {
   expect(screen.getByRole('textbox')).toBeVisible();
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
-  expect(screen.getByRole('button', { name: 'clear' })).toBeVisible();
 });
 test('popup modal should close and display CTA', async () => {
   const user = userEvent.setup();
