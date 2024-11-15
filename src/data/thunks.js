@@ -6,7 +6,6 @@ import { fetchChatResponse, fetchLearningAssistantMessageHistory, fetchLearningA
 import {
   setCurrentMessage,
   clearCurrentMessage,
-  resetMessages,
   setMessageList,
   setApiError,
   setApiIsLoading,
@@ -71,13 +70,6 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
       dispatch(setApiError());
       dispatch(setApiIsLoading(false));
     }
-  };
-}
-
-export function clearMessages() {
-  return (dispatch) => {
-    dispatch(resetMessages());
-    dispatch(resetApiError());
   };
 }
 

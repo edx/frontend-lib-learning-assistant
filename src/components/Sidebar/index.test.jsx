@@ -1,11 +1,9 @@
 import React from 'react';
 import { screen, act } from '@testing-library/react';
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
 import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
-import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY, OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS } from '../../data/optimizely';
 import showSurvey from '../../utils/surveyMonkey';
 
 import Sidebar from '.';
@@ -33,11 +31,6 @@ jest.mock('react-redux', () => ({
 
 jest.mock('../../experiments', () => ({
   usePromptExperimentDecision: jest.fn(),
-}));
-
-const clearMessagesAction = 'clear-messages-action';
-jest.mock('../../data/thunks', () => ({
-  clearMessages: () => 'clear-messages-action',
 }));
 
 const defaultProps = {
@@ -88,17 +81,6 @@ describe('<Sidebar />', () => {
       render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
     });
-
-    it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
-      render(undefined, { disclosureAcknowledged: true });
-
-      act(() => {
-        screen.queryByTestId('sidebar-clear-btn').click();
-      });
-
-      expect(mockDispatch).toHaveBeenCalledWith(clearMessagesAction);
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.clear', { course_id: defaultProps.courseId });
-    });
   });
 
   describe('when it\'s not open', () => {
@@ -132,29 +114,6 @@ describe('<Sidebar />', () => {
       });
 
       expect(showSurvey).toHaveBeenCalled();
-    });
-
-    it('should dispatch clearMessages() and call sendTrackEvent() with the expected props on clear', () => {
-      usePromptExperimentDecision.mockReturnValue([{
-        enabled: true,
-        variationKey: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
-      }]);
-
-      render(undefined, {
-        ...defaultState,
-        disclosureAcknowledged: true,
-      });
-
-      act(() => {
-        screen.queryByTestId('sidebar-clear-btn').click();
-      });
-
-      expect(mockDispatch).toHaveBeenCalledWith(clearMessagesAction);
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.clear', {
-        course_id: defaultProps.courseId,
-        experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
-        variation_key: OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
-      });
     });
   });
 });

@@ -1,16 +1,12 @@
 import React, { useRef, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
-  Button,
   Icon,
   IconButton,
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
-import { clearMessages } from '../../data/thunks';
-import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from '../../data/optimizely';
 import showSurvey from '../../utils/surveyMonkey';
 
 import APIError from '../APIError';
@@ -18,7 +14,6 @@ import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
 import MessageForm from '../MessageForm';
 import './Sidebar.scss';
-import { usePromptExperimentDecision } from '../../experiments';
 
 const Sidebar = ({
   courseId,
@@ -32,14 +27,6 @@ const Sidebar = ({
     messageList,
   } = useSelector(state => state.learningAssistant);
   const chatboxContainerRef = useRef(null);
-  const dispatch = useDispatch();
-
-  const [decision] = usePromptExperimentDecision();
-  const { enabled: enabledExperiment, variationKey } = decision || {};
-  const experimentPayload = enabledExperiment ? {
-    experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
-    variation_key: variationKey,
-  } : {};
 
   // this use effect is intended to scroll to the bottom of the chat window, in the case
   // that a message is larger than the chat window height.
@@ -83,14 +70,6 @@ const Sidebar = ({
     }
   };
 
-  const handleClearMessages = () => {
-    dispatch(clearMessages());
-    sendTrackEvent('edx.ui.lms.learning_assistant.clear', {
-      course_id: courseId,
-      ...experimentPayload,
-    });
-  };
-
   const getMessageForm = () => (
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
@@ -120,18 +99,6 @@ const Sidebar = ({
         )
       }
       {getMessageForm()}
-      <div className="d-flex justify-content-start">
-        <Button
-          className="clear mx-2 mb-2 border-0"
-          onClick={handleClearMessages}
-          aria-label="clear"
-          variant="primary"
-          type="button"
-          data-testid="sidebar-clear-btn"
-        >
-          Clear
-        </Button>
-      </div>
     </div>
   );
 
