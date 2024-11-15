@@ -1,0 +1,20 @@
+@use '../../utils/variables';
+
+.message-divider {
+  display: flex;
+  font-size: 15px;
+}
+.message-divider:before, .message-divider:after{
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid;
+  margin: auto;
+}
+.message-divider:before {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.message-divider:after {
+  margin-right: 10px;
+  margin-left: 10px;
+}
