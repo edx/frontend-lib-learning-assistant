@@ -11,6 +11,11 @@ export const initialState = {
   disclosureAcknowledged: false,
   sidebarIsOpen: false,
   isEnabled: false,
+  auditTrial: {
+    trialExists: false,
+    daysRemaining: 0,
+    trialCreated: null,  // TODO: what do we use for a datetime value here?
+  },
 };
 
 export const learningAssistantSlice = createSlice({
@@ -43,6 +48,9 @@ export const learningAssistantSlice = createSlice({
     },
     setIsEnabled: (state, { payload }) => {
       state.isEnabled = payload;
+    },
+    setAuditTrial: (state, { payload }) => {
+      state.auditTrial = payload;
     },
   },
 });

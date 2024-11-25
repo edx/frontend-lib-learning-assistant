@@ -2,7 +2,7 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
-import { fetchChatResponse, fetchLearningAssistantMessageHistory, fetchLearningAssistantEnabled } from './api';
+import { fetchChatResponse, fetchLearningAssistantMessageHistory, fetchLearningAssistantEnabled, fetchLearningAssistantAuditTrial } from './api';
 import {
   setCurrentMessage,
   clearCurrentMessage,
@@ -13,6 +13,7 @@ import {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
+  setAuditTrial,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 
@@ -129,6 +130,17 @@ export function getIsEnabled(courseId) {
     try {
       const data = await fetchLearningAssistantEnabled(courseId);
       dispatch(setIsEnabled(data.enabled));
+    } catch (error) {
+      dispatch(setApiError());
+    }
+  };
+}
+
+export function getIsAuditTrial(userId) {
+  return async (dispatch) => {
+    try {
+      const data = await fetchLearningAssistantAuditTrial(userId);
+      dispatch(setAuditTrial(data.enabled));
     } catch (error) {
       dispatch(setApiError());
     }
