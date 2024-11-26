@@ -136,11 +136,13 @@ export function getIsEnabled(courseId) {
   };
 }
 
-export function getIsAuditTrial(userId) {
+export function getAuditTrial(userId) {
   return async (dispatch) => {
     try {
       const data = await fetchLearningAssistantAuditTrial(userId);
-      dispatch(setAuditTrial(data.enabled));
+      if (!_.isEmpty(data)) {  // If returned data is not empty
+        dispatch(setAuditTrial(data));
+      }
     } catch (error) {
       dispatch(setApiError());
     }

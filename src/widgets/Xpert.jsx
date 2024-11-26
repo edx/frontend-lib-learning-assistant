@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { updateSidebarIsOpen, getIsEnabled, getIsAuditTrial } from '../data/thunks';
+import { updateSidebarIsOpen, getIsEnabled, getAuditTrial } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 import { ExperimentsProvider } from '../experiments';
@@ -15,11 +15,6 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const {
     isEnabled,
     sidebarIsOpen,
-    // TODO: How do we plan to use this value to gate things?
-    // i.e. how to use values such as:
-    //   auditTrial.trialExists
-    // auditTrial.daysRemaining
-    // auditTrial.trialCreated
     auditTrial,
   } = useSelector(state => state.learningAssistant);
 
@@ -32,8 +27,16 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   }, [dispatch, courseId]);
 
   useEffect(() => {
-    dispatch(getIsAuditTrial(userId));
+    dispatch(getAuditTrial(userId));
   }, [dispatch, userId]);
+
+  const isAuditTrialNotExpired = () => {
+    const auditTrialExpired = (Date.now() - auditTrial.expirationDate) > 0;
+    if (auditTrialExpired) {
+      return true
+    }
+    return false
+  }
 
   return isEnabled ? (
     <ExperimentsProvider>
@@ -49,6 +52,7 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
           isOpen={sidebarIsOpen}
           setIsOpen={setSidebarIsOpen}
           unitId={unitId}
+          auditTrialNotExpired={isAuditTrialNotExpired}
         />
       </>
     </ExperimentsProvider>

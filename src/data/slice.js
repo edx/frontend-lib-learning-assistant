@@ -12,9 +12,8 @@ export const initialState = {
   sidebarIsOpen: false,
   isEnabled: false,
   auditTrial: {
-    trialExists: false,
-    daysRemaining: 0,
-    trialCreated: null,  // TODO: what do we use for a datetime value here?
+    startDate: 0,
+    expirationDate: null,  // TODO: what do we use for a datetime value here?
   },
 };
 
@@ -50,7 +49,8 @@ export const learningAssistantSlice = createSlice({
       state.isEnabled = payload;
     },
     setAuditTrial: (state, { payload }) => {
-      state.auditTrial = payload;
+      state.auditTrial.startDate = payload.start_date;
+      state.auditTrial.expirationDate = payload.expiration_date;
     },
   },
 });

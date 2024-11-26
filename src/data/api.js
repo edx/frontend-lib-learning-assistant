@@ -30,30 +30,16 @@ async function fetchLearningAssistantEnabled(courseId) {
   return data;
 }
 
-
-async function fetchLearningAssistantAuditTrial(userId) {
-  // TODO: Insert correct URL once get endpoint is implemented.
-  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${userId}/`);
-
-  const { data } = await getAuthenticatedHttpClient().get(url.href);
-  return data;
-}
-
-
-async function fetchLearningAssistantAuditTrial(userId) {
-  // TODO: Insert correct URL once get endpoint is implemented.
-  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${userId}/`);
-
-  const { data } = await getAuthenticatedHttpClient().get(url.href);
-  // TODO: Extract below values from data:
-    // Whether or not a trial exists
-    // Days remaining in trial
-    // When trial was created
-  return data;
-}
-
 async function fetchLearningAssistantMessageHistory(courseId) {
   const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/history`);
+
+  const { data } = await getAuthenticatedHttpClient().get(url.href);
+  return data;
+}
+
+async function fetchLearningAssistantAuditTrial(userId) {
+  // TODO: Insert correct URL once get endpoint is implemented.
+  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/data/${userId}/`);
 
   const { data } = await getAuthenticatedHttpClient().get(url.href);
   return data;

@@ -20,7 +20,8 @@ const Sidebar = ({
   isOpen,
   setIsOpen,
   unitId,
-}) => {
+  auditTrialNotExpired
+  &, > {
   const {
     apiError,
     disclosureAcknowledged,
@@ -98,7 +99,10 @@ const Sidebar = ({
           </div>
         )
       }
-      {getMessageForm()}
+      {
+        auditTrialNotExpired
+        && getMessageForm()
+      }
     </div>
   );
 
