@@ -145,8 +145,14 @@ export function getAuditTrial(userId) {
   return async (dispatch) => {
     try {
       const data = await fetchLearningAssistantAuditTrial(userId);
+      console.log("DATA:", data)
+      console.log("data.start_date:", data.start_date)
+      console.log("data.expiration_date:", data.expiration_date)
       // If returned data is not empty
-      if (!_.isEmpty(data)) { // eslint-disable-line no-undef
+      if (Object.keys(data).length !== 0) { // eslint-disable-line no-undef
+        console.log("SETTING!")
+        // TODO: Why isn't the dispatch below setting the state?
+        debugger;
         dispatch(setAuditTrial(data));
       }
     } catch (error) {

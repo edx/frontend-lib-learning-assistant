@@ -41,10 +41,7 @@ const initialState = {
     disclosureAcknowledged: true,
     sidebarIsOpen: false,
 
-    auditTrial: {
-      startDate: Date.now(),
-      expirationDate: Date(8.64e15),
-    },
+
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -62,6 +59,10 @@ beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'fetchChatResponse').mockResolvedValue(responseMessage);
   jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: true });
+  jest.spyOn(api, 'fetchLearningAssistantAuditTrial').mockResolvedValue({
+    start_date: '2024-12-02T14:59:16.148236Z',
+    expiration_date: '9999-12-16T14:59:16.148236Z',
+  });
   usePromptExperimentDecision.mockReturnValue([]);
 
   window.localStorage.clear();
@@ -127,9 +128,6 @@ test('clicking the call to action opens the sidebar', async () => {
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
 
-  // API error caused by... getAuditTrial in thunks.
-  // I need to mock what's returned by fetchLearningAssistantAuditTrial...
-  // assert that text input has focus
   expect(screen.getByRole('textbox')).toHaveFocus();
 });
 test('clicking the toggle button opens the sidebar', async () => {

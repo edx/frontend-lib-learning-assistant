@@ -31,6 +31,8 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   useEffect(() => {
     dispatch(getAuditTrial(userId));
   }, [dispatch, userId]);
+  console.log("auditTrial:", auditTrial);
+  console.log("auditTrial.expirationDate:", auditTrial.expirationDate);
 
   // NOTE: This value can be used later on if/when we pass the enrollment mode to this componentn
   const isAuditTrialNotExpired = () => { // eslint-disable-line no-unused-vars

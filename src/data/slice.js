@@ -49,8 +49,9 @@ export const learningAssistantSlice = createSlice({
       state.isEnabled = payload;
     },
     setAuditTrial: (state, { payload }) => {
-      state.auditTrial.startDate = payload.start_date;
-      state.auditTrial.expirationDate = payload.expiration_date;
+      state.auditTrial = payload;
+      // state.auditTrial.startDate = payload.start_date;
+      // state.auditTrial.expirationDate = payload.expiration_date;
     },
   },
 });
