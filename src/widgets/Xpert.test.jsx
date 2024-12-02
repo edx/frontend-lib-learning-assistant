@@ -10,6 +10,7 @@ import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
 import { usePromptExperimentDecision } from '../experiments';
 import { useMessageHistory } from '../hooks';
+// import { updateSidebarIsOpen, getIsEnabled, getAuditTrial } from '../data/thunks';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
@@ -23,6 +24,12 @@ jest.mock('../experiments', () => ({
 
 jest.mock('../hooks');
 
+// TODO: Fix whatever the heck is going on here.
+// jest.mock('../data/thunks', () => ({
+//   getIsEnabled: jest.fn(),
+//   getAuditTrial: jest.fn(),
+// }));
+
 const initialState = {
   learningAssistant: {
     currentMessage: '',
@@ -33,6 +40,11 @@ const initialState = {
     //            I will remove this and write tests in a future pull request.
     disclosureAcknowledged: true,
     sidebarIsOpen: false,
+
+    auditTrial: {
+      startDate: Date.now(),
+      expirationDate: Date(8.64e15),
+    },
   },
 };
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -115,6 +127,8 @@ test('clicking the call to action opens the sidebar', async () => {
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
 
+  // API error caused by... getAuditTrial in thunks.
+  // I need to mock what's returned by fetchLearningAssistantAuditTrial...
   // assert that text input has focus
   expect(screen.getByRole('textbox')).toHaveFocus();
 });

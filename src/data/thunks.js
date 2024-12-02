@@ -2,7 +2,12 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
-import { fetchChatResponse, fetchLearningAssistantMessageHistory, fetchLearningAssistantEnabled, fetchLearningAssistantAuditTrial } from './api';
+import {
+  fetchChatResponse,
+  fetchLearningAssistantMessageHistory,
+  fetchLearningAssistantEnabled,
+  fetchLearningAssistantAuditTrial,
+} from './api';
 import {
   setCurrentMessage,
   clearCurrentMessage,
@@ -140,7 +145,8 @@ export function getAuditTrial(userId) {
   return async (dispatch) => {
     try {
       const data = await fetchLearningAssistantAuditTrial(userId);
-      if (!_.isEmpty(data)) {  // If returned data is not empty
+      // If returned data is not empty
+      if (!_.isEmpty(data)) { // eslint-disable-line no-undef
         dispatch(setAuditTrial(data));
       }
     } catch (error) {

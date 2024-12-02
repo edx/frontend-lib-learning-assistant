@@ -12,8 +12,8 @@ export const initialState = {
   sidebarIsOpen: false,
   isEnabled: false,
   auditTrial: {
-    startDate: 0,
-    expirationDate: null,  // TODO: what do we use for a datetime value here?
+    startDate: null,
+    expirationDate: null,
   },
 };
 
@@ -65,6 +65,7 @@ export const {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
+  setAuditTrial,
 } = learningAssistantSlice.actions;
 
 export const {

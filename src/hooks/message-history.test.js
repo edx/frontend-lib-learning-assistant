@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks'; // eslint-disable-line import/no-unresolved
 
 import { useSelector } from 'react-redux';
 import { useMessageHistory } from './message-history';

@@ -39,6 +39,7 @@ async function fetchLearningAssistantMessageHistory(courseId) {
 
 async function fetchLearningAssistantAuditTrial(userId) {
   // TODO: Insert correct URL once get endpoint is implemented.
+  console.log("\n\n\n\nUSER ID:", userId);
   const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/data/${userId}/`);
 
   const { data } = await getAuthenticatedHttpClient().get(url.href);
