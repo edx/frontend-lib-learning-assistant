@@ -4,9 +4,7 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
 import {
   fetchChatResponse,
-  fetchLearningAssistantMessageHistory,
-  fetchLearningAssistantEnabled,
-  fetchLearningAssistantAuditTrial,
+  fetchLearningAssistantSummary,
 } from './api';
 import {
   setCurrentMessage,
@@ -79,33 +77,6 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
   };
 }
 
-export function getLearningAssistantMessageHistory(courseId) {
-  return async (dispatch) => {
-    dispatch(setApiIsLoading(true));
-
-    try {
-      const rawMessageList = await fetchLearningAssistantMessageHistory(courseId);
-
-      if (rawMessageList.length) {
-        const messageList = rawMessageList
-          .map(({ timestamp, ...msg }) => ({
-            ...msg,
-            timestamp: new Date(timestamp), // Parse ISO time to Date()
-          }));
-
-        dispatch(setMessageList({ messageList }));
-
-        // If it has chat history, then we assume the user already aknowledged.
-        dispatch(setDisclosureAcknowledged(true));
-      }
-    } catch (e) {
-      // If fetching the messages fail, we just won't show it.
-    }
-
-    dispatch(setApiIsLoading(false));
-  };
-}
-
 export function updateCurrentMessage(content) {
   return (dispatch) => {
     dispatch(setCurrentMessage({ currentMessage: content }));
@@ -130,32 +101,46 @@ export function updateSidebarIsOpen(isOpen) {
   };
 }
 
-export function getIsEnabled(courseId) {
+export function getLearningAssistantSummary(courseId) {
   return async (dispatch) => {
-    try {
-      const data = await fetchLearningAssistantEnabled(courseId);
-      dispatch(setIsEnabled(data.enabled));
-    } catch (error) {
-      dispatch(setApiError());
-    }
-  };
-}
+    dispatch(setApiIsLoading(true));
 
-export function getAuditTrial(courseId) {
-  return async (dispatch) => {
     try {
-      const data = await fetchLearningAssistantAuditTrial(courseId);
-      console.log("DATA:", data)
-      console.log("data.start_date:", data.start_date)
-      console.log("data.expiration_date:", data.expiration_date)
-      // If returned data is not empty
-      if (Object.keys(data).length !== 0) { // eslint-disable-line no-undef
-        console.log("SETTING!")
-        // TODO: FIGURE OUT how to sync the data from Michael's PR into this MFEs state...
-        dispatch(setAuditTrial(data));
+      const data = await fetchLearningAssistantSummary(courseId);
+
+      // Enabled
+      dispatch(setIsEnabled(data.enabled));
+
+      // Message History
+      const rawMessageList = data.message_history;
+
+      // If returned message history data is not empty
+      if (rawMessageList.length) {
+        const messageList = rawMessageList
+          .map(({ timestamp, ...msg }) => ({
+            ...msg,
+            // NOTE to self: can't store Date() objects in store: https://github.com/reduxjs/redux-toolkit/issues/456
+            timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
+          }));
+
+        dispatch(setMessageList({ messageList }));
+
+        // If it has chat history, then we assume the user already aknowledged.
+        dispatch(setDisclosureAcknowledged(true));
+      }
+
+      // Audit Trial
+      const auditTrial = data.audit_trial;
+
+      // If returned audit trial data is not empty
+      if (Object.keys(auditTrial).length !== 0) { // eslint-disable-line no-undef
+        dispatch(setAuditTrial(auditTrial));
       }
     } catch (error) {
+      // NOTE: When used to not show if fetching the messages failed
+      // But we do know since this endpoint is combined.
       dispatch(setApiError());
     }
+    dispatch(setApiIsLoading(false));
   };
 }

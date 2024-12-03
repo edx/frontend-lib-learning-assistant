@@ -23,22 +23,7 @@ async function fetchChatResponse(courseId, messageList, unitId, customQueryParam
   return data;
 }
 
-async function fetchLearningAssistantEnabled(courseId) {
-  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/enabled`);
-
-  const { data } = await getAuthenticatedHttpClient().get(url.href);
-  return data;
-}
-
-async function fetchLearningAssistantMessageHistory(courseId) {
-  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/history`);
-
-  const { data } = await getAuthenticatedHttpClient().get(url.href);
-  return data;
-}
-
-async function fetchLearningAssistantAuditTrial(courseId) {
-  // TODO: Insert correct URL once get endpoint is implemented.
+async function fetchLearningAssistantSummary(courseId) {
   const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/summary`);
 
   const { data } = await getAuthenticatedHttpClient().get(url.href);
@@ -47,7 +32,5 @@ async function fetchLearningAssistantAuditTrial(courseId) {
 
 export {
   fetchChatResponse,
-  fetchLearningAssistantAuditTrial,
-  fetchLearningAssistantEnabled,
-  fetchLearningAssistantMessageHistory,
+  fetchLearningAssistantSummary,
 };

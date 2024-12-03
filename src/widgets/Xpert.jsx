@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
-import { updateSidebarIsOpen, getIsEnabled, getAuditTrial } from '../data/thunks';
+import { updateSidebarIsOpen, getLearningAssistantSummary } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 import { ExperimentsProvider } from '../experiments';
-import { useMessageHistory } from '../hooks';
+// import { getLearningAssistantData } from '../hooks';
 
 const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const dispatch = useDispatch();
-  useMessageHistory(courseId);
+  // getLearningAssistantData(courseId);
 
   const {
     isEnabled,
@@ -24,11 +23,8 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   };
 
   useEffect(() => {
-    dispatch(getIsEnabled(courseId));
-    dispatch(getAuditTrial(courseId));
+    dispatch(getLearningAssistantSummary(courseId));
   }, [dispatch, courseId]);
-  console.log("auditTrial:", auditTrial);
-  console.log("auditTrial.expirationDate:", auditTrial.expirationDate);
 
   // NOTE: This value can be used later on if/when we pass the enrollment mode to this componentn
   const isAuditTrialNotExpired = () => { // eslint-disable-line no-unused-vars
