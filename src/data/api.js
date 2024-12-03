@@ -37,9 +37,9 @@ async function fetchLearningAssistantMessageHistory(courseId) {
   return data;
 }
 
-async function fetchLearningAssistantAuditTrial(userId) {
+async function fetchLearningAssistantAuditTrial(courseId) {
   // TODO: Insert correct URL once get endpoint is implemented.
-  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/data/${userId}/`);
+  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/summary`);
 
   const { data } = await getAuthenticatedHttpClient().get(url.href);
   return data;

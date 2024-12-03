@@ -10,7 +10,6 @@ import { ExperimentsProvider } from '../experiments';
 import { useMessageHistory } from '../hooks';
 
 const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
-  const { userId } = getAuthenticatedUser();
   const dispatch = useDispatch();
   useMessageHistory(courseId);
 
@@ -26,11 +25,8 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
 
   useEffect(() => {
     dispatch(getIsEnabled(courseId));
+    dispatch(getAuditTrial(courseId));
   }, [dispatch, courseId]);
-
-  useEffect(() => {
-    dispatch(getAuditTrial(userId));
-  }, [dispatch, userId]);
   console.log("auditTrial:", auditTrial);
   console.log("auditTrial.expirationDate:", auditTrial.expirationDate);
 
