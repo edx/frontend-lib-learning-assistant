@@ -2,15 +2,13 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { updateSidebarIsOpen, getLearningAssistantSummary } from '../data/thunks';
+import { updateSidebarIsOpen, getLearningAssistantChatSummary } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 import { ExperimentsProvider } from '../experiments';
-// import { getLearningAssistantData } from '../hooks';
 
 const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const dispatch = useDispatch();
-  // getLearningAssistantData(courseId);
 
   const {
     isEnabled,
@@ -23,13 +21,14 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   };
 
   useEffect(() => {
-    dispatch(getLearningAssistantSummary(courseId));
+    dispatch(getLearningAssistantChatSummary(courseId));
   }, [dispatch, courseId]);
 
   // NOTE: This value can be used later on if/when we pass the enrollment mode to this component
   const isAuditTrialNotExpired = () => { // eslint-disable-line no-unused-vars
-    const auditTrialExpired = (Date.now() - auditTrial.expirationDate) > 0;
-    if (auditTrialExpired) {
+    const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
+
+    if ((Date.now() - auditTrialExpirationDate) >= 0) {
       return true;
     }
     return false;

@@ -11,10 +11,7 @@ export const initialState = {
   disclosureAcknowledged: false,
   sidebarIsOpen: false,
   isEnabled: false,
-  auditTrial: {
-    startDate: null,
-    expirationDate: null,
-  },
+  auditTrial: {},
 };
 
 export const learningAssistantSlice = createSlice({

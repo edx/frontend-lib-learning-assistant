@@ -4,7 +4,7 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
 import {
   fetchChatResponse,
-  fetchLearningAssistantSummary,
+  fetchLearningAssistantChatSummary,
 } from './api';
 import {
   setCurrentMessage,
@@ -101,12 +101,12 @@ export function updateSidebarIsOpen(isOpen) {
   };
 }
 
-export function getLearningAssistantSummary(courseId) {
+export function getLearningAssistantChatSummary(courseId) {
   return async (dispatch) => {
     dispatch(setApiIsLoading(true));
 
     try {
-      const data = await fetchLearningAssistantSummary(courseId);
+      const data = await fetchLearningAssistantChatSummary(courseId);
 
       // Enabled
       dispatch(setIsEnabled(data.enabled));
@@ -132,12 +132,10 @@ export function getLearningAssistantSummary(courseId) {
       const auditTrial = data.audit_trial;
 
       // If returned audit trial data is not empty
-      if (Object.keys(auditTrial).length !== 0) { // eslint-disable-line no-undef
+      if (Object.keys(auditTrial).length !== 0) {
         dispatch(setAuditTrial(auditTrial));
       }
     } catch (error) {
-      // NOTE: When used to not show if fetching the messages failed
-      // But we do know since this endpoint is combined.
       dispatch(setApiError());
     }
     dispatch(setApiIsLoading(false));

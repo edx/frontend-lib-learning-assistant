@@ -45,7 +45,7 @@ const assertSidebarElementsNotInDOM = () => {
 
 beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'fetchLearningAssistantSummary').mockResolvedValue({
+  jest.spyOn(api, 'fetchLearningAssistantChatSummary').mockResolvedValue({
     enabled: true,
     message_history: responseMessage,
     audit_trial: {
@@ -63,7 +63,7 @@ beforeEach(() => {
 });
 
 test('doesn\'t load if not enabled', async () => {
-  jest.spyOn(api, 'fetchLearningAssistantSummary').mockResolvedValue({ enabled: false });
+  jest.spyOn(api, 'fetchLearningAssistantChatSummary').mockResolvedValue({ enabled: false });
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
 
@@ -316,7 +316,7 @@ test('popup modal should close and display CTA', async () => {
   expect(screen.queryByTestId('action-message')).toBeVisible();
 });
 test('survey monkey survey should appear after closing sidebar', async () => {
-  jest.spyOn(api, 'fetchLearningAssistantSummary').mockResolvedValue({
+  jest.spyOn(api, 'fetchLearningAssistantChatSummary').mockResolvedValue({
     enabled: true,
     message_history: [
       // A length >= 2 is required to load the survey

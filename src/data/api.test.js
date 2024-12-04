@@ -1,7 +1,7 @@
 /* eslint-disable no-import-assign */
 import * as auth from '@edx/frontend-platform/auth';
 
-import { fetchLearningAssistantSummary } from './api';
+import { fetchLearningAssistantChatSummary } from './api';
 
 jest.mock('@edx/frontend-platform/auth');
 
@@ -16,7 +16,7 @@ describe('API', () => {
     jest.restoreAllMocks();
   });
 
-  describe('fetchLearningAssistantSummary()', () => {
+  describe('fetchLearningAssistantChatSummary()', () => {
     const courseId = 'course-v1:edx+test+23';
     const apiPayload = {
       enabled: true,
@@ -50,7 +50,7 @@ describe('API', () => {
     });
 
     it('should call the endpoint and process the results', async () => {
-      const response = await fetchLearningAssistantSummary(courseId);
+      const response = await fetchLearningAssistantChatSummary(courseId);
 
       expect(response).toEqual(apiPayload);
       expect(mockGet).toHaveBeenCalledTimes(1);

@@ -1,6 +1,6 @@
-import { fetchLearningAssistantSummary } from './api';
+import { fetchLearningAssistantChatSummary } from './api';
 
-import { getLearningAssistantSummary } from './thunks';
+import { getLearningAssistantChatSummary } from './thunks';
 
 jest.mock('./api');
 
@@ -9,7 +9,7 @@ describe('Thunks unit tests', () => {
 
   afterEach(() => jest.resetAllMocks());
 
-  describe('getLearningAssistantSummary()', () => {
+  describe('getLearningAssistantChatSummary()', () => {
     const courseId = 'course-v1:edx+test+23';
 
     it('with message_history and audit_trial data returned, call all expected dispatches', async () => {
@@ -33,16 +33,16 @@ describe('Thunks unit tests', () => {
         },
       };
 
-      fetchLearningAssistantSummary.mockResolvedValue(apiResponse);
+      fetchLearningAssistantChatSummary.mockResolvedValue(apiResponse);
 
-      await getLearningAssistantSummary(courseId)(dispatch);
+      await getLearningAssistantChatSummary(courseId)(dispatch);
 
       expect(dispatch).toHaveBeenNthCalledWith(1, {
         type: 'learning-assistant/setApiIsLoading',
         payload: true,
       });
 
-      expect(fetchLearningAssistantSummary).toHaveBeenCalledWith(courseId);
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
 
       expect(dispatch).toHaveBeenNthCalledWith(2, {
         type: 'learning-assistant/setIsEnabled',
@@ -88,16 +88,16 @@ describe('Thunks unit tests', () => {
         },
       };
 
-      fetchLearningAssistantSummary.mockResolvedValue(apiResponse);
+      fetchLearningAssistantChatSummary.mockResolvedValue(apiResponse);
 
-      await getLearningAssistantSummary(courseId)(dispatch);
+      await getLearningAssistantChatSummary(courseId)(dispatch);
 
       expect(dispatch).toHaveBeenNthCalledWith(1, {
         type: 'learning-assistant/setApiIsLoading',
         payload: true,
       });
 
-      expect(fetchLearningAssistantSummary).toHaveBeenCalledWith(courseId);
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
 
       expect(dispatch).toHaveBeenNthCalledWith(2, {
         type: 'learning-assistant/setIsEnabled',
@@ -144,16 +144,16 @@ describe('Thunks unit tests', () => {
         audit_trial: {},
       };
 
-      fetchLearningAssistantSummary.mockResolvedValue(apiResponse);
+      fetchLearningAssistantChatSummary.mockResolvedValue(apiResponse);
 
-      await getLearningAssistantSummary(courseId)(dispatch);
+      await getLearningAssistantChatSummary(courseId)(dispatch);
 
       expect(dispatch).toHaveBeenNthCalledWith(1, {
         type: 'learning-assistant/setApiIsLoading',
         payload: true,
       });
 
-      expect(fetchLearningAssistantSummary).toHaveBeenCalledWith(courseId);
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
 
       expect(dispatch).toHaveBeenNthCalledWith(2, {
         type: 'learning-assistant/setIsEnabled',
@@ -182,16 +182,16 @@ describe('Thunks unit tests', () => {
     });
 
     it('when throwing on fetching, should set the loading state and throw error', async () => {
-      fetchLearningAssistantSummary.mockRejectedValue('Whoopsie!');
+      fetchLearningAssistantChatSummary.mockRejectedValue('Whoopsie!');
 
-      await getLearningAssistantSummary(courseId)(dispatch);
+      await getLearningAssistantChatSummary(courseId)(dispatch);
 
       expect(dispatch).toHaveBeenNthCalledWith(1, {
         type: 'learning-assistant/setApiIsLoading',
         payload: true,
       });
 
-      expect(fetchLearningAssistantSummary).toHaveBeenCalledWith(courseId);
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
 
       expect(dispatch).not.toHaveBeenCalledWith(
         expect.objectContaining({ type: 'learning-assistant/setMessageList' }),
