@@ -28,7 +28,7 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
   const isAuditTrialNotExpired = () => { // eslint-disable-line no-unused-vars
     const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
 
-    if ((Date.now() - auditTrialExpirationDate) >= 0) {
+    if ((Date.now() - auditTrialExpirationDate) > 0) {
       return true;
     }
     return false;
