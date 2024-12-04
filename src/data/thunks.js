@@ -119,7 +119,6 @@ export function getLearningAssistantSummary(courseId) {
         const messageList = rawMessageList
           .map(({ timestamp, ...msg }) => ({
             ...msg,
-            // NOTE to self: can't store Date() objects in store: https://github.com/reduxjs/redux-toolkit/issues/456
             timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
           }));
 

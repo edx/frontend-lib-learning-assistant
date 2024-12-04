@@ -24,7 +24,7 @@ async function fetchChatResponse(courseId, messageList, unitId, customQueryParam
 }
 
 async function fetchLearningAssistantSummary(courseId) {
-  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/summary`);
+  const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/chat-summary`);
 
   const { data } = await getAuthenticatedHttpClient().get(url.href);
   return data;

@@ -26,7 +26,7 @@ const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
     dispatch(getLearningAssistantSummary(courseId));
   }, [dispatch, courseId]);
 
-  // NOTE: This value can be used later on if/when we pass the enrollment mode to this componentn
+  // NOTE: This value can be used later on if/when we pass the enrollment mode to this component
   const isAuditTrialNotExpired = () => { // eslint-disable-line no-unused-vars
     const auditTrialExpired = (Date.now() - auditTrial.expirationDate) > 0;
     if (auditTrialExpired) {

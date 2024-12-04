@@ -54,7 +54,7 @@ describe('API', () => {
 
       expect(response).toEqual(apiPayload);
       expect(mockGet).toHaveBeenCalledTimes(1);
-      expect(mockGet).toHaveBeenCalledWith(`${CHAT_RESPONSE_URL}/${courseId}/summary`);
+      expect(mockGet).toHaveBeenCalledWith(`${CHAT_RESPONSE_URL}/${courseId}/chat-summary`);
     });
   });
 });
