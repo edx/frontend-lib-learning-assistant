@@ -13,6 +13,7 @@ import APIError from '../APIError';
 import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
 import MessageForm from '../MessageForm';
+import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './Sidebar.scss';
 
 const Sidebar = ({
@@ -76,14 +77,8 @@ const Sidebar = ({
 
   const getSidebar = () => (
     <div className="h-100 d-flex flex-column justify-content-stretch" data-testid="sidebar-xpert">
-      <div className="d-flex flex-column align-items-center p-3">
-        <h1 className="font-weight-bold mb-3">
-          Hi, I&apos;m Xpert!
-        </h1>
-        <p className="px-3 mb-0 text-center">
-          Stuck on a concept? Need more clarification on a complicated topic?
-          Let&apos;s chat!
-        </p>
+      <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
+        <XpertLogo />
       </div>
       <span className="separator" />
       <ChatBox
@@ -116,7 +111,7 @@ const Sidebar = ({
           alt="close"
           aria-label="close"
           variant="primary"
-          invertColors={!disclosureAcknowledged}
+          invertColors
           data-testid="close-button"
         />
         {disclosureAcknowledged ? (getSidebar()) : (<Disclosure>{getMessageForm()}</Disclosure>)}
