@@ -36,7 +36,7 @@ const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const unitId = 'block-v1:edX+DemoX+Demo_Course+type@unit+block@unit1';
 
 const assertSidebarElementsNotInDOM = () => {
-  expect(screen.queryByTestId('heading', { name: 'Hi, I\'m Xpert!' })).not.toBeInTheDocument();
+  expect(screen.queryByTestId('sidebar-xpert-header')).not.toBeInTheDocument();
   expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
 
   expect(screen.queryByRole('button', { name: 'submit' })).not.toBeInTheDocument();
@@ -109,7 +109,7 @@ test('clicking the call to action opens the sidebar', async () => {
   await user.click(screen.queryByTestId('message-button'));
 
   // assert that UI elements present in the sidebar are visible
-  expect(screen.getByRole('heading', { name: 'Hi, I\'m Xpert!' })).toBeVisible();
+  expect(screen.getByTestId('sidebar-xpert-header')).toBeVisible();
   expect(screen.getByRole('textbox')).toBeVisible();
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
@@ -127,7 +127,7 @@ test('clicking the toggle button opens the sidebar', async () => {
   await user.click(screen.queryByTestId('toggle-button'));
 
   // assert that UI elements present in the sidebar are visible
-  expect(screen.getByRole('heading', { name: 'Hi, I\'m Xpert!' })).toBeVisible();
+  expect(screen.getByTestId('sidebar-xpert-header')).toBeVisible();
   expect(screen.getByRole('textbox')).toBeVisible();
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
@@ -291,7 +291,7 @@ test('popup modal should open chat', async () => {
   await user.click(screen.queryByTestId('check-button'));
 
   // assert that UI elements present in the sidebar are visible
-  expect(screen.getByRole('heading', { name: 'Hi, I\'m Xpert!' })).toBeVisible();
+  expect(screen.getByTestId('sidebar-xpert-header')).toBeVisible();
   expect(screen.getByRole('textbox')).toBeVisible();
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
