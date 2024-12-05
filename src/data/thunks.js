@@ -46,7 +46,6 @@ export function addChatMessage(role, content, courseId, promptExperimentVariatio
       user_id: userId,
       timestamp: message.timestamp,
       role: message.role,
-      content: message.content,
       ...(promptExperimentVariationKey ? {
         experiment_name: OPTIMIZELY_PROMPT_EXPERIMENT_KEY,
         variation_key: promptExperimentVariationKey,
