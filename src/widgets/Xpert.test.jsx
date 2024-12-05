@@ -9,7 +9,6 @@ import Xpert from './Xpert';
 import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
 import { usePromptExperimentDecision } from '../experiments';
-import { useMessageHistory } from '../hooks';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
@@ -20,8 +19,6 @@ jest.mock('../experiments', () => ({
   ExperimentsProvider: ({ children }) => children,
   usePromptExperimentDecision: jest.fn(),
 }));
-
-jest.mock('../hooks');
 
 const initialState = {
   learningAssistant: {
@@ -48,8 +45,15 @@ const assertSidebarElementsNotInDOM = () => {
 
 beforeEach(() => {
   const responseMessage = createRandomResponseForTesting();
-  jest.spyOn(api, 'fetchChatResponse').mockResolvedValue(responseMessage);
-  jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: true });
+  jest.spyOn(api, 'fetchLearningAssistantChatSummary').mockResolvedValue({
+    enabled: true,
+    message_history: responseMessage,
+    audit_trial: {
+      start_date: '2024-12-02T14:59:16.148236Z',
+      expiration_date: '9999-12-16T14:59:16.148236Z',
+    },
+  });
+
   usePromptExperimentDecision.mockReturnValue([]);
 
   window.localStorage.clear();
@@ -59,7 +63,7 @@ beforeEach(() => {
 });
 
 test('doesn\'t load if not enabled', async () => {
-  jest.spyOn(api, 'fetchLearningAssistantEnabled').mockResolvedValue({ enabled: false });
+  jest.spyOn(api, 'fetchLearningAssistantChatSummary').mockResolvedValue({ enabled: false });
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
 
@@ -77,11 +81,6 @@ test('initial load displays correct elements', async () => {
 
   // assert that UI elements in the sidebar are not in the DOM
   assertSidebarElementsNotInDOM();
-});
-test('calls useMessageHistory() hook', () => {
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
-
-  expect(useMessageHistory).toHaveBeenCalledWith(courseId);
 });
 test('clicking the call to action dismiss button removes the message', async () => {
   const user = userEvent.setup();
@@ -115,7 +114,6 @@ test('clicking the call to action opens the sidebar', async () => {
   expect(screen.getByRole('button', { name: 'submit' })).toBeVisible();
   expect(screen.getByTestId('close-button')).toBeVisible();
 
-  // assert that text input has focus
   expect(screen.getByRole('textbox')).toHaveFocus();
 });
 test('clicking the toggle button opens the sidebar', async () => {
@@ -169,7 +167,7 @@ test('response text appears as message in the sidebar', async () => {
 
   // re-mock the fetchChatResponse API function so that we can assert that the
   // responseMessage appears in the DOM
-  const responseMessage = createRandomResponseForTesting();
+  const responseMessage = createRandomResponseForTesting()[0];
   jest.spyOn(api, 'fetchChatResponse').mockResolvedValue(responseMessage);
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
@@ -318,23 +316,22 @@ test('popup modal should close and display CTA', async () => {
   expect(screen.queryByTestId('action-message')).toBeVisible();
 });
 test('survey monkey survey should appear after closing sidebar', async () => {
+  jest.spyOn(api, 'fetchLearningAssistantChatSummary').mockResolvedValue({
+    enabled: true,
+    message_history: [
+      // A length >= 2 is required to load the survey
+      { role: 'user', content: 'hi', timestamp: new Date().toString() },
+      { role: 'user', content: 'hi', timestamp: new Date().toString() },
+    ],
+    audit_trial: {
+      start_date: '2024-12-02T14:59:16.148236Z',
+      expiration_date: '9999-12-16T14:59:16.148236Z',
+    },
+  });
   const survey = jest.spyOn(surveyMonkey, 'default').mockReturnValueOnce(1);
   const user = userEvent.setup();
 
-  const surveyState = {
-    learningAssistant: {
-      currentMessage: '',
-      messageList: [
-        { role: 'user', content: 'hi', timestamp: new Date() },
-        { role: 'user', content: 'hi', timestamp: new Date() + 1 },
-      ],
-      apiIsLoading: false,
-      apiError: false,
-      disclosureAcknowledged: true,
-      sidebarIsOpen: false,
-    },
-  };
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: surveyState });
+  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />);
 
   // wait for button to appear
   await screen.findByTestId('toggle-button');
@@ -345,6 +342,6 @@ test('survey monkey survey should appear after closing sidebar', async () => {
   await user.click(screen.queryByTestId('close-button'));
 
   // assert mock called
-  expect(survey).toBeCalledTimes(1);
+  expect(survey).toHaveBeenCalledTimes(1);
   survey.mockRestore();
 });

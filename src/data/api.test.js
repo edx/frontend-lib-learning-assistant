@@ -1,7 +1,7 @@
 /* eslint-disable no-import-assign */
 import * as auth from '@edx/frontend-platform/auth';
 
-import { fetchLearningAssistantMessageHistory } from './api';
+import { fetchLearningAssistantChatSummary } from './api';
 
 jest.mock('@edx/frontend-platform/auth');
 
@@ -16,38 +16,45 @@ describe('API', () => {
     jest.restoreAllMocks();
   });
 
-  describe('fetchLearningAssistantMessageHistory()', () => {
-    const fakeCourseId = 'course-v1:edx+test+23';
-    const apiPayload = [
-      {
-        role: 'user',
-        content: 'Marco',
-        timestamp: '2024-11-04T19:05:07.403363Z',
+  describe('fetchLearningAssistantChatSummary()', () => {
+    const courseId = 'course-v1:edx+test+23';
+    const apiPayload = {
+      enabled: true,
+      message_history: [
+        {
+          role: 'user',
+          content: 'Marco',
+          timestamp: '2024-11-04T19:05:07.403363Z',
+        },
+        {
+          role: 'assistant',
+          content: 'Polo',
+          timestamp: '2024-11-04T19:05:21.357636Z',
+        },
+      ],
+      audit_trial: {
+        start_date: '2024-12-02T14:59:16.148236Z',
+        expiration_date: '9999-12-16T14:59:16.148236Z',
       },
-      {
-        role: 'assistant',
-        content: 'Polo',
-        timestamp: '2024-11-04T19:05:21.357636Z',
-      },
-    ];
+    };
 
-    const fakeGet = jest.fn(async () => ({
+    const mockGet = jest.fn(async () => ({
       data: apiPayload,
-      catch: () => {},
+      catch: () => { },
     }));
 
     beforeEach(() => {
       auth.getAuthenticatedHttpClient = jest.fn(() => ({
-        get: fakeGet,
+        get: mockGet,
       }));
     });
 
     it('should call the endpoint and process the results', async () => {
-      const response = await fetchLearningAssistantMessageHistory(fakeCourseId);
+      const response = await fetchLearningAssistantChatSummary(courseId);
 
       expect(response).toEqual(apiPayload);
-      expect(fakeGet).toHaveBeenCalledTimes(1);
-      expect(fakeGet).toHaveBeenCalledWith(`${CHAT_RESPONSE_URL}/${fakeCourseId}/history`);
+      expect(mockGet).toHaveBeenCalledTimes(1);
+      expect(mockGet).toHaveBeenCalledWith(`${CHAT_RESPONSE_URL}/${courseId}/chat-summary`);
     });
   });
 });

@@ -2,7 +2,10 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
-import { fetchChatResponse, fetchLearningAssistantMessageHistory, fetchLearningAssistantEnabled } from './api';
+import {
+  fetchChatResponse,
+  fetchLearningAssistantChatSummary,
+} from './api';
 import {
   setCurrentMessage,
   clearCurrentMessage,
@@ -13,6 +16,7 @@ import {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
+  setAuditTrial,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 
@@ -73,33 +77,6 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
   };
 }
 
-export function getLearningAssistantMessageHistory(courseId) {
-  return async (dispatch) => {
-    dispatch(setApiIsLoading(true));
-
-    try {
-      const rawMessageList = await fetchLearningAssistantMessageHistory(courseId);
-
-      if (rawMessageList.length) {
-        const messageList = rawMessageList
-          .map(({ timestamp, ...msg }) => ({
-            ...msg,
-            timestamp: new Date(timestamp), // Parse ISO time to Date()
-          }));
-
-        dispatch(setMessageList({ messageList }));
-
-        // If it has chat history, then we assume the user already aknowledged.
-        dispatch(setDisclosureAcknowledged(true));
-      }
-    } catch (e) {
-      // If fetching the messages fail, we just won't show it.
-    }
-
-    dispatch(setApiIsLoading(false));
-  };
-}
-
 export function updateCurrentMessage(content) {
   return (dispatch) => {
     dispatch(setCurrentMessage({ currentMessage: content }));
@@ -124,13 +101,43 @@ export function updateSidebarIsOpen(isOpen) {
   };
 }
 
-export function getIsEnabled(courseId) {
+export function getLearningAssistantChatSummary(courseId) {
   return async (dispatch) => {
+    dispatch(setApiIsLoading(true));
+
     try {
-      const data = await fetchLearningAssistantEnabled(courseId);
+      const data = await fetchLearningAssistantChatSummary(courseId);
+
+      // Enabled
       dispatch(setIsEnabled(data.enabled));
+
+      // Message History
+      const rawMessageList = data.message_history;
+
+      // If returned message history data is not empty
+      if (rawMessageList.length) {
+        const messageList = rawMessageList
+          .map(({ timestamp, ...msg }) => ({
+            ...msg,
+            timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
+          }));
+
+        dispatch(setMessageList({ messageList }));
+
+        // If it has chat history, then we assume the user already aknowledged.
+        dispatch(setDisclosureAcknowledged(true));
+      }
+
+      // Audit Trial
+      const auditTrial = data.audit_trial;
+
+      // If returned audit trial data is not empty
+      if (Object.keys(auditTrial).length !== 0) {
+        dispatch(setAuditTrial(auditTrial));
+      }
     } catch (error) {
       dispatch(setApiError());
     }
+    dispatch(setApiIsLoading(false));
   };
 }

@@ -11,6 +11,7 @@ export const initialState = {
   disclosureAcknowledged: false,
   sidebarIsOpen: false,
   isEnabled: false,
+  auditTrial: {},
 };
 
 export const learningAssistantSlice = createSlice({
@@ -44,6 +45,9 @@ export const learningAssistantSlice = createSlice({
     setIsEnabled: (state, { payload }) => {
       state.isEnabled = payload;
     },
+    setAuditTrial: (state, { payload }) => {
+      state.auditTrial = payload;
+    },
   },
 });
 
@@ -57,6 +61,7 @@ export const {
   setDisclosureAcknowledged,
   setSidebarIsOpen,
   setIsEnabled,
+  setAuditTrial,
 } = learningAssistantSlice.actions;
 
 export const {

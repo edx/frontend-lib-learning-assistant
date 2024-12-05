@@ -48,7 +48,9 @@ const createRandomResponseForTesting = () => {
     message.push(words[Math.floor(Math.random() * words.length)]);
   }
 
-  return { role: 'assistant', content: message.join(' ') };
+  const timestamp = new Date();
+
+  return [{ role: 'assistant', content: message.join(' '), timestamp }];
 };
 
 export { renderWithProviders as render, createRandomResponseForTesting };

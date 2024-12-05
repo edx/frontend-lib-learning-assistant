@@ -1,6 +1,6 @@
-import { fetchLearningAssistantMessageHistory } from './api';
+import { fetchLearningAssistantChatSummary } from './api';
 
-import { getLearningAssistantMessageHistory } from './thunks';
+import { getLearningAssistantChatSummary } from './thunks';
 
 jest.mock('./api');
 
@@ -9,118 +9,201 @@ describe('Thunks unit tests', () => {
 
   afterEach(() => jest.resetAllMocks());
 
-  describe('getLearningAssistantMessageHistory()', () => {
-    const fakeCourseId = 'course-v1:edx+test+23';
+  describe('getLearningAssistantChatSummary()', () => {
+    const courseId = 'course-v1:edx+test+23';
 
-    describe('when returning results', () => {
-      const apiResponse = [
-        {
-          role: 'user',
-          content: 'Marco',
-          timestamp: '2024-11-04T19:05:07.403363Z',
-        },
-        {
-          role: 'assistant',
-          content: 'Polo',
-          timestamp: '2024-11-04T19:05:21.357636Z',
-        },
-      ];
-
-      beforeEach(() => {
-        fetchLearningAssistantMessageHistory.mockResolvedValue(apiResponse);
-      });
-
-      it('should set the loading state, fetch, parse and set the messages and remove the loading state', async () => {
-        await getLearningAssistantMessageHistory(fakeCourseId)(dispatch);
-
-        expect(dispatch).toHaveBeenNthCalledWith(1, {
-          type: 'learning-assistant/setApiIsLoading',
-          payload: true,
-        });
-
-        expect(fetchLearningAssistantMessageHistory).toHaveBeenCalledWith(fakeCourseId);
-
-        expect(dispatch).toHaveBeenNthCalledWith(2, {
-          type: 'learning-assistant/setMessageList',
-          payload: {
-            messageList: apiResponse.map(({ timestamp, ...msg }) => ({
-              ...msg,
-              timestamp: new Date(timestamp), // Parse ISO time to Date()
-            })),
+    it('with message_history and audit_trial data returned, call all expected dispatches', async () => {
+      const apiResponse = {
+        enabled: true,
+        message_history: [
+          {
+            role: 'user',
+            content: 'Marco',
+            timestamp: '2024-11-04T19:05:07.403363Z',
           },
-        });
+          {
+            role: 'assistant',
+            content: 'Polo',
+            timestamp: '2024-11-04T19:05:21.357636Z',
+          },
+        ],
+        audit_trial: {
+          start_date: '2024-12-02T14:59:16.148236Z',
+          expiration_date: '9999-12-16T14:59:16.148236Z',
+        },
+      };
 
-        expect(dispatch).toHaveBeenNthCalledWith(3, {
-          type: 'learning-assistant/setDisclosureAcknowledged',
-          payload: true,
-        });
+      fetchLearningAssistantChatSummary.mockResolvedValue(apiResponse);
 
-        expect(dispatch).toHaveBeenNthCalledWith(4, {
-          type: 'learning-assistant/setApiIsLoading',
-          payload: false,
-        });
+      await getLearningAssistantChatSummary(courseId)(dispatch);
+
+      expect(dispatch).toHaveBeenNthCalledWith(1, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: true,
+      });
+
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
+
+      expect(dispatch).toHaveBeenNthCalledWith(2, {
+        type: 'learning-assistant/setIsEnabled',
+        payload: true,
+      });
+
+      expect(dispatch).toHaveBeenNthCalledWith(3, {
+        type: 'learning-assistant/setMessageList',
+        payload: {
+          messageList: apiResponse.message_history.map(({ timestamp, ...msg }) => ({
+            ...msg,
+            timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
+          })),
+        },
+      });
+
+      expect(dispatch).toHaveBeenNthCalledWith(4, {
+        type: 'learning-assistant/setDisclosureAcknowledged',
+        payload: true,
+      });
+
+      expect(dispatch).toHaveBeenNthCalledWith(5, {
+        type: 'learning-assistant/setAuditTrial',
+        payload: {
+          start_date: '2024-12-02T14:59:16.148236Z',
+          expiration_date: '9999-12-16T14:59:16.148236Z',
+        },
+      });
+
+      expect(dispatch).toHaveBeenNthCalledWith(6, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: false,
       });
     });
 
-    describe('when returning no messages', () => {
-      const apiResponse = [];
+    it('with no message_history data returned, do not call message history related dispatches', async () => {
+      const apiResponse = {
+        enabled: true,
+        message_history: [],
+        audit_trial: {
+          start_date: '2024-12-02T14:59:16.148236Z',
+          expiration_date: '9999-12-16T14:59:16.148236Z',
+        },
+      };
 
-      beforeEach(() => {
-        fetchLearningAssistantMessageHistory.mockResolvedValue(apiResponse);
+      fetchLearningAssistantChatSummary.mockResolvedValue(apiResponse);
+
+      await getLearningAssistantChatSummary(courseId)(dispatch);
+
+      expect(dispatch).toHaveBeenNthCalledWith(1, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: true,
       });
 
-      it('should only set and remove the loading state', async () => {
-        await getLearningAssistantMessageHistory(fakeCourseId)(dispatch);
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
 
-        expect(dispatch).toHaveBeenNthCalledWith(1, {
-          type: 'learning-assistant/setApiIsLoading',
-          payload: true,
-        });
+      expect(dispatch).toHaveBeenNthCalledWith(2, {
+        type: 'learning-assistant/setIsEnabled',
+        payload: true,
+      });
 
-        expect(fetchLearningAssistantMessageHistory).toHaveBeenCalledWith(fakeCourseId);
+      expect(dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'learning-assistant/setMessageList' }),
+      );
 
-        expect(dispatch).not.toHaveBeenCalledWith(
-          expect.objectContaining({ type: 'learning-assistant/setMessageList' }),
-        );
+      expect(dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'learning-assistant/setDisclosureAcknowledged' }),
+      );
 
-        expect(dispatch).not.toHaveBeenCalledWith(
-          expect.objectContaining({ type: 'learning-assistant/setDisclosureAcknowledged' }),
-        );
+      expect(dispatch).toHaveBeenNthCalledWith(3, {
+        type: 'learning-assistant/setAuditTrial',
+        payload: {
+          start_date: '2024-12-02T14:59:16.148236Z',
+          expiration_date: '9999-12-16T14:59:16.148236Z',
+        },
+      });
 
-        expect(dispatch).toHaveBeenNthCalledWith(2, {
-          type: 'learning-assistant/setApiIsLoading',
-          payload: false,
-        });
+      expect(dispatch).toHaveBeenNthCalledWith(4, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: false,
       });
     });
 
-    describe('when throwing on fetching', () => {
-      beforeEach(() => {
-        fetchLearningAssistantMessageHistory.mockRejectedValue('Whoopsie!');
+    it('with no audit_trial data returned, do not call audit trial dispatch', async () => {
+      const apiResponse = {
+        enabled: true,
+        message_history: [
+          {
+            role: 'user',
+            content: 'Marco',
+            timestamp: '2024-11-04T19:05:07.403363Z',
+          },
+          {
+            role: 'assistant',
+            content: 'Polo',
+            timestamp: '2024-11-04T19:05:21.357636Z',
+          },
+        ],
+        audit_trial: {},
+      };
+
+      fetchLearningAssistantChatSummary.mockResolvedValue(apiResponse);
+
+      await getLearningAssistantChatSummary(courseId)(dispatch);
+
+      expect(dispatch).toHaveBeenNthCalledWith(1, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: true,
       });
 
-      it('should only set and remove the loading state', async () => {
-        await getLearningAssistantMessageHistory(fakeCourseId)(dispatch);
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
 
-        expect(dispatch).toHaveBeenNthCalledWith(1, {
-          type: 'learning-assistant/setApiIsLoading',
-          payload: true,
-        });
+      expect(dispatch).toHaveBeenNthCalledWith(2, {
+        type: 'learning-assistant/setIsEnabled',
+        payload: true,
+      });
 
-        expect(fetchLearningAssistantMessageHistory).toHaveBeenCalledWith(fakeCourseId);
+      expect(dispatch).toHaveBeenNthCalledWith(3, {
+        type: 'learning-assistant/setMessageList',
+        payload: {
+          messageList: apiResponse.message_history.map(({ timestamp, ...msg }) => ({
+            ...msg,
+            timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
+          })),
+        },
+      });
 
-        expect(dispatch).not.toHaveBeenCalledWith(
-          expect.objectContaining({ type: 'learning-assistant/setMessageList' }),
-        );
+      expect(dispatch).toHaveBeenNthCalledWith(4, {
+        type: 'learning-assistant/setDisclosureAcknowledged',
+        payload: true,
+      });
 
-        expect(dispatch).not.toHaveBeenCalledWith(
-          expect.objectContaining({ type: 'learning-assistant/setDisclosureAcknowledged' }),
-        );
+      expect(dispatch).toHaveBeenNthCalledWith(5, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: false,
+      });
+    });
 
-        expect(dispatch).toHaveBeenNthCalledWith(2, {
-          type: 'learning-assistant/setApiIsLoading',
-          payload: false,
-        });
+    it('when throwing on fetching, should set the loading state and throw error', async () => {
+      fetchLearningAssistantChatSummary.mockRejectedValue('Whoopsie!');
+
+      await getLearningAssistantChatSummary(courseId)(dispatch);
+
+      expect(dispatch).toHaveBeenNthCalledWith(1, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: true,
+      });
+
+      expect(fetchLearningAssistantChatSummary).toHaveBeenCalledWith(courseId);
+
+      expect(dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'learning-assistant/setMessageList' }),
+      );
+
+      expect(dispatch).not.toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'learning-assistant/setDisclosureAcknowledged' }),
+      );
+
+      expect(dispatch).toHaveBeenNthCalledWith(2, {
+        type: 'learning-assistant/setApiError',
+        // payload: false,
       });
     });
   });
