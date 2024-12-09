@@ -7,7 +7,12 @@ import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
 import { ExperimentsProvider } from '../experiments';
 
-const Xpert = ({ courseId, contentToolsEnabled, unitId }) => {
+const Xpert = ({
+  courseId,
+  contentToolsEnabled,
+  unitId,
+  isUpgradeEligible, // eslint-disable-line no-unused-vars
+}) => {
   const dispatch = useDispatch();
 
   const {
@@ -58,6 +63,7 @@ Xpert.propTypes = {
   courseId: PropTypes.string.isRequired,
   contentToolsEnabled: PropTypes.bool.isRequired,
   unitId: PropTypes.string.isRequired,
+  isUpgradeEligible: PropTypes.bool.isRequired,
 };
 
 export default Xpert;
