@@ -23,6 +23,7 @@ const Sidebar = ({
   isOpen,
   setIsOpen,
   unitId,
+  daysRemainingMessage,
 }) => {
   const {
     apiError,
@@ -80,10 +81,28 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
+  // const showAuditTrialBanner = () => {
+  //   // if expired, show the banner
+  //   if (Object.keys(daysRemainingMessage).length !== 0) {
+  //     if (auditTrialData.expired) {
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // };
+
+  // const getAuditTrialBannerMessage = () => {
+  //   return {daysRemainingMessage}
+  // };
+
   const getSidebar = () => (
     <div className="h-100 d-flex flex-column justify-content-stretch" data-testid="sidebar-xpert">
       <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
         <XpertLogo />
+      </div>
+      {}
+      <div className="p-3 trial-header">
+        {daysRemainingMessage}
       </div>
       <span className="separator" />
       <ChatBox
