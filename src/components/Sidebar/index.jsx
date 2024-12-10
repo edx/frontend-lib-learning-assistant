@@ -23,10 +23,11 @@ const Sidebar = ({
   isOpen,
   setIsOpen,
   unitId,
-  daysRemainingMessage,
+  isUpgradeEligible,
 }) => {
   const {
     apiError,
+    auditTrial,
     disclosureAcknowledged,
     messageList,
   } = useSelector(state => state.learningAssistant);
@@ -81,20 +82,51 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
-  // const showAuditTrialBanner = () => {
-  //   // if expired, show the banner
-  //   if (Object.keys(daysRemainingMessage).length !== 0) {
-  //     if (auditTrialData.expired) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
-  // };
+  const getDaysRemainingMessage = () => {
+    // if enrollment mode is NOT upgrade eligible, there's no audit trial data
+    if (isUpgradeEligible) {
+      return None
 
-  // const getAuditTrialBannerMessage = () => {
-  //   return {daysRemainingMessage}
-  // };
+      // if enrollment mode IS upgrade eligible, return if the trial is expired
+      // TEMP NOTE: A trial is auto-created if one does not yet exist so ideally this
+      // returns true in the case that xpert is used for the first time in a course
+      // the user is upgrade eligible in
+    } else {
+      const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
+      const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+      const daysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / oneDay);
 
+      // console.log("auditTrial:", auditTrial)
+      // console.log("auditTrialExpirationDate:", auditTrialExpirationDate)
+      // console.log("daysRemaining:", daysRemaining)
+      if (daysRemaining > 1) {
+        return (
+          <div>
+            {daysRemaining} days remaining. <a href=''>Upgrade</a> for full access to Xpert.
+          </div>
+        );
+      } else if (daysRemaining === 1) {
+        return (
+          <div>
+            Your trial ends today! <a href=''>Upgrade</a> for full access to Xpert.
+          </div>
+        );
+      } else {
+        // TODO: Show the upgrade screen instead of this banner
+        return (
+          <div>
+            Your trial has expired. <a href=''>Upgrade</a> for full access to Xpert.
+          </div>
+        );
+      };
+    }
+  };
+
+  /**
+   * if no audit trial, and chat message endpoint success,
+   * we know an audit trial just started so write "[xpert_trial_length] days"
+   * and re-call the chat summary endpoint
+  */
   const getSidebar = () => (
     <div className="h-100 d-flex flex-column justify-content-stretch" data-testid="sidebar-xpert">
       <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
@@ -102,7 +134,7 @@ const Sidebar = ({
       </div>
       {}
       <div className="p-3 trial-header">
-        {daysRemainingMessage}
+        {getDaysRemainingMessage()}
       </div>
       <span className="separator" />
       <ChatBox
@@ -158,6 +190,7 @@ Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
   unitId: PropTypes.string.isRequired,
+  isUpgradeEligible: PropTypes.bool.isRequired,
 };
 
 export default Sidebar;
