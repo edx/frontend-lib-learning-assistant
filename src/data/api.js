@@ -16,7 +16,6 @@ async function fetchChatResponse(courseId, messageList, unitId, customQueryParam
 
   let queryString = new URLSearchParams(queryParams);
   queryString = queryString.toString();
-
   const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}?${queryString}`);
   const { data } = await getAuthenticatedHttpClient().post(url.href, payload);
 
@@ -27,7 +26,6 @@ async function fetchLearningAssistantChatSummary(courseId) {
   const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/chat-summary`);
 
   const { data } = await getAuthenticatedHttpClient().get(url.href);
-  console.log("DATA:", data)
   return data;
 }
 

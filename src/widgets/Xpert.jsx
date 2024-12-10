@@ -18,7 +18,6 @@ const Xpert = ({
   const {
     isEnabled,
     sidebarIsOpen,
-    auditTrial,
   } = useSelector(state => state.learningAssistant);
 
   const setSidebarIsOpen = (isOpen) => {
