@@ -12,6 +12,8 @@ import {
 } from '../../data/thunks';
 import { usePromptExperimentDecision } from '../../experiments';
 
+import './MessageForm.scss';
+
 const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
   const { apiIsLoading, currentMessage, apiError } = useSelector(state => state.learningAssistant);
   const dispatch = useDispatch();
@@ -55,7 +57,7 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
   );
 
   return (
-    <Form className="w-100 pl-2" onSubmit={handleSubmitMessage} data-testid="message-form">
+    <Form className="message-form w-100 pl-2" onSubmit={handleSubmitMessage} data-testid="message-form">
       <Form.Group>
         <Form.Control
           data-hj-suppress
@@ -65,6 +67,7 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
           trailingElement={getSubmitButton()}
           value={currentMessage}
           ref={inputRef}
+          className="send-message-input"
         />
       </Form.Group>
     </Form>
