@@ -82,23 +82,19 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
+
+  // Get this to work
   const getDaysRemainingMessage = () => {
     // if enrollment mode is NOT upgrade eligible, there's no audit trial data
-    if (isUpgradeEligible) {
-      return None
+    if (!isUpgradeEligible) {
+      return
 
       // if enrollment mode IS upgrade eligible, return if the trial is expired
-      // TEMP NOTE: A trial is auto-created if one does not yet exist so ideally this
-      // returns true in the case that xpert is used for the first time in a course
-      // the user is upgrade eligible in
     } else {
       const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
       const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
       const daysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / oneDay);
 
-      // console.log("auditTrial:", auditTrial)
-      // console.log("auditTrialExpirationDate:", auditTrialExpirationDate)
-      // console.log("daysRemaining:", daysRemaining)
       if (daysRemaining > 1) {
         return (
           <div>
@@ -112,7 +108,7 @@ const Sidebar = ({
           </div>
         );
       } else {
-        // TODO: Show the upgrade screen instead of this banner
+        // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
         return (
           <div>
             Your trial has expired. <a href=''>Upgrade</a> for full access to Xpert.

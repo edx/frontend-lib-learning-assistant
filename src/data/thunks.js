@@ -70,6 +70,9 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
 
       dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
+      if (message.audit_trial_created) {
+        dispatch(getLearningAssistantChatSummary(courseId));
+      }
     } catch (error) {
       dispatch(setApiError());
       dispatch(setApiIsLoading(false));
@@ -129,16 +132,10 @@ export function getLearningAssistantChatSummary(courseId) {
       }
 
       // Audit Trial
-      const auditTrial = data.audit_trial;
-
-      // temp forcing of expiration date value just to test this out
-      // const startDate = new Date(Date.now());
-      // const expirationDate = new Date();
-      // expirationDate.setDate(expirationDate.getDate() + 2);
-      // const auditTrial = {
-      //   startDate: startDate.toISOString(),
-      //   expirationDate: expirationDate.toISOString(),
-      // };
+      const auditTrial = {
+        startDate: data.audit_trial.start_date,
+        expirationDate: data.audit_trial.expiration_date,
+      };
       console.log("thunks auditTrial:", auditTrial);
 
       // If returned audit trial data is not empty
