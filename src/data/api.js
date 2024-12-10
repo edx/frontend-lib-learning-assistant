@@ -27,6 +27,7 @@ async function fetchLearningAssistantChatSummary(courseId) {
   const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}/chat-summary`);
 
   const { data } = await getAuthenticatedHttpClient().get(url.href);
+  console.log("DATA:", data)
   return data;
 }
 

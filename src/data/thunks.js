@@ -129,17 +129,17 @@ export function getLearningAssistantChatSummary(courseId) {
       }
 
       // Audit Trial
-      // const auditTrial = data.audit_trial;
+      const auditTrial = data.audit_trial;
 
       // temp forcing of expiration date value just to test this out
-      const startDate = new Date(Date.now());
-      const expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + 1);
-      const auditTrial = {
-        startDate: startDate.toISOString(),
-        expirationDate: expirationDate.toISOString(),
-      };
-      // console.log("thunks auditTrial:", auditTrial);
+      // const startDate = new Date(Date.now());
+      // const expirationDate = new Date();
+      // expirationDate.setDate(expirationDate.getDate() + 2);
+      // const auditTrial = {
+      //   startDate: startDate.toISOString(),
+      //   expirationDate: expirationDate.toISOString(),
+      // };
+      console.log("thunks auditTrial:", auditTrial);
 
       // If returned audit trial data is not empty
       if (Object.keys(auditTrial).length !== 0) {
