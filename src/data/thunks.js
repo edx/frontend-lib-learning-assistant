@@ -21,6 +21,52 @@ import {
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 
+export function getLearningAssistantChatSummary(courseId) {
+  return async (dispatch) => {
+    dispatch(setApiIsLoading(true));
+
+    try {
+      const data = await fetchLearningAssistantChatSummary(courseId);
+
+      // Enabled
+      dispatch(setIsEnabled(data.enabled));
+
+      // Message History
+      const rawMessageList = data.message_history;
+
+      // If returned message history data is not empty
+      if (rawMessageList.length) {
+        const messageList = rawMessageList
+          .map(({ timestamp, ...msg }) => ({
+            ...msg,
+            timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
+          }));
+
+        dispatch(setMessageList({ messageList }));
+
+        // If it has chat history, then we assume the user already aknowledged.
+        dispatch(setDisclosureAcknowledged(true));
+      }
+
+      // Audit Trial
+      const auditTrial = {
+        startDate: data.audit_trial.start_date,
+        expirationDate: data.audit_trial.expiration_date,
+      };
+
+      // If returned audit trial data is not empty
+      if (Object.keys(auditTrial).length !== 0) {
+        dispatch(setAuditTrial(auditTrial));
+      }
+
+      dispatch(setAuditTrialLengthDays(data.audit_trial_length_days));
+    } catch (error) {
+      dispatch(setApiError());
+    }
+    dispatch(setApiIsLoading(false));
+  };
+}
+
 export function addChatMessage(role, content, courseId, promptExperimentVariationKey = undefined) {
   return (dispatch, getState) => {
     const { messageList, conversationId } = getState().learningAssistant;
@@ -70,9 +116,9 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
 
       dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
-      if (message.audit_trial_created) {
-        dispatch(getLearningAssistantChatSummary(courseId));
-      }
+      // NOTE for self: There could be a case where the user just keeps a tab open to keep
+      // their trial going. Though this is unlikely, this call prevents the trial from continuing in the UI
+      dispatch(getLearningAssistantChatSummary(courseId));
     } catch (error) {
       dispatch(setApiError());
       dispatch(setApiIsLoading(false));
