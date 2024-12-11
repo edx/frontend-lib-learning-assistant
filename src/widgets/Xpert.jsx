@@ -18,7 +18,6 @@ const Xpert = ({
   const {
     isEnabled,
     sidebarIsOpen,
-    auditTrial,
   } = useSelector(state => state.learningAssistant);
 
   const setSidebarIsOpen = (isOpen) => {
@@ -28,16 +27,6 @@ const Xpert = ({
   useEffect(() => {
     dispatch(getLearningAssistantChatSummary(courseId));
   }, [dispatch, courseId]);
-
-  // NOTE: This value can be used later on if/when we pass the enrollment mode to this component
-  const isAuditTrialNotExpired = () => { // eslint-disable-line no-unused-vars
-    const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
-
-    if ((Date.now() - auditTrialExpirationDate) > 0) {
-      return true;
-    }
-    return false;
-  };
 
   return isEnabled ? (
     <ExperimentsProvider>
@@ -53,6 +42,7 @@ const Xpert = ({
           isOpen={sidebarIsOpen}
           setIsOpen={setSidebarIsOpen}
           unitId={unitId}
+          isUpgradeEligible={isUpgradeEligible}
         />
       </>
     </ExperimentsProvider>

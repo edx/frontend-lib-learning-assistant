@@ -7,6 +7,9 @@ import {
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
+// Commenting this out for now until we figure out a solution for getting the upgrade url
+// import { useModel } from '@src/generic/model-store';
+
 import showSurvey from '../../utils/surveyMonkey';
 
 import APIError from '../APIError';
@@ -21,13 +24,26 @@ const Sidebar = ({
   isOpen,
   setIsOpen,
   unitId,
+  isUpgradeEligible,
 }) => {
   const {
     apiError,
+    auditTrial,
     disclosureAcknowledged,
     messageList,
   } = useSelector(state => state.learningAssistant);
   const chatboxContainerRef = useRef(null);
+
+  // Commenting this out for now until we figure out a solution for getting the upgrade url
+  // const courseHomeMeta = useModel('courseHomeMeta', courseId);
+  // const {
+  //   verifiedMode,
+  // } = courseHomeMeta;
+
+  // const course = useModel('coursewareMeta', courseId);
+  // const {
+  //   offer,
+  // } = course;
 
   // this use effect is intended to scroll to the bottom of the chat window, in the case
   // that a message is larger than the chat window height.
@@ -75,11 +91,54 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
+  // Get this to work
+  const getDaysRemainingMessage = () => {
+    const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const daysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / oneDay);
+
+    // Commenting this out for now until we figure out a solution for getting the upgrade url
+    // const upgradeURL = offer ? offer.upgradeUrl : verifiedMode.upgradeUrl;
+    const upgradeURL = '';
+
+    if (daysRemaining > 1) {
+      const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
+      return (
+        <div>
+          Your trial ends {irtl.format(daysRemaining, 'day')}. <a href={upgradeURL}>Upgrade</a> for full access to Xpert.
+        </div>
+      );
+    } if (daysRemaining === 1) {
+      return (
+        <div>
+          Your trial ends today! <a href={upgradeURL}>Upgrade</a> for full access to Xpert.
+        </div>
+      );
+    }
+    // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
+    return (
+      <div>
+        Your trial has expired. <a href={upgradeURL}>Upgrade</a> for full access to Xpert.
+      </div>
+    );
+  };
+
+  /**
+   * if no audit trial, and chat message endpoint success,
+   * we know an audit trial just started so write "[xpert_trial_length] days"
+   * and re-call the chat summary endpoint
+  */
   const getSidebar = () => (
     <div className="h-100 d-flex flex-column justify-content-stretch" data-testid="sidebar-xpert">
       <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
         <XpertLogo />
       </div>
+      {isUpgradeEligible
+        && (
+        <div className="p-3 trial-header">
+          {getDaysRemainingMessage()}
+        </div>
+        )}
       <span className="separator" />
       <ChatBox
         chatboxContainerRef={chatboxContainerRef}
@@ -125,6 +184,7 @@ Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
   unitId: PropTypes.string.isRequired,
+  isUpgradeEligible: PropTypes.bool.isRequired,
 };
 
 export default Sidebar;
