@@ -57,7 +57,7 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
   );
 
   return (
-    <Form className="message-form w-100 pl-2" onSubmit={handleSubmitMessage} data-testid="message-form">
+    <Form className="message-form w-100" onSubmit={handleSubmitMessage} data-testid="message-form">
       <Form.Group>
         <Form.Control
           data-hj-suppress

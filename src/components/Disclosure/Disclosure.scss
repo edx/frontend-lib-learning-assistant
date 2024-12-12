@@ -6,6 +6,8 @@
     background-color: variables.$dark-green;
     font-family: Inter, Arial, sans-serif;
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
 
     h2 {
         font-size: 1.375rem;
@@ -44,7 +46,6 @@
 
     .disclaimer {
         font-size: 0.75rem;
-        margin-bottom: 7.5rem;
     }
 
     .trial-period {
@@ -75,7 +76,15 @@
     .trial-upgrade {
         background: #D74000;
         border-radius: 99rem;
-        font-size: 0.875rem;
+        font-size: 0
+        .875rem;
+    }
+
+    .pgn__form-group {
+        margin: 0;
+    }
+    .pgn__form-control-decorator-group {
+        margin: 0;
     }
 }
 
