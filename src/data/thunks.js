@@ -17,7 +17,6 @@ import {
   setSidebarIsOpen,
   setIsEnabled,
   setAuditTrial,
-  setAuditTrialLengthDays,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 
@@ -59,7 +58,6 @@ export function getLearningAssistantChatSummary(courseId) {
         dispatch(setAuditTrial(auditTrial));
       }
 
-      dispatch(setAuditTrialLengthDays(data.audit_trial_length_days));
     } catch (error) {
       dispatch(setApiError());
     }
@@ -116,8 +114,7 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
 
       dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
-      // NOTE for self: There could be a case where the user just keeps a tab open to keep
-      // their trial going. Though this is unlikely, this call prevents the trial from continuing in the UI
+      // Refresh chat summary so we can tell if the user has initiated an audit trial
       dispatch(getLearningAssistantChatSummary(courseId));
     } catch (error) {
       dispatch(setApiError());

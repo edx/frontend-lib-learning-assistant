@@ -12,7 +12,6 @@ export const initialState = {
   sidebarIsOpen: false,
   isEnabled: false,
   auditTrial: {},
-  auditTrialLengthDays: null,
 };
 
 export const learningAssistantSlice = createSlice({
@@ -49,9 +48,6 @@ export const learningAssistantSlice = createSlice({
     setAuditTrial: (state, { payload }) => {
       state.auditTrial = payload;
     },
-    setAuditTrialLengthDays: (state, { payload }) => {
-      state.auditTrialLengthDays = payload;
-    },
   },
 });
 
@@ -66,7 +62,6 @@ export const {
   setSidebarIsOpen,
   setIsEnabled,
   setAuditTrial,
-  setAuditTrialLengthDays,
 } = learningAssistantSlice.actions;
 
 export const {
