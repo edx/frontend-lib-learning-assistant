@@ -1,6 +1,9 @@
 import React from 'react';
 import { screen, act } from '@testing-library/react';
 
+import { Factory } from 'rosie';
+import { setModel } from '@src/generic/model-store'; // eslint-disable-line import/no-unresolved
+
 import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
@@ -67,7 +70,10 @@ const render = async (props = {}, sliceState = {}) => {
 };
 
 describe('<Sidebar />', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    setModel('courseHomeMeta', Factory.build('courseHomeMeta'));
+    setModel('coursewareMeta', Factory.build('coursewareMeta'));
+
     jest.resetAllMocks();
     useCourseUpgrade.mockReturnValue({ upgradeable: false });
     useTrackEvent.mockReturnValue({ track: jest.fn() });
