@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+
+import { useModel } from '@src/generic/model-store';
+
 import {
   Icon,
   IconButton,
@@ -38,16 +41,15 @@ const Sidebar = ({
 
   const chatboxContainerRef = useRef(null);
 
-  // Commenting this out for now until we figure out a solution for getting the upgrade url
-  // const courseHomeMeta = useModel('courseHomeMeta', courseId);
-  // const {
-  //   verifiedMode,
-  // } = courseHomeMeta;
+  const courseHomeMeta = useModel('courseHomeMeta', courseId);
+  const {
+    verifiedMode,
+  } = courseHomeMeta;
 
-  // const course = useModel('coursewareMeta', courseId);
-  // const {
-  //   offer,
-  // } = course;
+  const course = useModel('coursewareMeta', courseId);
+  const {
+    offer,
+  } = course;
 
   // this use effect is intended to scroll to the bottom of the chat window, in the case
   // that a message is larger than the chat window height.
@@ -101,28 +103,26 @@ const Sidebar = ({
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const daysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / oneDay);
 
-    // Commenting this out for now until we figure out a solution for getting the upgrade url
-    // const upgradeURL = offer ? offer.upgradeUrl : verifiedMode.upgradeUrl;
-    const upgradeURL = '';
+    const upgradeURL = offer ? offer.upgradeUrl : verifiedMode.upgradeUrl;
 
     if (daysRemaining > 1) {
       const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
         <div>
-          Your trial ends {irtl.format(daysRemaining, 'day')}. <a href={upgradeURL}>Upgrade</a> for full access to Xpert.
+          Your trial ends {irtl.format(daysRemaining, 'day')}. <a target='_blank' href={upgradeURL}>Upgrade</a> for full access to Xpert.
         </div>
       );
     } if (daysRemaining === 1) {
       return (
         <div>
-          Your trial ends today! <a href={upgradeURL}>Upgrade</a> for full access to Xpert.
+          Your trial ends today! <a target='_blank' href={upgradeURL}>Upgrade</a> for full access to Xpert.
         </div>
       );
     }
     // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
     return (
       <div>
-        Your trial has expired. <a href={upgradeURL}>Upgrade</a> for full access to Xpert.
+        Your trial has expired. <a target='_blank' href={upgradeURL}>Upgrade</a> for full access to Xpert.
       </div>
     );
   };
