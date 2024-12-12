@@ -19,6 +19,7 @@ import {
   setAuditTrial,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
+import { camelCaseObject } from '@edx/frontend-platform';
 
 export function getLearningAssistantChatSummary(courseId) {
   return async (dispatch) => {
@@ -48,14 +49,11 @@ export function getLearningAssistantChatSummary(courseId) {
       }
 
       // Audit Trial
-      const auditTrial = {
-        startDate: data.audit_trial.start_date,
-        expirationDate: data.audit_trial.expiration_date,
-      };
+      const auditTrial = data.audit_trial;
 
       // If returned audit trial data is not empty
       if (Object.keys(auditTrial).length !== 0) {
-        dispatch(setAuditTrial(auditTrial));
+        dispatch(setAuditTrial(camelCaseObject(auditTrial)));
       }
     } catch (error) {
       dispatch(setApiError());
@@ -111,10 +109,14 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
       const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
       const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
 
+      // Refresh chat summary only on the first message so we can tell if the user has initiated an audit trial
+      // NOTE: This is a bit of a hacky solution that may be refined later
+      if (messageList.length === 1) {
+        dispatch(getLearningAssistantChatSummary(courseId));
+      }
+
       dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
-      // Refresh chat summary so we can tell if the user has initiated an audit trial
-      dispatch(getLearningAssistantChatSummary(courseId));
     } catch (error) {
       dispatch(setApiError());
       dispatch(setApiIsLoading(false));
