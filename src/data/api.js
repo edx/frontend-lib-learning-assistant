@@ -16,6 +16,7 @@ async function fetchChatResponse(courseId, messageList, unitId, customQueryParam
 
   let queryString = new URLSearchParams(queryParams);
   queryString = queryString.toString();
+
   const url = new URL(`${getConfig().CHAT_RESPONSE_URL}/${courseId}?${queryString}`);
   const { data } = await getAuthenticatedHttpClient().post(url.href, payload);
 

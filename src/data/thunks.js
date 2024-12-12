@@ -57,7 +57,6 @@ export function getLearningAssistantChatSummary(courseId) {
       if (Object.keys(auditTrial).length !== 0) {
         dispatch(setAuditTrial(auditTrial));
       }
-
     } catch (error) {
       dispatch(setApiError());
     }

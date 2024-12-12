@@ -2,16 +2,13 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { useModel } from '@src/generic/model-store';
-
 import {
   Icon,
   IconButton,
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
-// Commenting this out for now until we figure out a solution for getting the upgrade url
-// import { useModel } from '@src/generic/model-store';
+import { useModel } from '@src/generic/model-store'; // eslint-disable-line import/no-unresolved
 
 import showSurvey from '../../utils/surveyMonkey';
 
@@ -109,20 +106,20 @@ const Sidebar = ({
       const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
         <div>
-          Your trial ends {irtl.format(daysRemaining, 'day')}. <a target='_blank' href={upgradeURL}>Upgrade</a> for full access to Xpert.
+          Your trial ends {irtl.format(daysRemaining, 'day')}. <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
     } if (daysRemaining === 1) {
       return (
         <div>
-          Your trial ends today! <a target='_blank' href={upgradeURL}>Upgrade</a> for full access to Xpert.
+          Your trial ends today! <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
     }
     // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
     return (
       <div>
-        Your trial has expired. <a target='_blank' href={upgradeURL}>Upgrade</a> for full access to Xpert.
+        Your trial has expired. <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
       </div>
     );
   };
