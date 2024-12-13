@@ -82,18 +82,7 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
-  /**
-   * isUpgradeEligible - can they have an audit trial?
-      not staff
-      enrolled as audit or honor
-      course has verified mode
-      enable xpert audit setting is true
-    if isUpgradeEligible:
-      show all the audit trial data, expired or not.
-   */
   const getDaysRemainingMessage = () => {
-    console.log("auditTrialDaysRemaining", auditTrialDaysRemaining)
-
     if (auditTrialDaysRemaining > 1) {
       const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
       return (

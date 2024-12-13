@@ -1,6 +1,7 @@
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
+import { camelCaseObject } from '@edx/frontend-platform';
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
 import {
   fetchChatResponse,
@@ -20,7 +21,6 @@ import {
   setAuditTrialLengthDays,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
-import { camelCaseObject } from '@edx/frontend-platform';
 
 export function addChatMessage(role, content, courseId, promptExperimentVariationKey = undefined) {
   return (dispatch, getState) => {
@@ -72,6 +72,7 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
       // Refresh chat summary only on the first message so we can tell if the user has initiated an audit trial
       // NOTE: This is a bit of a hacky solution that may be refined later
       if (messageList.length === 1) {
+        // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
 
@@ -143,8 +144,8 @@ export function getLearningAssistantChatSummary(courseId) {
 
       // Validate audit trial data & dates
       const auditTrialDatesValid = !(
-        Number.isNaN(Date.parse(auditTrial.startDate)) ||
-        Number.isNaN(Date.parse(auditTrial.expirationDate))
+        Number.isNaN(Date.parse(auditTrial.startDate))
+        || Number.isNaN(Date.parse(auditTrial.expirationDate))
       );
 
       if (Object.keys(auditTrial).length !== 0 && auditTrialDatesValid) {
