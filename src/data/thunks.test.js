@@ -1,13 +1,56 @@
+import { v4 as uuidv4 } from 'uuid';
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
 import { fetchLearningAssistantChatSummary } from './api';
 
-import { getLearningAssistantChatSummary } from './thunks';
+import { addChatMessage, getLearningAssistantChatSummary } from './thunks';
 
 jest.mock('./api');
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendTrackEvent: jest.fn(),
+}));
+const userId = 5;
+jest.mock('@edx/frontend-platform/auth', () => ({
+  getAuthenticatedUser: jest.fn().mockReturnValue({ userId }),
+}));
+
+const mockState = {
+  learningAssistant: { messageList: [], conversationId: uuidv4() },
+};
 
 describe('Thunks unit tests', () => {
   const dispatch = jest.fn();
+  const getState = jest.fn().mockReturnValue(mockState);
 
   afterEach(() => jest.resetAllMocks());
+
+  describe('addChatMessage()', () => {
+    const mockDate = new Date(2024, 1, 1);
+    beforeAll(() => {
+      jest.useFakeTimers('modern');
+      jest.setSystemTime(mockDate);
+    });
+
+    it('sends track event correctly, without content', async () => {
+      const courseId = 'course-v1:edx+test+23';
+      const role = 'user';
+      const content = 'hello!';
+      await addChatMessage(role, content, courseId)(dispatch, getState);
+
+      const eventName = 'edx.ui.lms.learning_assistant.message';
+      const properties = {
+        course_id: courseId,
+        id: mockState.learningAssistant.conversationId,
+        role,
+        timestamp: mockDate.toString(),
+        user_id: userId,
+      };
+      expect(sendTrackEvent).toHaveBeenCalledWith(
+        eventName,
+        properties,
+      );
+    });
+  });
 
   describe('getLearningAssistantChatSummary()', () => {
     const courseId = 'course-v1:edx+test+23';
