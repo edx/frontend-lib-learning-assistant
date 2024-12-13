@@ -52,7 +52,7 @@ export default function useCourseUpgrade() {
     auditTrialDaysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / millisecondsInOneDay);
 
     auditTrialExpired = auditTrialDaysRemaining < 0;
-    console.log({ upgradeUrl }, { auditTrialDaysRemaining });
+    // console.log({ upgradeUrl }, { auditTrialDaysRemaining });
   }
 
   const isFBE = !!accessExpiration && !!datesBannerInfo?.contentTypeGatingEnabled;
