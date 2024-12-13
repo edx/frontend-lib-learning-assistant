@@ -28,6 +28,7 @@ describe('Thunks unit tests', () => {
 
   describe('addChatMessage()', () => {
     const mockDate = new Date(2024, 1, 1);
+
     beforeEach(async () => {
       setModel('coursewareMeta', Factory.build('coursewareMeta'));
       setModel('courseHomeMeta', Factory.build('courseHomeMeta'));

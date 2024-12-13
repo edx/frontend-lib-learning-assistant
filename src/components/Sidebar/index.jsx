@@ -17,6 +17,7 @@ import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
 import UpgradePanel from '../UpgradePanel';
 import MessageForm from '../MessageForm';
+import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './Sidebar.scss';
 
@@ -29,12 +30,11 @@ const Sidebar = ({
 }) => {
   const {
     apiError,
-    auditTrial,
     disclosureAcknowledged,
     messageList,
   } = useSelector(state => state.learningAssistant);
 
-  const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
+  const { upgradeUrl, auditTrialDaysRemaining } = useCourseUpgrade();
 
   const chatboxContainerRef = useRef(null);
 
@@ -94,20 +94,27 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
-  const getDaysRemainingMessage = (auditTrialExpirationDate) => {
-    const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const daysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / millisecondsInOneDay);
+  /**
+   * isUpgradeEligible - can they have an audit trial?
+      not staff
+      enrolled as audit or honor
+      course has verified mode
+      enable xpert audit setting is true
+    if isUpgradeEligible:
+      show all the audit trial data, expired or not.
+   */
+  const getDaysRemainingMessage = () => {
 
     const upgradeURL = offer ? offer.upgradeUrl : verifiedMode.upgradeUrl;
 
-    if (daysRemaining > 1) {
+    if (auditTrialDaysRemaining > 1) {
       const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
         <div>
-          Your trial ends {irtl.format(daysRemaining, 'day')}. <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
+          Your trial ends {irtl.format(auditTrialDaysRemaining, 'day')}. <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
-    } if (daysRemaining === 1) {
+    } if (auditTrialDaysRemaining === 1) {
       return (
         <div>
           Your trial ends today! <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
@@ -122,11 +129,6 @@ const Sidebar = ({
     );
   };
 
-  /**
-   * if no audit trial, and chat message endpoint success,
-   * we know an audit trial just started so write "[xpert_trial_length] days"
-   * and re-call the chat summary endpoint
-  */
   const getSidebar = () => (
     <div className="h-100 d-flex flex-column justify-content-stretch" data-testid="sidebar-xpert">
       <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
@@ -134,9 +136,9 @@ const Sidebar = ({
       </div>
       {isUpgradeEligible
         && (
-        <div className="p-3 trial-header">
-          {getDaysRemainingMessage(auditTrialExpirationDate)}
-        </div>
+          <div className="p-3 trial-header">
+            {getDaysRemainingMessage()}
+          </div>
         )}
       <span className="separator" />
       <ChatBox
