@@ -8,8 +8,6 @@ import {
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
-import { useModel } from '@src/generic/model-store'; // eslint-disable-line import/no-unresolved
-
 import showSurvey from '../../utils/surveyMonkey';
 
 import APIError from '../APIError';
@@ -17,7 +15,7 @@ import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
 import UpgradePanel from '../UpgradePanel';
 import MessageForm from '../MessageForm';
-import { useCourseUpgrade, useTrackEvent } from '../../hooks';
+import { useCourseUpgrade } from '../../hooks';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './Sidebar.scss';
 
@@ -37,16 +35,6 @@ const Sidebar = ({
   const { upgradeUrl, auditTrialDaysRemaining } = useCourseUpgrade();
 
   const chatboxContainerRef = useRef(null);
-
-  const courseHomeMeta = useModel('courseHomeMeta', courseId);
-  const {
-    verifiedMode,
-  } = courseHomeMeta;
-
-  const course = useModel('coursewareMeta', courseId);
-  const {
-    offer,
-  } = course;
 
   // this use effect is intended to scroll to the bottom of the chat window, in the case
   // that a message is larger than the chat window height.
@@ -104,27 +92,26 @@ const Sidebar = ({
       show all the audit trial data, expired or not.
    */
   const getDaysRemainingMessage = () => {
-
-    const upgradeURL = offer ? offer.upgradeUrl : verifiedMode.upgradeUrl;
+    console.log("auditTrialDaysRemaining", auditTrialDaysRemaining)
 
     if (auditTrialDaysRemaining > 1) {
       const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
         <div>
-          Your trial ends {irtl.format(auditTrialDaysRemaining, 'day')}. <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
+          Your trial ends {irtl.format(auditTrialDaysRemaining, 'day')}. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
     } if (auditTrialDaysRemaining === 1) {
       return (
         <div>
-          Your trial ends today! <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
+          Your trial ends today! <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
     }
     // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
     return (
       <div>
-        Your trial has expired. <a target="_blank" href={upgradeURL} rel="noreferrer">Upgrade</a> for full access to Xpert.
+        Your trial has expired. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
       </div>
     );
   };

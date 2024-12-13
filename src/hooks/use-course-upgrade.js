@@ -40,7 +40,6 @@ export default function useCourseUpgrade() {
     auditTrialLengthDays,
     auditTrial,
   } = useSelector(state => state.learningAssistant);
-
   const upgradeUrl = offer?.upgradeUrl || verifiedMode?.upgradeUrl;
 
   if (!isUpgradeEligible || !upgradeUrl) { return { upgradeable: false }; }
@@ -53,6 +52,7 @@ export default function useCourseUpgrade() {
     auditTrialDaysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / millisecondsInOneDay);
 
     auditTrialExpired = auditTrialDaysRemaining < 0;
+    console.log({upgradeUrl}, {auditTrialDaysRemaining})
   }
 
   const isFBE = !!accessExpiration && !!datesBannerInfo?.contentTypeGatingEnabled;
