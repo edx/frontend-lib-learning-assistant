@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Factory } from 'rosie';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { setModel } from '@src/generic/model-store'; // eslint-disable-line import/no-unresolved
 
 import { fetchLearningAssistantChatSummary } from './api';
 
@@ -27,6 +29,8 @@ describe('Thunks unit tests', () => {
   describe('addChatMessage()', () => {
     const mockDate = new Date(2024, 1, 1);
     beforeAll(() => {
+      setModel('coursewareMeta', Factory.build('coursewareMeta'));
+      setModel('courseHomeMeta', Factory.build('courseHomeMeta'));
       jest.useFakeTimers('modern');
       jest.setSystemTime(mockDate);
     });
