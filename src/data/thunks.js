@@ -50,6 +50,15 @@ export function getLearningAssistantChatSummary(courseId) {
 
       // Audit Trial
       const auditTrial = data.audit_trial;
+      auditTrial.start_date="POTATOES";
+      auditTrial.expiration_date="POTATOES";
+      try {
+        new Date(auditTrial.start_date);
+        new Date(auditTrial.expiration_date);
+      } catch {
+        // TODO: How to validate the data here?
+        throw new Error("AAAA:", TypeError);
+      }
 
       // If returned audit trial data is not empty
       if (Object.keys(auditTrial).length !== 0) {

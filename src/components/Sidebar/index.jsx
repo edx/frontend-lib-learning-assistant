@@ -34,7 +34,7 @@ const Sidebar = ({
     messageList,
   } = useSelector(state => state.learningAssistant);
 
-  const { upgradeable, auditTrialExpired } = useCourseUpgrade();
+  const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
 
   const chatboxContainerRef = useRef(null);
 
@@ -94,11 +94,9 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
-  // Get this to work
-  const getDaysRemainingMessage = () => {
-    const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
-    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const daysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / oneDay);
+  const getDaysRemainingMessage = (auditTrialExpirationDate) => {
+    const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const daysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / millisecondsInOneDay);
 
     const upgradeURL = offer ? offer.upgradeUrl : verifiedMode.upgradeUrl;
 
@@ -137,7 +135,7 @@ const Sidebar = ({
       {isUpgradeEligible
         && (
         <div className="p-3 trial-header">
-          {getDaysRemainingMessage()}
+          {getDaysRemainingMessage(auditTrialExpirationDate)}
         </div>
         )}
       <span className="separator" />
