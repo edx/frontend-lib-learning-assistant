@@ -17,59 +17,10 @@ import {
   setSidebarIsOpen,
   setIsEnabled,
   setAuditTrial,
+  setAuditTrialLengthDays,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 import { camelCaseObject } from '@edx/frontend-platform';
-
-export function getLearningAssistantChatSummary(courseId) {
-  return async (dispatch) => {
-    dispatch(setApiIsLoading(true));
-
-    try {
-      const data = await fetchLearningAssistantChatSummary(courseId);
-
-      // Enabled
-      dispatch(setIsEnabled(data.enabled));
-
-      // Message History
-      const rawMessageList = data.message_history;
-
-      // If returned message history data is not empty
-      if (rawMessageList.length) {
-        const messageList = rawMessageList
-          .map(({ timestamp, ...msg }) => ({
-            ...msg,
-            timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
-          }));
-
-        dispatch(setMessageList({ messageList }));
-
-        // If it has chat history, then we assume the user already aknowledged.
-        dispatch(setDisclosureAcknowledged(true));
-      }
-
-      // Audit Trial
-      const auditTrial = data.audit_trial;
-      auditTrial.start_date="POTATOES";
-      auditTrial.expiration_date="POTATOES";
-      try {
-        new Date(auditTrial.start_date);
-        new Date(auditTrial.expiration_date);
-      } catch {
-        // TODO: How to validate the data here?
-        throw new Error("AAAA:", TypeError);
-      }
-
-      // If returned audit trial data is not empty
-      if (Object.keys(auditTrial).length !== 0) {
-        dispatch(setAuditTrial(camelCaseObject(auditTrial)));
-      }
-    } catch (error) {
-      dispatch(setApiError());
-    }
-    dispatch(setApiIsLoading(false));
-  };
-}
 
 export function addChatMessage(role, content, courseId, promptExperimentVariationKey = undefined) {
   return (dispatch, getState) => {
@@ -189,11 +140,15 @@ export function getLearningAssistantChatSummary(courseId) {
         startDate: data.audit_trial.start_date,
         expirationDate: data.audit_trial.expiration_date,
       };
-      console.log("thunks auditTrial:", auditTrial);
 
-      // If returned audit trial data is not empty
-      if (Object.keys(auditTrial).length !== 0) {
-        dispatch(setAuditTrial(auditTrial));
+      // Validate audit trial data & dates
+      const auditTrialDatesValid = !(
+        Number.isNaN(Date.parse(auditTrial.startDate)) ||
+        Number.isNaN(Date.parse(auditTrial.expirationDate))
+      );
+
+      if (Object.keys(auditTrial).length !== 0 && auditTrialDatesValid) {
+        dispatch(setAuditTrial(camelCaseObject(auditTrial)));
       }
 
       if (data.audit_trial_length_days) { dispatch(setAuditTrialLengthDays(data.audit_trial_length_days)); }
