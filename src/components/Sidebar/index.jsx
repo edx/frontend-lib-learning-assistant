@@ -95,8 +95,7 @@ const Sidebar = ({
           Your trial ends today! <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
-    }
-    // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
+    } // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
     return (
       <div>
         Your trial has expired. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
