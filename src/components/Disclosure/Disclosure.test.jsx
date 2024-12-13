@@ -13,7 +13,7 @@ jest.mock('@edx/frontend-platform/config', () => ({
 describe('<TrialDisclosure />', () => {
   let container;
 
-  describe('When trial upgrade is not being showed', () => {
+  describe('When trial upgrade is not being shown', () => {
     beforeEach(() => {
       ({ container } = render(<TrialDisclosure><span>Children</span></TrialDisclosure>));
     });
@@ -36,7 +36,7 @@ describe('<TrialDisclosure />', () => {
     });
   });
 
-  describe('When trial upgrade being showed', () => {
+  describe('When trial upgrade being shown', () => {
     beforeEach(() => {
       ({ container } = render(<TrialDisclosure showTrial><span>Children</span></TrialDisclosure>));
     });
