@@ -24,7 +24,6 @@ const Sidebar = ({
   isOpen,
   setIsOpen,
   unitId,
-  isUpgradeEligible,
 }) => {
   const {
     apiError,
@@ -32,7 +31,7 @@ const Sidebar = ({
     messageList,
   } = useSelector(state => state.learningAssistant);
 
-  const { upgradeUrl, auditTrialDaysRemaining } = useCourseUpgrade();
+  const { upgradeable, upgradeUrl, auditTrialDaysRemaining } = useCourseUpgrade();
 
   const chatboxContainerRef = useRef(null);
 
@@ -86,13 +85,13 @@ const Sidebar = ({
     if (auditTrialDaysRemaining > 1) {
       const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
-        <div>
+        <div data-testid='x-days-remaining-message'>
           Your trial ends {irtl.format(auditTrialDaysRemaining, 'day')}. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
     } if (auditTrialDaysRemaining === 1) {
       return (
-        <div>
+        <div data-testid='trial-ends-today'>
           Your trial ends today! <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
@@ -110,7 +109,7 @@ const Sidebar = ({
       <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
         <XpertLogo />
       </div>
-      {isUpgradeEligible
+      {upgradeable
         && (
           <div className="p-3 trial-header">
             {getDaysRemainingMessage()}
@@ -170,7 +169,6 @@ Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
   unitId: PropTypes.string.isRequired,
-  isUpgradeEligible: PropTypes.bool.isRequired,
 };
 
 export default Sidebar;
