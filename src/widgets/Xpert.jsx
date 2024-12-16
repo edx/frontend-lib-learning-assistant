@@ -30,7 +30,7 @@ const Xpert = ({
   };
 
   useEffect(() => {
-    dispatch(getLearningAssistantChatSummary(courseId, isUpgradeEligible));
+    dispatch(getLearningAssistantChatSummary(courseId));
   }, [dispatch, courseId]);
 
   return isEnabled ? (

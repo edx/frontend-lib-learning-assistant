@@ -10,7 +10,6 @@ import {
   acknowledgeDisclosure,
   addChatMessage,
   getChatResponse,
-  getLearningAssistantChatSummary,
   updateCurrentMessage,
 } from '../../data/thunks';
 import { useCourseUpgrade } from '../../hooks';
