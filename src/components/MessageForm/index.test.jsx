@@ -10,10 +10,16 @@ import {
   acknowledgeDisclosure,
   addChatMessage,
   getChatResponse,
+  getLearningAssistantChatSummary,
   updateCurrentMessage,
 } from '../../data/thunks';
+import { useCourseUpgrade } from '../../hooks';
 
 import MessageForm from '.';
+
+jest.mock('../../hooks', () => ({
+  useCourseUpgrade: jest.fn(),
+}));
 
 jest.mock('../../utils/surveyMonkey', () => ({
   showControlSurvey: jest.fn(),
@@ -81,6 +87,9 @@ describe('<MessageForm />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     usePromptExperimentDecision.mockReturnValue([]);
+    useCourseUpgrade.mockReturnValue({
+      upgradeable: true,
+    });
   });
 
   describe('when rendered', () => {
@@ -137,7 +146,7 @@ describe('<MessageForm />', () => {
 
       expect(acknowledgeDisclosure).toHaveBeenCalledWith(true);
       expect(addChatMessage).toHaveBeenCalledWith('user', currentMessage, defaultProps.courseId, undefined);
-      expect(getChatResponse).toHaveBeenCalledWith(defaultProps.courseId, defaultProps.unitId, undefined);
+      expect(getChatResponse).toHaveBeenCalledWith(defaultProps.courseId, defaultProps.unitId, true, undefined);
       expect(mockDispatch).toHaveBeenCalledTimes(3);
     });
 
@@ -187,6 +196,7 @@ describe('<MessageForm />', () => {
       expect(getChatResponse).toHaveBeenCalledWith(
         defaultProps.courseId,
         defaultProps.unitId,
+        true,
         OPTIMIZELY_PROMPT_EXPERIMENT_VARIATION_KEYS.UPDATED_PROMPT,
       );
       expect(mockDispatch).toHaveBeenCalledTimes(3);

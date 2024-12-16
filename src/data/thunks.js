@@ -56,7 +56,7 @@ export function addChatMessage(role, content, courseId, promptExperimentVariatio
   };
 }
 
-export function getChatResponse(courseId, unitId, promptExperimentVariationKey = undefined) {
+export function getChatResponse(courseId, unitId, upgradeable, promptExperimentVariationKey = undefined) {
   return async (dispatch, getState) => {
     const { userId } = getAuthenticatedUser();
     const { messageList } = getState().learningAssistant;
@@ -69,9 +69,9 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
       const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
       const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
 
-      // Refresh chat summary only on the first message so we can tell if the user has initiated an audit trial
-      // NOTE: This is a bit of a hacky solution that may be refined later
-      if (messageList.length === 1) {
+      // Refresh chat summary only on the first message for an upgrade eligible user
+      // so we can tell if the user has just initiated an audit trial
+      if (messageList.length === 1 && upgradeable) {
         // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }

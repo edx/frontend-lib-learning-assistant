@@ -10,11 +10,14 @@ import {
   getChatResponse,
   updateCurrentMessage,
 } from '../../data/thunks';
+import { useCourseUpgrade } from '../../hooks';
 import { usePromptExperimentDecision } from '../../experiments';
 
 import './MessageForm.scss';
 
 const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
+  const { upgradeable } = useCourseUpgrade();
+
   const { apiIsLoading, currentMessage, apiError } = useSelector(state => state.learningAssistant);
   const dispatch = useDispatch();
   const inputRef = useRef();
@@ -35,7 +38,7 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
     if (currentMessage) {
       dispatch(acknowledgeDisclosure(true));
       dispatch(addChatMessage('user', currentMessage, courseId, promptExperimentVariationKey));
-      dispatch(getChatResponse(courseId, unitId, promptExperimentVariationKey));
+      dispatch(getChatResponse(courseId, unitId, upgradeable, promptExperimentVariationKey));
     }
   };
 
