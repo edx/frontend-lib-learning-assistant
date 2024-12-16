@@ -85,7 +85,7 @@ describe('<TrialDisclosure />', () => {
 
       fireEvent.click(upgradeCta);
 
-      expect(mockedTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.message');
+      expect(mockedTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.disclosure_upgrade_click');
     });
 
     it('should match snapshot', () => {

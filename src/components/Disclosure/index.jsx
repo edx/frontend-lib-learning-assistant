@@ -14,7 +14,7 @@ const Disclosure = ({ children }) => {
   const { upgradeable, upgradeUrl, auditTrialLengthDays } = useCourseUpgrade();
   const { track } = useTrackEvent();
 
-  const handleClick = () => track('edx.ui.lms.learning_assistant.message');
+  const handleClick = () => track('edx.ui.lms.learning_assistant.disclosure_upgrade_click');
   const freeDays = auditTrialLengthDays === 1 ? '1 day' : `${auditTrialLengthDays} days`;
 
   return (

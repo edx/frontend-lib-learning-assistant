@@ -5,6 +5,29 @@ import { CourseInfoContext } from '../context';
 
 const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 
+/**
+ * @typedef AuditTrial
+ * @type {object}
+ * @property {string} startDate Date String of when the Trial started.
+ * @property {string} expirationDate Date String of when the Trial ends.
+ */
+
+/**
+ * @typedef CourseUpgradeInfo
+ * @type {object}
+ * @property {boolean} upgradeable Should this user see a trial/upgrade option?.
+ * @property {number} [auditTrialLengthDays] Audit Trial full length in days.
+ * @property {number} [auditTrialDaysRemaining] Remaining day for the current trial (if any).
+ * @property {boolean} [auditTrialExpired] True means that the audit has been taken and expired.
+ * @property {AuditTrial} [auditTrial] The Audit trial information. Undefined if there's no trial for this user.
+ * @property {string} [upgradeUrl] URL to redirect the user in case there's intention to upgrade.
+ */
+
+/**
+ * This hook returns related data for the Course Upgrade.
+ *
+ * @returns {CourseUpgradeInfo}
+ */
 export default function useCourseUpgrade() {
   const { courseId, isUpgradeEligible } = useContext(CourseInfoContext);
   const { offer } = useModel('coursewareMeta', courseId);
