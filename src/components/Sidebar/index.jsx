@@ -114,9 +114,7 @@ const Sidebar = ({
           invertColors
           data-testid="close-button"
         />
-        {disclosureAcknowledged
-          ? (getSidebar())
-          : (<Disclosure>{getMessageForm()}</Disclosure>)}
+        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure>{getMessageForm()}</Disclosure>)}
       </div>
     )
   );

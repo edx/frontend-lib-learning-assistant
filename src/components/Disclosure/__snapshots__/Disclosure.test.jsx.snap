@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TrialDisclosure /> When trial upgrade being showed should match snapshot 1`] = `
+exports[`<TrialDisclosure /> When trial upgrade being shown should match snapshot 1`] = `
 <div>
-  <div
+  <section
     class="disclosure d-flex flex-column align-items-stretch"
   >
     <h2
@@ -10,86 +10,22 @@ exports[`<TrialDisclosure /> When trial upgrade being showed should match snapsh
     >
       Xpert Learning Assistant
     </h2>
-    <h3
-      class="small py-2"
-    >
-      An AI-powered educational tool
-    </h3>
     <div
-      class="d-flex flex-column"
+      class="info"
     >
-      <div
-        class="text-light-100 d-flex flex-row mb-3"
+      <h3
+        class="small py-2"
       >
-        <span
-          class="pgn__icon bullet-icon"
-        >
-          <svg
-            aria-hidden="true"
-            fill="none"
-            focusable="false"
-            height="24"
-            role="img"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 17c-.83 0-1.5-.67-1.5-1.5h3c0 .83-.67 1.5-1.5 1.5zm3-2.5H9V15h6v1.5zm-.03-2.5H9.03A4.966 4.966 0 0 1 7 10c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.64-.8 3.09-2.03 4z"
-              fill="currentColor"
-            />
-          </svg>
-        </span>
-        <div>
-          Understand a concept
-          <br />
-          <small>
-            “How does photosynthesis work?”
-          </small>
-        </div>
-      </div>
+        An AI-powered educational tool
+      </h3>
       <div
-        class="text-light-100 d-flex flex-row mb-4"
-      >
-        <span
-          class="pgn__icon bullet-icon"
-        >
-          <svg
-            aria-hidden="true"
-            fill="none"
-            focusable="false"
-            height="24"
-            role="img"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15 4v7H5.17l-.59.59-.58.58V4h11Zm1-2H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1Zm5 4h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1Z"
-              fill="currentColor"
-            />
-          </svg>
-        </span>
-        <div>
-          Summarize your learning
-          <br />
-          <small>
-            “Can you help me review pivot tables?”
-          </small>
-        </div>
-      </div>
-    </div>
-    <div
-      class="trial-period"
-    >
-      <div
-        class="trial-period-content"
+        class="d-flex flex-column"
       >
         <div
-          class="d-flex flex-row text-light-100"
+          class="text-light-100 d-flex flex-row mb-3"
         >
           <span
-            class="pgn__icon bullet-icon bullet-icon"
+            class="pgn__icon bullet-icon"
           >
             <svg
               aria-hidden="true"
@@ -102,46 +38,121 @@ exports[`<TrialDisclosure /> When trial upgrade being showed should match snapsh
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 17c-.83 0-1.5-.67-1.5-1.5h3c0 .83-.67 1.5-1.5 1.5zm3-2.5H9V15h6v1.5zm-.03-2.5H9.03A4.966 4.966 0 0 1 7 10c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.64-.8 3.09-2.03 4z"
                 fill="currentColor"
               />
             </svg>
           </span>
-          <small>
-            Free trial, then upgrade course for full access to Xpert features.
-          </small>
+          <div>
+            Understand a concept
+            <br />
+            <small>
+              “How does photosynthesis work?”
+            </small>
+          </div>
         </div>
-        <button
-          class="trial-upgrade mt-3 btn btn-primary btn-block"
-          type="button"
+        <div
+          class="text-light-100 d-flex flex-row mb-4"
         >
-          Upgrade now
-        </button>
+          <span
+            class="pgn__icon bullet-icon"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15 4v7H5.17l-.59.59-.58.58V4h11Zm1-2H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1Zm5 4h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <div>
+            Summarize your learning
+            <br />
+            <small>
+              “Can you help me review pivot tables?”
+            </small>
+          </div>
+        </div>
       </div>
-    </div>
-    <p
-      class="disclaimer small text-light-100 py-3"
-    >
-      Note: This chat is AI generated, mistakes are possible. By using it you agree that edX may create a record of this chat. Your personal data will be used as described in our  
-      <a
-        class="pgn__hyperlink default-link standalone-link privacy-policy-link text-light-100"
-        href="https://some.url/policy"
-        target="_self"
+      <div
+        class="trial-period"
       >
-        privacy policy
-      </a>
-      .
-    </p>
-    <span>
-      Children
-    </span>
-  </div>
+        <div
+          class="trial-period-content"
+        >
+          <div
+            class="d-flex flex-row text-light-100"
+          >
+            <span
+              class="pgn__icon bullet-icon bullet-icon"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <small
+              data-testid="free-days-label"
+            >
+              Free for 
+              7 days
+              , then upgrade course for full access to Xpert features.
+            </small>
+          </div>
+          <a
+            class="trial-upgrade mt-3 btn btn-primary btn-block"
+            data-testid="upgrade-cta"
+            href="https://upgrade.edx/course/test"
+          >
+            Upgrade now
+          </a>
+        </div>
+      </div>
+      <p
+        class="disclaimer small text-light-100 py-3"
+      >
+        Note: This chat is AI generated, mistakes are possible. By using it you agree that edX may create a record of this chat. Your personal data will be used as described in our  
+        <a
+          class="pgn__hyperlink default-link standalone-link privacy-policy-link text-light-100"
+          href="https://some.url/policy"
+          target="_self"
+        >
+          privacy policy
+        </a>
+        .
+      </p>
+    </div>
+    <footer>
+      <span>
+        Children
+      </span>
+    </footer>
+  </section>
 </div>
 `;
 
-exports[`<TrialDisclosure /> When trial upgrade is not being showed should match snapshot 1`] = `
+exports[`<TrialDisclosure /> When trial upgrade is not being shown should match snapshot 1`] = `
 <div>
-  <div
+  <section
     class="disclosure d-flex flex-column align-items-stretch"
   >
     <h2
@@ -149,91 +160,97 @@ exports[`<TrialDisclosure /> When trial upgrade is not being showed should match
     >
       Xpert Learning Assistant
     </h2>
-    <h3
-      class="small py-2"
-    >
-      An AI-powered educational tool
-    </h3>
     <div
-      class="d-flex flex-column"
+      class="info"
     >
-      <div
-        class="text-light-100 d-flex flex-row mb-3"
+      <h3
+        class="small py-2"
       >
-        <span
-          class="pgn__icon bullet-icon"
+        An AI-powered educational tool
+      </h3>
+      <div
+        class="d-flex flex-column"
+      >
+        <div
+          class="text-light-100 d-flex flex-row mb-3"
         >
-          <svg
-            aria-hidden="true"
-            fill="none"
-            focusable="false"
-            height="24"
-            role="img"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
+          <span
+            class="pgn__icon bullet-icon"
           >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 17c-.83 0-1.5-.67-1.5-1.5h3c0 .83-.67 1.5-1.5 1.5zm3-2.5H9V15h6v1.5zm-.03-2.5H9.03A4.966 4.966 0 0 1 7 10c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.64-.8 3.09-2.03 4z"
-              fill="currentColor"
-            />
-          </svg>
-        </span>
-        <div>
-          Understand a concept
-          <br />
-          <small>
-            “How does photosynthesis work?”
-          </small>
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 17c-.83 0-1.5-.67-1.5-1.5h3c0 .83-.67 1.5-1.5 1.5zm3-2.5H9V15h6v1.5zm-.03-2.5H9.03A4.966 4.966 0 0 1 7 10c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.64-.8 3.09-2.03 4z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <div>
+            Understand a concept
+            <br />
+            <small>
+              “How does photosynthesis work?”
+            </small>
+          </div>
+        </div>
+        <div
+          class="text-light-100 d-flex flex-row mb-4"
+        >
+          <span
+            class="pgn__icon bullet-icon"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15 4v7H5.17l-.59.59-.58.58V4h11Zm1-2H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1Zm5 4h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <div>
+            Summarize your learning
+            <br />
+            <small>
+              “Can you help me review pivot tables?”
+            </small>
+          </div>
         </div>
       </div>
-      <div
-        class="text-light-100 d-flex flex-row mb-4"
+      <p
+        class="disclaimer small text-light-100 py-3"
       >
-        <span
-          class="pgn__icon bullet-icon"
+        Note: This chat is AI generated, mistakes are possible. By using it you agree that edX may create a record of this chat. Your personal data will be used as described in our  
+        <a
+          class="pgn__hyperlink default-link standalone-link privacy-policy-link text-light-100"
+          href="https://some.url/policy"
+          target="_self"
         >
-          <svg
-            aria-hidden="true"
-            fill="none"
-            focusable="false"
-            height="24"
-            role="img"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15 4v7H5.17l-.59.59-.58.58V4h11Zm1-2H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1Zm5 4h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1Z"
-              fill="currentColor"
-            />
-          </svg>
-        </span>
-        <div>
-          Summarize your learning
-          <br />
-          <small>
-            “Can you help me review pivot tables?”
-          </small>
-        </div>
-      </div>
+          privacy policy
+        </a>
+        .
+      </p>
     </div>
-    <p
-      class="disclaimer small text-light-100 py-3"
-    >
-      Note: This chat is AI generated, mistakes are possible. By using it you agree that edX may create a record of this chat. Your personal data will be used as described in our  
-      <a
-        class="pgn__hyperlink default-link standalone-link privacy-policy-link text-light-100"
-        href="https://some.url/policy"
-        target="_self"
-      >
-        privacy policy
-      </a>
-      .
-    </p>
-    <span>
-      Children
-    </span>
-  </div>
+    <footer>
+      <span>
+        Children
+      </span>
+    </footer>
+  </section>
 </div>
 `;

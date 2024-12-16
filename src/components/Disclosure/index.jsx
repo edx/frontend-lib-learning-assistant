@@ -4,9 +4,9 @@ import React from 'react';
 import { Hyperlink, Icon, Button } from '@openedx/paragon';
 import { QuestionAnswerOutline, LightbulbCircle, AutoAwesome } from '@openedx/paragon/icons';
 import { ensureConfig, getConfig } from '@edx/frontend-platform/config';
+import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 
 import './Disclosure.scss';
-import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 
 ensureConfig(['PRIVACY_POLICY_URL']);
 
@@ -45,7 +45,7 @@ const Disclosure = ({ children }) => {
             <div className="trial-period-content">
               <div className="d-flex flex-row text-light-100">
                 <Icon src={AutoAwesome} className="bullet-icon bullet-icon" />
-                <small>
+                <small data-testid="free-days-label">
                   Free for {freeDays}, then upgrade course for full access to Xpert features.
                 </small>
               </div>
@@ -54,6 +54,7 @@ const Disclosure = ({ children }) => {
                 href={upgradeUrl}
                 className="trial-upgrade mt-3"
                 block
+                data-testid="upgrade-cta"
               >
                 Upgrade now
               </Button>
