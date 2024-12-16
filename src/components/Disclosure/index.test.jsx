@@ -1,7 +1,7 @@
 import React from 'react';
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { render } from '../../utils/utils.test';
-import { useCourseUpgrade, useTrackEvent } from '../../hooks';
+import { useCourseUpgrade } from '../../hooks';
 
 import TrialDisclosure from '.';
 
@@ -53,15 +53,12 @@ describe('<TrialDisclosure />', () => {
   });
 
   describe('When trial upgrade being shown', () => {
-    const mockedTrackEvent = jest.fn();
-
     beforeEach(() => {
       useCourseUpgrade.mockReturnValue({
         upgradeable: true,
         upgradeUrl: mockedUpgradeUrl,
         auditTrialLengthDays: mockedAuditTrialDays,
       });
-      useTrackEvent.mockReturnValue({ track: mockedTrackEvent });
       ({ container } = render(<TrialDisclosure showTrial><span>Children</span></TrialDisclosure>));
     });
 
@@ -76,16 +73,6 @@ describe('<TrialDisclosure />', () => {
 
       expect(upgradeCta).toBeInTheDocument();
       expect(upgradeCta).toHaveAttribute('href', mockedUpgradeUrl);
-    });
-
-    it('should call the track event on click', () => {
-      const upgradeCta = screen.queryByTestId('upgrade-cta');
-
-      expect(mockedTrackEvent).not.toHaveBeenCalled();
-
-      fireEvent.click(upgradeCta);
-
-      expect(mockedTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.disclosure_upgrade_click');
     });
 
     it('should match snapshot', () => {

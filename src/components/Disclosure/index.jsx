@@ -1,20 +1,20 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Hyperlink, Icon, Button } from '@openedx/paragon';
+import { Hyperlink, Icon } from '@openedx/paragon';
 import { QuestionAnswerOutline, LightbulbCircle, AutoAwesome } from '@openedx/paragon/icons';
 import { ensureConfig, getConfig } from '@edx/frontend-platform/config';
-import { useCourseUpgrade, useTrackEvent } from '../../hooks';
+
+import UpgradeButton from '../UpgradeButton';
+import { useCourseUpgrade } from '../../hooks';
 
 import './Disclosure.scss';
 
 ensureConfig(['PRIVACY_POLICY_URL']);
 
 const Disclosure = ({ children }) => {
-  const { upgradeable, upgradeUrl, auditTrialLengthDays } = useCourseUpgrade();
-  const { track } = useTrackEvent();
+  const { upgradeable, auditTrialLengthDays } = useCourseUpgrade();
 
-  const handleClick = () => track('edx.ui.lms.learning_assistant.disclosure_upgrade_click');
   const freeDays = auditTrialLengthDays === 1 ? '1 day' : `${auditTrialLengthDays} days`;
 
   return (
@@ -49,15 +49,7 @@ const Disclosure = ({ children }) => {
                   Free for {freeDays}, then upgrade course for full access to Xpert features.
                 </small>
               </div>
-              <Button
-                onClick={handleClick}
-                href={upgradeUrl}
-                className="trial-upgrade mt-3"
-                block
-                data-testid="upgrade-cta"
-              >
-                Upgrade now
-              </Button>
+              <UpgradeButton trackingEventName="edx.ui.lms.learning_assistant.disclosure_upgrade_click" />
             </div>
           </div>
         ) : null}

@@ -5,6 +5,7 @@ import { usePromptExperimentDecision } from '../../experiments';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import showSurvey from '../../utils/surveyMonkey';
+import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 
 import Sidebar from '.';
 
@@ -31,6 +32,11 @@ jest.mock('react-redux', () => ({
 
 jest.mock('../../experiments', () => ({
   usePromptExperimentDecision: jest.fn(),
+}));
+
+jest.mock('../../hooks', () => ({
+  useCourseUpgrade: jest.fn(),
+  useTrackEvent: jest.fn(),
 }));
 
 const defaultProps = {
@@ -63,6 +69,8 @@ const render = async (props = {}, sliceState = {}) => {
 describe('<Sidebar />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
+    useCourseUpgrade.mockReturnValue({ upgradeable: false });
+    useTrackEvent.mockReturnValue({ track: jest.fn() });
     usePromptExperimentDecision.mockReturnValue([]);
   });
 
@@ -80,6 +88,15 @@ describe('<Sidebar />', () => {
     it('should render xpert if disclosureAcknowledged', () => {
       render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
+    });
+
+    it('should not render xpert if audit trial is expired', () => {
+      useCourseUpgrade.mockReturnValue({
+        upgradeable: true,
+        auditTrialExpired: true,
+      });
+      render();
+      expect(screen.queryByTestId('sidebar-xpert')).not.toBeInTheDocument();
     });
   });
 

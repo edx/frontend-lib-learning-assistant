@@ -7,11 +7,13 @@ import {
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
+import { useCourseUpgrade } from '../../hooks';
 import showSurvey from '../../utils/surveyMonkey';
 
 import APIError from '../APIError';
 import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
+import UpgradePanel from '../UpgradePanel';
 import MessageForm from '../MessageForm';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './Sidebar.scss';
@@ -27,6 +29,9 @@ const Sidebar = ({
     disclosureAcknowledged,
     messageList,
   } = useSelector(state => state.learningAssistant);
+
+  const { upgradeable, auditTrialExpired } = useCourseUpgrade();
+
   const chatboxContainerRef = useRef(null);
 
   // this use effect is intended to scroll to the bottom of the chat window, in the case
@@ -97,6 +102,15 @@ const Sidebar = ({
     </div>
   );
 
+  const getPanel = () => {
+    const showUpgrade = upgradeable && auditTrialExpired;
+
+    if (showUpgrade) {
+      return <UpgradePanel />;
+    }
+    return (disclosureAcknowledged ? (getSidebar()) : (<Disclosure>{getMessageForm()}</Disclosure>));
+  };
+
   return (
     isOpen && (
       <div
@@ -114,7 +128,7 @@ const Sidebar = ({
           invertColors
           data-testid="close-button"
         />
-        {disclosureAcknowledged ? (getSidebar()) : (<Disclosure>{getMessageForm()}</Disclosure>)}
+        {getPanel()}
       </div>
     )
   );
