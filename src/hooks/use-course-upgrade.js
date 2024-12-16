@@ -40,6 +40,7 @@ export default function useCourseUpgrade() {
     auditTrialLengthDays,
     auditTrial,
   } = useSelector(state => state.learningAssistant);
+
   const upgradeUrl = offer?.upgradeUrl || verifiedMode?.upgradeUrl;
 
   if (!isUpgradeEligible || !upgradeUrl) { return { upgradeable: false }; }

@@ -94,7 +94,6 @@ describe('<Sidebar />', () => {
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
     });
 
-    // TODO: Write out these tests.
     it('If auditTrialDaysRemaining > 1, show days remaining', () => {
       useCourseUpgrade.mockReturnValue({
         upgradeable: true,
