@@ -8,15 +8,15 @@ import TrialDisclosure from '.';
 const mockedUpgradeUrl = 'https://upgrade.edx/course/test';
 const mockedAuditTrialDays = 7;
 
-jest.mock('../../hooks', () => ({
-  useCourseUpgrade: jest.fn(),
-  useTrackEvent: jest.fn(() => ({ track: jest.fn() })),
-}));
-
 const PRIVACY_POLICY_URL = 'https://some.url/policy';
 jest.mock('@edx/frontend-platform/config', () => ({
   ensureConfig: jest.fn(),
   getConfig: () => ({ PRIVACY_POLICY_URL }),
+}));
+
+jest.mock('../../hooks', () => ({
+  useCourseUpgrade: jest.fn(),
+  useTrackEvent: jest.fn(() => ({ track: jest.fn() })),
 }));
 
 describe('<TrialDisclosure />', () => {

@@ -32,7 +32,7 @@ const renderHook = ({
   { wrapper: contextWrapper({ courseInfo }) },
 );
 
-describe('useCourseUpgrade()', () => {
+describe('useTrackEvent()', () => {
   afterEach(() => jest.resetAllMocks());
 
   it('should return a track method that calls sendTrackEvent with the contextual information', () => {

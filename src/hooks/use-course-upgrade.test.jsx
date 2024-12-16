@@ -4,7 +4,6 @@ import { useModel } from '@src/generic/model-store'; // eslint-disable-line impo
 import { CourseInfoProvider } from '../context';
 import useCourseUpgrade from './use-course-upgrade';
 
-jest.mock('@src/generic/model-store', () => ({ useModel: jest.fn() }), { virtual: true });
 jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
 
 const mockedUpgradeUrl = 'https://upgrade.edx/course/test';
