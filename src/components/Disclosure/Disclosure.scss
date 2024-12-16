@@ -2,16 +2,31 @@
 
 .disclosure {
     height: 100%;
-
     overflow-y: auto;
     background-color: variables.$dark-green;
+    font-family: Inter, Arial, sans-serif;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
 
     h2 {
-        font-size: 2rem;
+        font-size: 1.375rem;
     }
 
     h3 {
+        font-family: "Roboto Mono", Inter, Arial, sans-serif;
         color: variables.$accent-yellow;
+        margin-bottom: 3rem;
+    }
+
+    small {
+        font-size: 0.875rem;
+    }
+
+    .bullet-icon {
+        width: 2rem;
+        height: 2rem;
+        margin-right: 1rem;
     }
 
     p {
@@ -30,6 +45,46 @@
     }
 
     .disclaimer {
-        font-size: 1rem;
+        font-size: 0.75rem;
+    }
+
+    .trial-period {
+        padding: 3px;
+        background: #2D494E;
+        border-radius: 0.8125rem;
+        background-image:
+            linear-gradient(#2D494E, #2D494E),
+            linear-gradient(to right, #E76F3F, #EBA7BC);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+
+        &-content {
+            padding: 0.8125rem;
+        }
+
+        .bullet-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.5rem;
+
+            svg path {
+                fill: #E98B7E;
+            }
+        }
+    }
+
+    .trial-upgrade {
+        background: #D74000;
+        border-radius: 99rem;
+        font-size: 0
+        .875rem;
+    }
+
+    .pgn__form-group {
+        margin: 0;
+    }
+    .pgn__form-control-decorator-group {
+        margin: 0;
     }
 }
+

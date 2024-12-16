@@ -17,6 +17,7 @@ import {
   setSidebarIsOpen,
   setIsEnabled,
   setAuditTrial,
+  setAuditTrialLengthDays,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 
@@ -134,6 +135,8 @@ export function getLearningAssistantChatSummary(courseId) {
       if (Object.keys(auditTrial).length !== 0) {
         dispatch(setAuditTrial(auditTrial));
       }
+
+      if (data.audit_trial_length_days) { dispatch(setAuditTrialLengthDays(data.audit_trial_length_days)); }
     } catch (error) {
       dispatch(setApiError());
     }
