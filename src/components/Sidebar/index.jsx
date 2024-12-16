@@ -85,13 +85,13 @@ const Sidebar = ({
     if (auditTrialDaysRemaining > 1) {
       const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
-        <div data-testid="x-days-remaining-message">
+        <div data-testid="days-remaining-message">
           Your trial ends {irtl.format(auditTrialDaysRemaining, 'day')}. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
     } if (auditTrialDaysRemaining === 1) {
       return (
-        <div data-testid="trial-ends-today">
+        <div data-testid="trial-ends-today-message">
           Your trial ends today! <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
@@ -110,7 +110,7 @@ const Sidebar = ({
       </div>
       {upgradeable
         && (
-          <div className="p-3 trial-header">
+          <div className="p-3 trial-header" data-testid="get-days-remaining-message">
             {getDaysRemainingMessage()}
           </div>
         )}

@@ -2,13 +2,18 @@ import React from 'react';
 import { screen, act } from '@testing-library/react';
 
 import { usePromptExperimentDecision } from '../../experiments';
-import { useCourseUpgrade } from '../../hooks';
+import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import showSurvey from '../../utils/surveyMonkey';
 import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 
 import Sidebar from '.';
+
+jest.mock('../../hooks', () => ({
+  useCourseUpgrade: jest.fn(),
+  useTrackEvent: jest.fn(() => ({ track: jest.fn() })),
+}));
 
 jest.mock('../../utils/surveyMonkey', () => jest.fn());
 
@@ -33,10 +38,6 @@ jest.mock('react-redux', () => ({
 
 jest.mock('../../experiments', () => ({
   usePromptExperimentDecision: jest.fn(),
-}));
-
-jest.mock('../../hooks', () => ({
-  useCourseUpgrade: jest.fn(),
 }));
 
 const defaultProps = {
@@ -73,6 +74,8 @@ describe('<Sidebar />', () => {
     useTrackEvent.mockReturnValue({ track: jest.fn() });
     usePromptExperimentDecision.mockReturnValue([]);
     useCourseUpgrade.mockReturnValue([]);
+    const mockedTrackEvent = jest.fn();
+    useTrackEvent.mockReturnValue({ track: mockedTrackEvent });
   });
 
   describe('when it\'s open', () => {
@@ -100,9 +103,8 @@ describe('<Sidebar />', () => {
       });
       render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
-
-      const daysRemainingMessage = screen.queryByTestId('x-days-remaining-message');
-      expect(daysRemainingMessage).toBeInTheDocument();
+      expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('days-remaining-message')).toBeInTheDocument();
     });
 
     it('If auditTrialDaysRemaining === 1, say final day', () => {
@@ -113,9 +115,8 @@ describe('<Sidebar />', () => {
       });
       render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
-
-      const trialEndsTodayMessage = screen.queryByTestId('trial-ends-today');
-      expect(trialEndsTodayMessage).toBeInTheDocument();
+      expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('trial-ends-today')).not.toBeInTheDocument();
     });
 
     it('If auditTrialDaysRemaining < 1, do not show either of those', () => {
@@ -126,11 +127,9 @@ describe('<Sidebar />', () => {
       });
       render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
-
-      const daysRemainingMessage = screen.queryByTestId('x-days-remaining-message');
-      const trialEndsTodayMessage = screen.queryByTestId('trial-ends-today');
-      expect(daysRemainingMessage).not.toBeInTheDocument();
-      expect(trialEndsTodayMessage).not.toBeInTheDocument();
+      expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('days-remaining-message')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('trial-ends-today')).not.toBeInTheDocument();
     });
   });
 
