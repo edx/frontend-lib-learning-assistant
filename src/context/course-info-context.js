@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-export const CourseInfoContext = createContext('course-info', {
+export const CourseInfoContext = createContext({
   courseId: null,
   unitId: null,
   isUpgradeEligible: false,

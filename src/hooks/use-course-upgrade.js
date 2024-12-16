@@ -23,6 +23,7 @@ export default function useCourseUpgrade() {
 
   if (auditTrial?.expirationDate) {
     const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
+
     auditTrialDaysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / millisecondsInOneDay);
 
     auditTrialExpired = auditTrialDaysRemaining < 0;
