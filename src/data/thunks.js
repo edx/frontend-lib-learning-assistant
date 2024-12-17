@@ -1,6 +1,7 @@
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
+import { camelCaseObject } from '@edx/frontend-platform';
 import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
 import {
   fetchChatResponse,
@@ -55,7 +56,7 @@ export function addChatMessage(role, content, courseId, promptExperimentVariatio
   };
 }
 
-export function getChatResponse(courseId, unitId, promptExperimentVariationKey = undefined) {
+export function getChatResponse(courseId, unitId, upgradeable, promptExperimentVariationKey = undefined) {
   return async (dispatch, getState) => {
     const { userId } = getAuthenticatedUser();
     const { messageList } = getState().learningAssistant;
@@ -67,6 +68,13 @@ export function getChatResponse(courseId, unitId, promptExperimentVariationKey =
       }
       const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
       const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
+
+      // Refresh chat summary only on the first message for an upgrade eligible user
+      // so we can tell if the user has just initiated an audit trial
+      if (messageList.length === 1 && upgradeable) {
+        // eslint-disable-next-line no-use-before-define
+        dispatch(getLearningAssistantChatSummary(courseId));
+      }
 
       dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
@@ -129,11 +137,19 @@ export function getLearningAssistantChatSummary(courseId) {
       }
 
       // Audit Trial
-      const auditTrial = data.audit_trial;
+      const auditTrial = {
+        startDate: data.audit_trial.start_date,
+        expirationDate: data.audit_trial.expiration_date,
+      };
 
-      // If returned audit trial data is not empty
-      if (Object.keys(auditTrial).length !== 0) {
-        dispatch(setAuditTrial(auditTrial));
+      // Validate audit trial data & dates
+      const auditTrialDatesValid = !(
+        Number.isNaN(Date.parse(auditTrial.startDate))
+        || Number.isNaN(Date.parse(auditTrial.expirationDate))
+      );
+
+      if (Object.keys(auditTrial).length !== 0 && auditTrialDatesValid) {
+        dispatch(setAuditTrial(camelCaseObject(auditTrial)));
       }
 
       if (data.audit_trial_length_days) { dispatch(setAuditTrialLengthDays(data.audit_trial_length_days)); }

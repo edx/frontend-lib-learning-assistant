@@ -26,7 +26,8 @@ describe('Thunks unit tests', () => {
 
   describe('addChatMessage()', () => {
     const mockDate = new Date(2024, 1, 1);
-    beforeAll(() => {
+
+    beforeEach(async () => {
       jest.useFakeTimers('modern');
       jest.setSystemTime(mockDate);
     });
@@ -110,8 +111,8 @@ describe('Thunks unit tests', () => {
       expect(dispatch).toHaveBeenNthCalledWith(5, {
         type: 'learning-assistant/setAuditTrial',
         payload: {
-          start_date: '2024-12-02T14:59:16.148236Z',
-          expiration_date: '9999-12-16T14:59:16.148236Z',
+          startDate: '2024-12-02T14:59:16.148236Z',
+          expirationDate: '9999-12-16T14:59:16.148236Z',
         },
       });
 
@@ -158,8 +159,8 @@ describe('Thunks unit tests', () => {
       expect(dispatch).toHaveBeenNthCalledWith(3, {
         type: 'learning-assistant/setAuditTrial',
         payload: {
-          start_date: '2024-12-02T14:59:16.148236Z',
-          expiration_date: '9999-12-16T14:59:16.148236Z',
+          startDate: '2024-12-02T14:59:16.148236Z',
+          expirationDate: '9999-12-16T14:59:16.148236Z',
         },
       });
 

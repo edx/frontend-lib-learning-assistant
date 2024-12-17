@@ -1,20 +1,21 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+
 import {
   Icon,
   IconButton,
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
-import { useCourseUpgrade } from '../../hooks';
 import showSurvey from '../../utils/surveyMonkey';
 
 import APIError from '../APIError';
 import ChatBox from '../ChatBox';
 import Disclosure from '../Disclosure';
-import UpgradePanel from '../UpgradePanel';
 import MessageForm from '../MessageForm';
+import UpgradePanel from '../UpgradePanel';
+import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
 import './Sidebar.scss';
 
@@ -30,7 +31,11 @@ const Sidebar = ({
     messageList,
   } = useSelector(state => state.learningAssistant);
 
-  const { upgradeable, auditTrialExpired } = useCourseUpgrade();
+  const {
+    upgradeable, upgradeUrl, auditTrialExpired, auditTrialDaysRemaining,
+  } = useCourseUpgrade();
+
+  const { track } = useTrackEvent();
 
   const chatboxContainerRef = useRef(null);
 
@@ -80,11 +85,53 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
+  const handleUpgradeLinkClick = () => {
+    track('edx.ui.lms.learning_assistant.days_remaining_banner_upgrade_click');
+  };
+
+  const getUpgradeLink = () => (
+    <a
+      onClick={handleUpgradeLinkClick}
+      target="_blank"
+      href={upgradeUrl}
+      rel="noreferrer"
+      data-testid="days_remaining_banner_upgrade_link"
+    >
+      Upgrade
+    </a>
+  );
+
+  const getDaysRemainingMessage = () => { // eslint-disable-line consistent-return
+    if (auditTrialDaysRemaining > 1) {
+      const intlRelativeTime = new Intl.RelativeTimeFormat({ style: 'long' });
+      return (
+        <div data-testid="days-remaining-message">
+          Your trial ends {intlRelativeTime.format(auditTrialDaysRemaining, 'day')}. {getUpgradeLink()} for full access to Xpert.
+        </div>
+      );
+    } if (auditTrialDaysRemaining === 1) {
+      return (
+        <div data-testid="trial-ends-today-message">
+          Your trial ends today! {getUpgradeLink()} for full access to Xpert.
+        </div>
+      );
+    }
+  };
+
   const getSidebar = () => (
-    <div className="h-100 d-flex flex-column justify-content-stretch" data-testid="sidebar-xpert">
+    <div
+      className="h-100 d-flex flex-column justify-content-stretch"
+      data-testid="sidebar-xpert"
+    >
       <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
         <XpertLogo />
       </div>
+      {upgradeable
+        && (
+          <div className="p-3 trial-header" data-testid="get-days-remaining-message">
+            {getDaysRemainingMessage()}
+          </div>
+        )}
       <span className="separator" />
       <ChatBox
         chatboxContainerRef={chatboxContainerRef}
