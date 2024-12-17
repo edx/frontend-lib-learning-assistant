@@ -119,7 +119,7 @@ exports[`<TrialDisclosure /> When trial upgrade being shown should match snapsho
             </small>
           </div>
           <a
-            class="trial-upgrade mt-3 btn btn-primary btn-block"
+            class="trial-upgrade mt-3 btn btn-brand btn-block"
             data-testid="upgrade-cta"
             href="https://upgrade.edx/course/test"
           >

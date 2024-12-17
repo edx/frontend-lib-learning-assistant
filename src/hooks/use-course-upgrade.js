@@ -30,7 +30,11 @@ const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milli
  */
 export default function useCourseUpgrade() {
   const { courseId, isUpgradeEligible } = useContext(CourseInfoContext);
-  const { offer } = useModel('coursewareMeta', courseId);
+  const {
+    offer,
+    accessExpiration,
+    datesBannerInfo,
+  } = useModel('coursewareMeta', courseId);
   const { verifiedMode } = useModel('courseHomeMeta', courseId);
   const {
     auditTrialLengthDays,
@@ -46,11 +50,12 @@ export default function useCourseUpgrade() {
 
   if (auditTrial?.expirationDate) {
     const auditTrialExpirationDate = new Date(auditTrial.expirationDate);
-
     auditTrialDaysRemaining = Math.ceil((auditTrialExpirationDate - Date.now()) / millisecondsInOneDay);
 
     auditTrialExpired = auditTrialDaysRemaining < 0;
   }
+
+  const isFBE = !!accessExpiration && !!datesBannerInfo?.contentTypeGatingEnabled;
 
   return {
     upgradeable: true,
@@ -59,5 +64,6 @@ export default function useCourseUpgrade() {
     auditTrialExpired,
     auditTrial,
     upgradeUrl,
+    isFBE,
   };
 }

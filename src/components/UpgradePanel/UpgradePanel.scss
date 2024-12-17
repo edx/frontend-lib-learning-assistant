@@ -1,0 +1,21 @@
+@use '../../utils/variables';
+
+.upgrade-panel {
+  height: 100%;
+
+  overflow-y: auto;
+  background-color: variables.$dark-green;
+
+  h2 {
+    font-size: 1.375rem;
+  }
+
+  .xpert-value-prop-check {
+    color: variables.$accent-yellow;
+  }
+
+  .xpert-value-prop {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+}

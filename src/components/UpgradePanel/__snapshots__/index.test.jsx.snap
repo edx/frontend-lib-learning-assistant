@@ -1,0 +1,717 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UpgradePanel displays correct bullet points if FBE 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="upgrade-panel d-flex flex-column align-items-stretch px-4 py-3"
+      >
+        <h2
+          class="text-light-100"
+        >
+          Upgrade this course
+        </h2>
+        <div
+          class="pl-4 text-white pt-0 my-4"
+          role="list"
+        >
+          <div
+            class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+            data-testid="xpert-access-bullet"
+            role="listitem"
+          >
+            <span
+              class="pgn__icon xpert-value-prop-check"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span>
+              Gain full access to 
+              <span
+                class="font-weight-bold"
+              >
+                Xpert Learning Assistant
+              </span>
+            </span>
+          </div>
+          <div
+            class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+            data-testid="verified-cert-bullet"
+            role="listitem"
+          >
+            <span
+              class="pgn__icon xpert-value-prop-check"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span>
+              Earn a 
+              <a
+                class="inline-link-underline font-weight-bold text-white"
+                href="http://localhost:18000/verified-certificate"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                verified certificate
+              </a>
+               of completion to showcase on your resumé
+            </span>
+          </div>
+          <div
+            class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+            data-testid="unlock-graded-bullet"
+            role="listitem"
+          >
+            <span
+              class="pgn__icon xpert-value-prop-check"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span>
+              Unlock your access to all course activities, including 
+              <span
+                class="font-weight-bold"
+              >
+                graded assignments
+              </span>
+            </span>
+          </div>
+          <div
+            class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+            data-testid="full-access-bullet"
+            role="listitem"
+          >
+            <span
+              class="pgn__icon xpert-value-prop-check"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span>
+              <span
+                class="font-weight-bold"
+              >
+                Full access
+              </span>
+               to course content and materials, even after the course ends
+            </span>
+          </div>
+        </div>
+        <a
+          class="trial-upgrade mt-3 btn btn-brand btn-block"
+          data-testid="upgrade-cta"
+          href="www.test.com"
+        >
+          <span
+            class="pgn__icon my-0 mx-2"
+            data-testid="lock-icon"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 8h-3V6.21c0-2.61-1.91-4.94-4.51-5.19A5.008 5.008 0 0 0 7 6h2c0-1.13.6-2.24 1.64-2.7C12.85 2.31 15 3.9 15 6v2H4v14h16V8zm-2 12H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          Upgrade now
+        </a>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="upgrade-panel d-flex flex-column align-items-stretch px-4 py-3"
+    >
+      <h2
+        class="text-light-100"
+      >
+        Upgrade this course
+      </h2>
+      <div
+        class="pl-4 text-white pt-0 my-4"
+        role="list"
+      >
+        <div
+          class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+          data-testid="xpert-access-bullet"
+          role="listitem"
+        >
+          <span
+            class="pgn__icon xpert-value-prop-check"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span>
+            Gain full access to 
+            <span
+              class="font-weight-bold"
+            >
+              Xpert Learning Assistant
+            </span>
+          </span>
+        </div>
+        <div
+          class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+          data-testid="verified-cert-bullet"
+          role="listitem"
+        >
+          <span
+            class="pgn__icon xpert-value-prop-check"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span>
+            Earn a 
+            <a
+              class="inline-link-underline font-weight-bold text-white"
+              href="http://localhost:18000/verified-certificate"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              verified certificate
+            </a>
+             of completion to showcase on your resumé
+          </span>
+        </div>
+        <div
+          class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+          data-testid="unlock-graded-bullet"
+          role="listitem"
+        >
+          <span
+            class="pgn__icon xpert-value-prop-check"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span>
+            Unlock your access to all course activities, including 
+            <span
+              class="font-weight-bold"
+            >
+              graded assignments
+            </span>
+          </span>
+        </div>
+        <div
+          class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+          data-testid="full-access-bullet"
+          role="listitem"
+        >
+          <span
+            class="pgn__icon xpert-value-prop-check"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span>
+            <span
+              class="font-weight-bold"
+            >
+              Full access
+            </span>
+             to course content and materials, even after the course ends
+          </span>
+        </div>
+      </div>
+      <a
+        class="trial-upgrade mt-3 btn btn-brand btn-block"
+        data-testid="upgrade-cta"
+        href="www.test.com"
+      >
+        <span
+          class="pgn__icon my-0 mx-2"
+          data-testid="lock-icon"
+        >
+          <svg
+            aria-hidden="true"
+            fill="none"
+            focusable="false"
+            height="24"
+            role="img"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 8h-3V6.21c0-2.61-1.91-4.94-4.51-5.19A5.008 5.008 0 0 0 7 6h2c0-1.13.6-2.24 1.64-2.7C12.85 2.31 15 3.9 15 6v2H4v14h16V8zm-2 12H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        Upgrade now
+      </a>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "store": {
+    "dispatch": [Function],
+    "getState": [Function],
+    "replaceReducer": [Function],
+    "subscribe": [Function],
+    Symbol(Symbol.observable): [Function],
+  },
+  "unmount": [Function],
+}
+`;
+
+exports[`UpgradePanel displays correct bullet points if not FBE 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="upgrade-panel d-flex flex-column align-items-stretch px-4 py-3"
+      >
+        <h2
+          class="text-light-100"
+        >
+          Upgrade this course
+        </h2>
+        <div
+          class="pl-4 text-white pt-0 my-4"
+          role="list"
+        >
+          <div
+            class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+            data-testid="xpert-access-bullet"
+            role="listitem"
+          >
+            <span
+              class="pgn__icon xpert-value-prop-check"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span>
+              Gain full access to 
+              <span
+                class="font-weight-bold"
+              >
+                Xpert Learning Assistant
+              </span>
+            </span>
+          </div>
+          <div
+            class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+            data-testid="verified-cert-bullet"
+            role="listitem"
+          >
+            <span
+              class="pgn__icon xpert-value-prop-check"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
+            <span>
+              Earn a 
+              <a
+                class="inline-link-underline font-weight-bold text-white"
+                href="http://localhost:18000/verified-certificate"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                verified certificate
+              </a>
+               of completion to showcase on your resumé
+            </span>
+          </div>
+        </div>
+        <a
+          class="trial-upgrade mt-3 btn btn-brand btn-block"
+          data-testid="upgrade-cta"
+          href="www.test.com"
+        >
+          <span
+            class="pgn__icon my-0 mx-2"
+            data-testid="lock-icon"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 8h-3V6.21c0-2.61-1.91-4.94-4.51-5.19A5.008 5.008 0 0 0 7 6h2c0-1.13.6-2.24 1.64-2.7C12.85 2.31 15 3.9 15 6v2H4v14h16V8zm-2 12H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          Upgrade now
+        </a>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="upgrade-panel d-flex flex-column align-items-stretch px-4 py-3"
+    >
+      <h2
+        class="text-light-100"
+      >
+        Upgrade this course
+      </h2>
+      <div
+        class="pl-4 text-white pt-0 my-4"
+        role="list"
+      >
+        <div
+          class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+          data-testid="xpert-access-bullet"
+          role="listitem"
+        >
+          <span
+            class="pgn__icon xpert-value-prop-check"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span>
+            Gain full access to 
+            <span
+              class="font-weight-bold"
+            >
+              Xpert Learning Assistant
+            </span>
+          </span>
+        </div>
+        <div
+          class="pgn__hstack pgn__stack-gap--3 align-items-start xpert-value-prop"
+          data-testid="verified-cert-bullet"
+          role="listitem"
+        >
+          <span
+            class="pgn__icon xpert-value-prop-check"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              focusable="false"
+              height="24"
+              role="img"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+          <span>
+            Earn a 
+            <a
+              class="inline-link-underline font-weight-bold text-white"
+              href="http://localhost:18000/verified-certificate"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              verified certificate
+            </a>
+             of completion to showcase on your resumé
+          </span>
+        </div>
+      </div>
+      <a
+        class="trial-upgrade mt-3 btn btn-brand btn-block"
+        data-testid="upgrade-cta"
+        href="www.test.com"
+      >
+        <span
+          class="pgn__icon my-0 mx-2"
+          data-testid="lock-icon"
+        >
+          <svg
+            aria-hidden="true"
+            fill="none"
+            focusable="false"
+            height="24"
+            role="img"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 8h-3V6.21c0-2.61-1.91-4.94-4.51-5.19A5.008 5.008 0 0 0 7 6h2c0-1.13.6-2.24 1.64-2.7C12.85 2.31 15 3.9 15 6v2H4v14h16V8zm-2 12H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        Upgrade now
+      </a>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "store": {
+    "dispatch": [Function],
+    "getState": [Function],
+    "replaceReducer": [Function],
+    "subscribe": [Function],
+    Symbol(Symbol.observable): [Function],
+  },
+  "unmount": [Function],
+}
+`;

@@ -18,12 +18,12 @@ const contextWrapper = ({ courseInfo }) => function Wrapper({ children }) { // e
 };
 
 const renderHook = ({
-  courseInfo, offer = {}, verifiedMode = {}, state = { learningAssistant: {} },
+  courseInfo, coursewareMeta = { offer: {} }, courseHomeMeta = { verifiedMode: {} }, state = { learningAssistant: {} },
 }) => {
   useModel.mockImplementation((model) => {
     switch (model) {
-      case 'coursewareMeta': return { offer };
-      case 'courseHomeMeta': return { verifiedMode };
+      case 'coursewareMeta': return coursewareMeta;
+      case 'courseHomeMeta': return courseHomeMeta;
       default: {
         throw new Error('Model not mocked');
       }
@@ -63,12 +63,15 @@ describe('useCourseUpgrade()', () => {
       auditTrialExpired: false,
       auditTrialLengthDays: mockedAuditTrialLengthDays,
       upgradeUrl: mockedUpgradeUrl,
+      isFBE: false,
     };
 
     const { result: resultOffer } = renderHook({
       courseInfo: { isUpgradeEligible: true },
-      offer: {
-        upgradeUrl: mockedUpgradeUrl,
+      coursewareMeta: {
+        offer: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
       },
       state: {
         learningAssistant: {
@@ -81,8 +84,10 @@ describe('useCourseUpgrade()', () => {
 
     const { result: resultVerified } = renderHook({
       courseInfo: { isUpgradeEligible: true },
-      verifiedMode: {
-        upgradeUrl: mockedUpgradeUrl,
+      courseHomeMeta: {
+        verifiedMode: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
       },
       state: {
         learningAssistant: {
@@ -97,11 +102,15 @@ describe('useCourseUpgrade()', () => {
   it('should return trial info if enabled and not expired', () => {
     const { result } = renderHook({
       courseInfo: { isUpgradeEligible: true },
-      offer: {
-        upgradeUrl: mockedUpgradeUrl,
+      coursewareMeta: {
+        offer: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
       },
-      verifiedMode: {
-        upgradeUrl: mockedUpgradeUrl,
+      courseHomeMeta: {
+        verifiedMode: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
       },
       state: {
         learningAssistant: {
@@ -122,17 +131,22 @@ describe('useCourseUpgrade()', () => {
       auditTrialLengthDays: mockedAuditTrialLengthDays,
       upgradeUrl: 'https://upgrade.edx/course/test',
       upgradeable: true,
+      isFBE: false,
     });
   });
 
   it('should return trial info if expired', () => {
     const { result } = renderHook({
       courseInfo: { isUpgradeEligible: true },
-      offer: {
-        upgradeUrl: mockedUpgradeUrl,
+      coursewareMeta: {
+        offer: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
       },
-      verifiedMode: {
-        upgradeUrl: mockedUpgradeUrl,
+      courseHomeMeta: {
+        verifiedMode: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
       },
       state: {
         learningAssistant: {
@@ -153,6 +167,49 @@ describe('useCourseUpgrade()', () => {
       auditTrialLengthDays: mockedAuditTrialLengthDays,
       upgradeUrl: 'https://upgrade.edx/course/test',
       upgradeable: true,
+      isFBE: false,
+    });
+  });
+
+  it('should return isFBE true if feature based enrollment', () => {
+    const { result } = renderHook({
+      courseInfo: { isUpgradeEligible: true },
+      coursewareMeta: {
+        offer: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
+        accessExpiration: {
+          upgradeDeadline: '2024-01-07 09:00:00',
+        },
+        datesBannerInfo: {
+          contentTypeGatingEnabled: true,
+        },
+      },
+      courseHomeMeta: {
+        verifiedMode: {
+          upgradeUrl: mockedUpgradeUrl,
+        },
+      },
+      state: {
+        learningAssistant: {
+          auditTrialLengthDays: mockedAuditTrialLengthDays,
+          auditTrial: {
+            expirationDate: '2024-01-05 09:00:00',
+          },
+        },
+      },
+    });
+
+    expect(result.current).toEqual({
+      auditTrial: {
+        expirationDate: '2024-01-05 09:00:00',
+      },
+      auditTrialDaysRemaining: -5,
+      auditTrialExpired: true,
+      auditTrialLengthDays: mockedAuditTrialLengthDays,
+      upgradeUrl: 'https://upgrade.edx/course/test',
+      upgradeable: true,
+      isFBE: true,
     });
   });
 });
