@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, act } from '@testing-library/react';
+import { fireEvent, screen, act } from '@testing-library/react';
 
 import { usePromptExperimentDecision } from '../../experiments';
 import {
@@ -13,7 +13,7 @@ import Sidebar from '.';
 
 jest.mock('../../hooks', () => ({
   useCourseUpgrade: jest.fn(),
-  useTrackEvent: jest.fn(() => ({ track: jest.fn() })),
+  useTrackEvent: jest.fn(),
 }));
 
 jest.mock('../../utils/surveyMonkey', () => jest.fn());
@@ -72,11 +72,9 @@ describe('<Sidebar />', () => {
   beforeEach(async () => {
     jest.resetAllMocks();
     useCourseUpgrade.mockReturnValue({ upgradeable: false });
-    useTrackEvent.mockReturnValue({ track: jest.fn() });
     usePromptExperimentDecision.mockReturnValue([]);
     useCourseUpgrade.mockReturnValue([]);
-    const mockedTrackEvent = jest.fn();
-    useTrackEvent.mockReturnValue({ track: mockedTrackEvent });
+    useTrackEvent.mockReturnValue({ track: jest.fn() });
   });
 
   describe('when it\'s open', () => {
@@ -117,6 +115,22 @@ describe('<Sidebar />', () => {
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
       expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
       expect(screen.queryByTestId('trial-ends-today')).not.toBeInTheDocument();
+    });
+
+    it('should call track event on click', () => {
+      useCourseUpgrade.mockReturnValue({
+        upgradeable: true,
+        upgradeUrl: 'https://mockurl.com',
+        auditTrialDaysRemaining: 1,
+      });
+      const mockedTrackEvent = jest.fn();
+      useTrackEvent.mockReturnValue({ track: mockedTrackEvent });
+
+      render(undefined, { disclosureAcknowledged: true });
+      const upgradeLink = screen.queryByTestId('days_remaining_banner_upgrade_link');
+      expect(mockedTrackEvent).not.toHaveBeenCalled();
+      fireEvent.click(upgradeLink);
+      expect(mockedTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.days_remaining_banner_upgrade_click');
     });
 
     it('If auditTrialDaysRemaining < 1, do not show either of those', () => {
