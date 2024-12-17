@@ -2,11 +2,12 @@ import React from 'react';
 import { screen, act } from '@testing-library/react';
 
 import { usePromptExperimentDecision } from '../../experiments';
-import { useCourseUpgrade, useTrackEvent } from '../../hooks';
+import {
+  useCourseUpgrade, useTrackEvent,
+} from '../../hooks';
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import showSurvey from '../../utils/surveyMonkey';
-import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 
 import Sidebar from '.';
 

@@ -31,7 +31,9 @@ const Sidebar = ({
     messageList,
   } = useSelector(state => state.learningAssistant);
 
-  const { upgradeable, upgradeUrl, auditTrialDaysRemaining } = useCourseUpgrade();
+  const {
+    upgradeable, upgradeUrl, auditTrialExpired, auditTrialDaysRemaining,
+  } = useCourseUpgrade();
 
   const chatboxContainerRef = useRef(null);
 
@@ -81,7 +83,7 @@ const Sidebar = ({
     <MessageForm courseId={courseId} shouldAutofocus unitId={unitId} />
   );
 
-  const getDaysRemainingMessage = () => {
+  const getDaysRemainingMessage = () => { // eslint-disable-line consistent-return
     if (auditTrialDaysRemaining > 1) {
       const intlRelativeTime = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
@@ -95,12 +97,7 @@ const Sidebar = ({
           Your trial ends today! <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
-    } // TODO: Show the upgrade screen instead of this banner, to be done in future ticket
-    return (
-      <div>
-        Your trial has expired. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
-      </div>
-    );
+    }
   };
 
   const getSidebar = () => (
