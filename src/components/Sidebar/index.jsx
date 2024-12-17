@@ -83,10 +83,10 @@ const Sidebar = ({
 
   const getDaysRemainingMessage = () => {
     if (auditTrialDaysRemaining > 1) {
-      const irtl = new Intl.RelativeTimeFormat({ style: 'long' });
+      const intlRelativeTime = new Intl.RelativeTimeFormat({ style: 'long' });
       return (
         <div data-testid="days-remaining-message">
-          Your trial ends {irtl.format(auditTrialDaysRemaining, 'day')}. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
+          Your trial ends {intlRelativeTime.format(auditTrialDaysRemaining, 'day')}. <a target="_blank" href={upgradeUrl} rel="noreferrer">Upgrade</a> for full access to Xpert.
         </div>
       );
     } if (auditTrialDaysRemaining === 1) {
