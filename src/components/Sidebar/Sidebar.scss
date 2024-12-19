@@ -9,8 +9,6 @@
   background-color: white;
   width: 100%;
   max-width: 25rem;
-  /* Add smooth scrolling behavior */
-  scroll-behavior: smooth;
 
   h1 {
     font-size: 1.25rem;
@@ -18,32 +16,38 @@
   }
 
   button.chat-close {
-    top: 0;
-    right: 0;
+    top: 0.75rem;
+    right: 1.5rem;
+    height: 1.5rem;
+    width: 1.5rem;
+
+    .btn-icon__icon {
+      width: 1.375rem !important;
+      height: 1.375rem !important;
+    }
   }
 
   .sidebar-header {
+    display: flex;
+    align-items: center;
     background: linear-gradient(to left, rgb(58, 101, 108) 0px, rgb(0, 29, 34));
     width: 100%;
-    height: 60px;
+    height: 48px;
+    padding: 0 1.5rem;
+
 
     svg {
-      height: 30px;
+      display: block;
+      height: 24px;
     }
+  }
+
+  .sidebar-footer {
+
   }
 
   .trial-header {
     font-size: 0.9em;
     background-color: #F49974;
   }
-}
-
-.separator {
-  z-index: 100;
-  width: 100%;
-  height: 5px;
-  padding: 5px;
-  background: -webkit-linear-gradient(270deg, rgba(0, 0, 0, 0.35), transparent);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent);
-  opacity: 0.3;
 }

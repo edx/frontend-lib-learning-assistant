@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import Message from '../Message';
 import './ChatBox.scss';
 import MessageDivider from '../MessageDivider';
@@ -14,34 +13,53 @@ function isToday(date) {
   );
 }
 
+const scrollToBottom = (containerRef, smooth = false) => {
+  setTimeout(() => {
+    containerRef.current.scrollTo({
+      top: containerRef.current.scrollHeight,
+      behavior: smooth ? 'smooth' : 'instant',
+    });
+  });
+};
+
 // container for all of the messages
-const ChatBox = ({ chatboxContainerRef }) => {
+const ChatBox = () => {
+  const firstRender = useRef(true);
+  const messageContainerRef = useRef();
+
   const { messageList, apiIsLoading } = useSelector(state => state.learningAssistant);
   const messagesBeforeToday = messageList.filter((m) => (!isToday(new Date(m.timestamp))));
   const messagesToday = messageList.filter((m) => (isToday(new Date(m.timestamp))));
 
+  useEffect(() => {
+    if (firstRender.current) {
+      scrollToBottom(messageContainerRef);
+      firstRender.current = false;
+      return;
+    }
+
+    scrollToBottom(messageContainerRef, true);
+  }, [messageList.length]);
+
   // message divider should not display if no messages or if all messages sent today.
   return (
-    <div ref={chatboxContainerRef} className="flex-grow-1 scroller d-flex flex-column pb-4">
-      {messagesBeforeToday.map(({ role, content, timestamp }) => (
-        <Message key={timestamp} variant={role} message={content} />
-      ))}
-      {(messageList.length !== 0 && messagesBeforeToday.length !== 0) && (<MessageDivider text="Today" />)}
-      {messagesToday.map(({ role, content, timestamp }) => (
-        <Message key={timestamp} variant={role} message={content} />
-      ))}
-      {apiIsLoading && (
+    <div className="xpert-chat-scroller">
+      <div className="messages-list d-flex flex-column" ref={messageContainerRef}>
+        {messagesBeforeToday.map(({ role, content, timestamp }) => (
+          <Message key={timestamp} variant={role} message={content} />
+        ))}
+        {(messageList.length !== 0 && messagesBeforeToday.length !== 0) && (<MessageDivider text="Today" />)}
+        {messagesToday.map(({ role, content, timestamp }) => (
+          <Message key={timestamp} variant={role} message={content} />
+        ))}
+        {apiIsLoading && (
         <div className="loading">Xpert is thinking</div>
-      )}
+        )}
+      </div>
+      <span className="separator separator--top" />
+      <span className="separator separator--bottom" />
     </div>
   );
-};
-
-ChatBox.propTypes = {
-  chatboxContainerRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]).isRequired,
 };
 
 export default ChatBox;
