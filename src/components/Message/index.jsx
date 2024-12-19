@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const Message = ({ variant, message }) => (
   <div
-    className={`message ${variant} ${variant === 'user' ? 'align-self-end' : ''} text-left my-1 mx-2 py-2 px-3`}
+    className={`message ${variant} ${variant === 'user' ? 'align-self-end' : ''} text-left my-1 mx-4 py-2 px-3`}
     data-hj-suppress
   >
     <ReactMarkdown>

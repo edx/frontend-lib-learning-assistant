@@ -1,4 +1,6 @@
 .message-form {
+  padding: 0.75rem 1.5rem;
+
   .send-message-input {
     .pgn__form-control-floating-label {
       color: #ADADAD;
@@ -6,6 +8,15 @@
 
     input {
       border-radius: 1rem;
+      border: 1px solid #C8C8CC;
     }
+  }
+
+  .pgn__form-control-decorator-group {
+    margin-inline-end: 0;
+  }
+
+  button {
+    color: #8F8F8F;
   }
 }
