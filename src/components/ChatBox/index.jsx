@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Message from '../Message';
 import './ChatBox.scss';
 import MessageDivider from '../MessageDivider';
+import { scrollToBottom } from '../../utils/scroll';
 
 function isToday(date) {
   const today = new Date();
@@ -12,15 +13,6 @@ function isToday(date) {
     && date.getFullYear() === today.getFullYear()
   );
 }
-
-const scrollToBottom = (containerRef, smooth = false) => {
-  setTimeout(() => {
-    containerRef.current.scrollTo({
-      top: containerRef.current.scrollHeight,
-      behavior: smooth ? 'smooth' : 'instant',
-    });
-  });
-};
 
 // container for all of the messages
 const ChatBox = () => {
@@ -41,13 +33,13 @@ const ChatBox = () => {
     scrollToBottom(messageContainerRef, true);
   }, [messageList.length]);
 
-  // message divider should not display if no messages or if all messages sent today.
   return (
     <div className="xpert-chat-scroller">
-      <div className="messages-list d-flex flex-column" ref={messageContainerRef}>
+      <div className="messages-list d-flex flex-column" ref={messageContainerRef} data-testid="messages-container">
         {messagesBeforeToday.map(({ role, content, timestamp }) => (
           <Message key={timestamp} variant={role} message={content} />
         ))}
+        {/* Message divider should not display if no messages or if all messages sent today. */}
         {(messageList.length !== 0 && messagesBeforeToday.length !== 0) && (<MessageDivider text="Today" />)}
         {messagesToday.map(({ role, content, timestamp }) => (
           <Message key={timestamp} variant={role} message={content} />
