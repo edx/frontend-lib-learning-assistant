@@ -61,18 +61,16 @@ const MessageForm = ({ courseId, shouldAutofocus, unitId }) => {
 
   return (
     <Form className="message-form w-100" onSubmit={handleSubmitMessage} data-testid="message-form">
-      <Form.Group>
-        <Form.Control
-          data-hj-suppress
-          disabled={apiIsLoading}
-          floatingLabel="Write a message"
-          onChange={handleUpdateCurrentMessage}
-          trailingElement={getSubmitButton()}
-          value={currentMessage}
-          ref={inputRef}
-          className="send-message-input"
-        />
-      </Form.Group>
+      <Form.Control
+        data-hj-suppress
+        disabled={apiIsLoading}
+        floatingLabel="Write a message"
+        onChange={handleUpdateCurrentMessage}
+        trailingElement={getSubmitButton()}
+        value={currentMessage}
+        ref={inputRef}
+        className="send-message-input"
+      />
     </Form>
   );
 };
