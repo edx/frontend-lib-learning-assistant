@@ -3,12 +3,12 @@
 
   .send-message-input {
     .pgn__form-control-floating-label {
-      color: #ADADAD;
+      color: $gray-300;
     }
 
     input {
       border-radius: 1rem;
-      border: 1px solid #C8C8CC;
+      border: 1px solid $gray-200;
     }
   }
 
@@ -17,6 +17,6 @@
   }
 
   button {
-    color: #8F8F8F;
+    color: $gray-400;
   }
 }
