@@ -1,9 +1,14 @@
-.scroller {
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  width: 100%;
-  opacity: 1;
-  margin-right: 0;
+.xpert-chat-scroller {
+  position: relative;
+  flex: 1;
+
+  .messages-list {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    position: absolute;
+    inset: 0;
+    padding: 1rem 0;
+  }
 
   &:after {
     content: ""; /* Add an empty content area after the chat messages */
@@ -11,20 +16,38 @@
     height: 0;
     clear: both;
   }
-}
 
-.loading {
-  font-size: 13px;
-  padding-left: 10px;
+  .loading {
+    font-size: 13px;
+    padding-left: 10px;
 
-  &:after {
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: bottom;
-    -webkit-animation: ellipsis steps(4,end) 900ms infinite;
-    animation: ellipsis steps(4,end) 900ms infinite;
-    content: "\2026"; /* ascii code for the ellipsis character */
-    width: 0px;
+    &:after {
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: bottom;
+      -webkit-animation: ellipsis steps(4,end) 900ms infinite;
+      animation: ellipsis steps(4,end) 900ms infinite;
+      content: "\2026"; /* ascii code for the ellipsis character */
+      width: 0px;
+    }
+  }
+
+  .separator {
+    position: absolute;
+    z-index: 100;
+    height: 5px;
+    padding: 5px;
+    opacity: 0.3;
+
+    &--top {
+      inset: 0 0 auto 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent);
+    }
+
+    &--bottom {
+      inset: auto 0 0 0;
+      background: linear-gradient(0, rgba(0, 0, 0, 0.35), transparent);
+    }
   }
 }
 

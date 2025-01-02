@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -36,42 +36,6 @@ const Sidebar = ({
   } = useCourseUpgrade();
 
   const { track } = useTrackEvent();
-
-  const chatboxContainerRef = useRef(null);
-
-  // this use effect is intended to scroll to the bottom of the chat window, in the case
-  // that a message is larger than the chat window height.
-  useEffect(() => {
-    const messageContainer = chatboxContainerRef.current;
-
-    if (messageContainer) {
-      const { scrollHeight, clientHeight } = messageContainer;
-      const maxScrollTop = scrollHeight - clientHeight;
-      const duration = 200;
-
-      if (maxScrollTop > 0) {
-        const startTime = Date.now();
-        const endTime = startTime + duration;
-
-        const scroll = () => {
-          const currentTime = Date.now();
-          const timeFraction = (currentTime - startTime) / duration;
-          const scrollTop = maxScrollTop * timeFraction;
-
-          messageContainer.scrollTo({
-            top: scrollTop,
-            behavior: 'smooth',
-          });
-
-          if (currentTime < endTime) {
-            requestAnimationFrame(scroll);
-          }
-        };
-
-        requestAnimationFrame(scroll);
-      }
-    }
-  }, [messageList, isOpen, apiError]);
 
   const handleClick = () => {
     setIsOpen(false);
@@ -120,10 +84,10 @@ const Sidebar = ({
 
   const getSidebar = () => (
     <div
-      className="h-100 d-flex flex-column justify-content-stretch"
+      className="d-flex flex-column h-100"
       data-testid="sidebar-xpert"
     >
-      <div className="p-3 sidebar-header" data-testid="sidebar-xpert-header">
+      <div className="sidebar-header" data-testid="sidebar-xpert-header">
         <XpertLogo />
       </div>
       {upgradeable
@@ -132,11 +96,7 @@ const Sidebar = ({
             {getDaysRemainingMessage()}
           </div>
         )}
-      <span className="separator" />
-      <ChatBox
-        chatboxContainerRef={chatboxContainerRef}
-        messageList={messageList}
-      />
+      <ChatBox messageList={messageList} />
       {
         apiError
         && (
@@ -145,7 +105,9 @@ const Sidebar = ({
           </div>
         )
       }
-      {getMessageForm()}
+      <div className="sidebar-footer">
+        {getMessageForm()}
+      </div>
     </div>
   );
 
@@ -165,7 +127,7 @@ const Sidebar = ({
         data-testid="sidebar"
       >
         <IconButton
-          className="chat-close position-absolute m-2 border-0"
+          className="chat-close position-absolute border-0"
           src={Close}
           iconAs={Icon}
           onClick={handleClick}

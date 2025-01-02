@@ -1,11 +1,22 @@
 .message-form {
+  padding: 0.75rem 1.5rem;
+
   .send-message-input {
     .pgn__form-control-floating-label {
-      color: #ADADAD;
+      color: $gray-300;
     }
 
     input {
       border-radius: 1rem;
+      border: 1px solid $gray-200;
     }
+  }
+
+  .pgn__form-control-decorator-group {
+    margin-inline-end: 0;
+  }
+
+  button {
+    color: $gray-400;
   }
 }

@@ -20,6 +20,10 @@ jest.mock('../experiments', () => ({
   usePromptExperimentDecision: jest.fn(),
 }));
 
+jest.mock('../utils/scroll', () => ({
+  scrollToBottom: jest.fn(),
+}));
+
 const initialState = {
   learningAssistant: {
     currentMessage: '',
