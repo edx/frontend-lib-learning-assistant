@@ -65,21 +65,22 @@ const Sidebar = ({
     </a>
   );
 
-  const getDaysRemainingMessage = () => { // eslint-disable-line consistent-return
-    if (auditTrialDaysRemaining > 1) {
-      const intlRelativeTime = new Intl.RelativeTimeFormat({ style: 'long' });
-      return (
-        <div data-testid="days-remaining-message">
-          Your trial ends {intlRelativeTime.format(auditTrialDaysRemaining, 'day')}. {getUpgradeLink()} for full access to Xpert.
-        </div>
-      );
-    } if (auditTrialDaysRemaining === 1) {
-      return (
-        <div data-testid="trial-ends-today-message">
-          Your trial ends today! {getUpgradeLink()} for full access to Xpert.
-        </div>
-      );
-    }
+  const getDaysRemainingMessage = () => {
+    if (!upgradeable || auditTrialDaysRemaining < 1) { return null; }
+
+    return (
+      <div className="trial-header" data-testid="get-days-remaining-message">
+        {auditTrialDaysRemaining === 1 ? (
+          <div data-testid="trial-ends-today-message">
+            Your trial ends today! {getUpgradeLink()} for full access to Xpert.
+          </div>
+        ) : (
+          <div data-testid="days-remaining-message">
+            {auditTrialDaysRemaining} days remaining. {getUpgradeLink()} for full access to Xpert.
+          </div>
+        )}
+      </div>
+    );
   };
 
   const getSidebar = () => (
@@ -90,12 +91,9 @@ const Sidebar = ({
       <div className="sidebar-header" data-testid="sidebar-xpert-header">
         <XpertLogo />
       </div>
-      {upgradeable
-        && (
-          <div className="p-3 trial-header" data-testid="get-days-remaining-message">
-            {getDaysRemainingMessage()}
-          </div>
-        )}
+
+      {getDaysRemainingMessage()}
+
       <ChatBox messageList={messageList} />
       {
         apiError

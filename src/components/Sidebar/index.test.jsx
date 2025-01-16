@@ -114,7 +114,7 @@ describe('<Sidebar />', () => {
       render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
       expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
-      expect(screen.queryByTestId('trial-ends-today')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('trial-ends-today-message')).toBeInTheDocument();
     });
 
     it('should call track event on click', () => {
@@ -141,9 +141,9 @@ describe('<Sidebar />', () => {
       });
       render(undefined, { disclosureAcknowledged: true });
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
-      expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('get-days-remaining-message')).not.toBeInTheDocument();
       expect(screen.queryByTestId('days-remaining-message')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('trial-ends-today')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('trial-ends-today-message')).not.toBeInTheDocument();
     });
   });
 
