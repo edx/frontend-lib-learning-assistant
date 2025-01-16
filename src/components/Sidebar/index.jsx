@@ -66,7 +66,7 @@ const Sidebar = ({
   );
 
   const getDaysRemainingMessage = () => {
-    if (!upgradeable || auditTrialDaysRemaining < 0) { return null; }
+    if (!upgradeable || auditTrialDaysRemaining < 1) { return null; }
 
     return (
       <div className="trial-header" data-testid="get-days-remaining-message">
