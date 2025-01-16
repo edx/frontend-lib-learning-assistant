@@ -1,4 +1,4 @@
-@use '../../utils/variables';
+@use '../../utils/variables' as var;
 
 .sidebar {
   box-shadow: 0 0 1rem 0 #00000026,0 0 .625rem 0 #00000026;
@@ -6,7 +6,7 @@
   right: 0;
   bottom: 0;
   z-index: 9999;
-  background-color: white;
+  background-color: var.$white;
   width: 100%;
   max-width: 25rem;
 
@@ -44,6 +44,14 @@
 
   .trial-header {
     font-size: 0.9em;
-    background-color: #F49974;
+    background-color: var.$brand-100;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    color: var.$black;
+
+    a {
+      text-decoration: underline;
+    }
   }
 }
