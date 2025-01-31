@@ -3,6 +3,14 @@ import { useModel } from '@src/generic/model-store'; // eslint-disable-line impo
 import { useSelector } from 'react-redux';
 import { CourseInfoContext } from '../context';
 
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
+import {
+  OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_KEY,
+  OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS,
+} from '../../data/optimizely';
+import { useAuditTrialExperimentDecision } from '../../experiments';
+
 const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 
 /**
@@ -28,6 +36,7 @@ const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milli
  *
  * @returns {CourseUpgradeInfo}
  */
+// Update logic here to make upgrade eligible if in experiment variation
 export default function useCourseUpgrade() {
   const { courseId, isUpgradeEligible } = useContext(CourseInfoContext);
   const {
@@ -40,6 +49,30 @@ export default function useCourseUpgrade() {
     auditTrialLengthDays,
     auditTrial,
   } = useSelector(state => state.learningAssistant);
+
+  const [decision] = useAuditTrialExperimentDecision();
+  const { enabled, variationKey } = decision || {};
+  const experimentPayload = enabled ? {
+    experiment_name: OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_KEY,
+    variation_key: variationKey,
+  } : {};
+
+  // Make upgrade eligible if in experiment variation
+  if (OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.includes(variationKey)) {
+    isUpgradeEligible = true;
+
+    // Do I need to add a sendTrackEvent call like this?
+    // sendTrackEvent(
+    //   'edx.ui.lms.learning_assistant.audit_trial_started',
+    //   {
+    //     course_id: courseId,
+    //     user_id: userId,
+    //     source: event.target.id === 'toggle-button' ? 'toggle' : 'cta',
+    //     ...experimentPayload,
+    //   },
+    // );
+  }
+
 
   const upgradeUrl = offer?.upgradeUrl || verifiedMode?.upgradeUrl;
 
