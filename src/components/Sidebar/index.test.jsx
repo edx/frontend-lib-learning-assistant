@@ -8,6 +8,7 @@ import {
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import showSurvey from '../../utils/surveyMonkey';
+import { trackUpgradeButtonClickedOptimizely } from '../../utils/optimizelyExperiment';
 
 import Sidebar from '.';
 
@@ -17,6 +18,10 @@ jest.mock('../../hooks', () => ({
 }));
 
 jest.mock('../../utils/surveyMonkey', () => jest.fn());
+
+jest.mock('../../utils/optimizelyExperiment', () => ({
+  trackUpgradeButtonClickedOptimizely: jest.fn(),
+}));
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendTrackEvent: jest.fn(),
@@ -130,7 +135,18 @@ describe('<Sidebar />', () => {
       const upgradeLink = screen.queryByTestId('days_remaining_banner_upgrade_link');
       expect(mockedTrackEvent).not.toHaveBeenCalled();
       fireEvent.click(upgradeLink);
+
+      expect(trackUpgradeButtonClickedOptimizely).toHaveBeenCalled();
       expect(mockedTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.days_remaining_banner_upgrade_click');
+      expect(mockedTrackEvent).toHaveBeenCalledWith(
+        'edx.bi.ecommerce.upsell_links_clicked',
+        {
+          "linkCategory": "xpert_learning_assistant",
+          "linkName": "xpert_days_remaining_banner",
+          "linkType": "button",
+          "pageName": "in_course"
+        }
+      );
     });
 
     it('If auditTrialDaysRemaining < 1, do not show either of those', () => {

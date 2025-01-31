@@ -2,7 +2,7 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import { camelCaseObject } from '@edx/frontend-platform';
-import trackChatBotMessageOptimizely from '../utils/optimizelyExperiment';
+import { trackChatBotMessageOptimizely } from '../utils/optimizelyExperiment';
 import {
   fetchChatResponse,
   fetchLearningAssistantChatSummary,
