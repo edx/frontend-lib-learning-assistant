@@ -141,11 +141,11 @@ describe('<Sidebar />', () => {
       expect(mockedTrackEvent).toHaveBeenCalledWith(
         'edx.bi.ecommerce.upsell_links_clicked',
         {
-          "linkCategory": "xpert_learning_assistant",
-          "linkName": "xpert_days_remaining_banner",
-          "linkType": "button",
-          "pageName": "in_course"
-        }
+          linkCategory: 'xpert_learning_assistant',
+          linkName: 'xpert_days_remaining_banner',
+          linkType: 'button',
+          pageName: 'in_course',
+        },
       );
     });
 

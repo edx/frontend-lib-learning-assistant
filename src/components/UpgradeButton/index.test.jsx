@@ -48,11 +48,11 @@ describe('UpgradeButton', () => {
     expect(mockedTrackEvent).toHaveBeenCalledWith(
       'edx.bi.ecommerce.upsell_links_clicked',
       {
-        "linkCategory": "xpert_learning_assistant",
-        "linkName": "xpert_upgrade_panel",
-        "linkType": "button",
-        "pageName": "in_course"
-      }
+        linkCategory: 'xpert_learning_assistant',
+        linkName: 'xpert_upgrade_panel',
+        linkType: 'button',
+        pageName: 'in_course',
+      },
     );
   });
 

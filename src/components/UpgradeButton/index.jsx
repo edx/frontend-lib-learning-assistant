@@ -25,7 +25,7 @@ const UpgradeButton = ({ includeLockIcon, trackingEventName }) => {
       linkType: 'button',
       pageName: 'in_course',
     });
-  }
+  };
 
   return (
     <Button

@@ -18,7 +18,7 @@ const trackUpgradeButtonClickedOptimizely = (userId, userAttributes = {}) => {
   optimizelyInstance.onReady().then(() => {
     optimizelyInstance.track('upgrade_button_click', userId, userAttributes);
   });
-}
+};
 
 export {
   trackChatBotMessageOptimizely,

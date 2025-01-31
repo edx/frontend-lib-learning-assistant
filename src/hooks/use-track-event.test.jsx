@@ -1,6 +1,6 @@
 import { renderHook as rtlRenderHook } from '@testing-library/react-hooks';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { useModel } from '@src/generic/model-store'; // eslint-disable-line import
+import { useModel } from '@src/generic/model-store'; // eslint-disable-line import/no-unresolved
 import { CourseInfoProvider } from '../context';
 
 import useTrackEvent from './use-track-event';
@@ -8,7 +8,7 @@ import useTrackEvent from './use-track-event';
 const mockedUserId = 123;
 const mockedCourseId = 'some-course-id';
 const mockedModuleId = 'some-module-id';
-const mockedOrg = 'org'
+const mockedOrg = 'org';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendTrackEvent: jest.fn(),
@@ -19,9 +19,7 @@ jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: () => mockedAuthenticatedUser,
 }));
 
-useModel.mockImplementation(() => {
-  return { org: mockedOrg }
-})
+useModel.mockImplementation(() => ({ org: mockedOrg }));
 
 const contextWrapper = ({ courseInfo }) => function Wrapper({ children }) { // eslint-disable-line react/prop-types
   return (
