@@ -10,4 +10,17 @@ const trackChatBotMessageOptimizely = (userId, userAttributes = {}) => {
   });
 };
 
-export default trackChatBotMessageOptimizely;
+const trackUpgradeButtonClickedOptimizely = (userId, userAttributes = {}) => {
+  const optimizelyInstance = getOptimizely();
+
+  if (!optimizelyInstance || Object.keys(optimizelyInstance).length === 0) { return; }
+
+  optimizelyInstance.onReady().then(() => {
+    optimizelyInstance.track('upgrade_button_click', userId, userAttributes);
+  });
+};
+
+export {
+  trackChatBotMessageOptimizely,
+  trackUpgradeButtonClickedOptimizely,
+};
