@@ -25,6 +25,7 @@ const getOptimizely = () => {
 
 const OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_KEY = 'xpert_audit_trial_experiment';
 const OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS = {
+  CONTROL: 'control',
   XPERT_AUDIT_14_DAY_TRIAL: 'xpert_audit_14_day_trial',
   XPERT_AUDIT_28_DAY_TRIAL: 'xpert_audit_28_day_trial',
 };
