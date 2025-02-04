@@ -31,7 +31,6 @@ const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milli
  *
  * @returns {CourseUpgradeInfo}
  */
-// Update logic here to make upgrade eligible if in experiment variation
 export default function useCourseUpgrade() {
   const { courseId, isUpgradeEligible } = useContext(CourseInfoContext);
   const {
@@ -55,7 +54,7 @@ export default function useCourseUpgrade() {
     || !upgradeUrl
     || !enabled
     || (variationKey !== OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.XPERT_AUDIT_14_DAY_TRIAL
-    && variationKey !== OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.XPERT_AUDIT_28_DAY_TRIAL)
+      && variationKey !== OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.XPERT_AUDIT_28_DAY_TRIAL)
   ) { return { upgradeable: false }; }
 
   let auditTrialExpired = false;
