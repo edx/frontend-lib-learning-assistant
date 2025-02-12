@@ -2,13 +2,15 @@ import React from 'react';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useModel } from '@src/generic/model-store'; // eslint-disable-line import/no-unresolved
 
 import * as api from '../data/api';
 import Xpert from './Xpert';
 
 import * as surveyMonkey from '../utils/surveyMonkey';
 import { render, createRandomResponseForTesting } from '../utils/utils.test';
-import { usePromptExperimentDecision } from '../experiments';
+import { useAuditTrialExperimentDecision, usePromptExperimentDecision } from '../experiments';
+import { OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS } from '../data/optimizely';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth', () => ({
@@ -18,11 +20,17 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 jest.mock('../experiments', () => ({
   ExperimentsProvider: ({ children }) => children,
   usePromptExperimentDecision: jest.fn(),
+  useAuditTrialExperimentDecision: jest.fn(() => [{
+    enabled: true,
+    variationKey: 'test',
+  }]),
 }));
 
 jest.mock('../utils/scroll', () => ({
   scrollToBottom: jest.fn(),
 }));
+
+useModel.mockImplementation(() => ({ isStaff: false }));
 
 const initialState = {
   learningAssistant: {
@@ -73,7 +81,6 @@ test('doesn\'t load if not enabled', async () => {
 
   // button to open chat should not be in the DOM
   await waitFor(() => expect(screen.queryByTestId('toggle-button')).not.toBeInTheDocument());
-  // expect(screen.queryByTestId('toggle-button')).not.toBeVisible();
   await waitFor(() => (expect(screen.queryByTestId('action-message')).not.toBeInTheDocument()));
 });
 test('initial load displays correct elements', async () => {
@@ -348,4 +355,17 @@ test('survey monkey survey should appear after closing sidebar', async () => {
   // assert mock called
   expect(survey).toHaveBeenCalledTimes(1);
   survey.mockRestore();
+});
+test('Xpert is not rendered for control group', async () => {
+  useAuditTrialExperimentDecision.mockReturnValue([{
+    enabled: true,
+    variationKey: OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.CONTROL,
+  }]);
+
+  render(
+    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />,
+    { preloadedState: initialState },
+  );
+
+  await waitFor(() => expect(screen.queryByTestId('toggle-button')).not.toBeInTheDocument());
 });
