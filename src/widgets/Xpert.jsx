@@ -54,7 +54,7 @@ const Xpert = ({
   return isEnabled ? (
     <CourseInfoProvider value={courseInfo}>
       <ExperimentsProvider>
-        { shouldDisplayXpert() ? (
+        { shouldDisplayXpert ? (
           <>
             <ToggleXpert
               courseId={courseId}
