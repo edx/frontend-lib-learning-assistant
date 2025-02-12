@@ -41,12 +41,12 @@ const Xpert = ({
   };
 
   const [decision] = useAuditTrialExperimentDecision();
-  const { enabled, variationKey } = decision || {};
+  const { enabled: experimentEnabled, variationKey } = decision || {};
 
-  const shouldDisplayXpert = () => (
-    // if a user is not part of the experiment, not part of the control, or not eligible for upgrade, they should
-    // still see xpert
-    !enabled
+  // if a user is not part of the experiment, not part of the control, or not eligible for upgrade, they should
+  // still see xpert
+  const shouldDisplayXpert = (
+    !experimentEnabled
     || !(variationKey === OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.CONTROL)
     || isStaff
   );
