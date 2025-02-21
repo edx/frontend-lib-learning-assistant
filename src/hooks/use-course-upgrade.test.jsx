@@ -163,7 +163,11 @@ describe('useCourseUpgrade()', () => {
     });
   });
 
-  it('should return trial info if expired', () => {
+  it.each([
+    ['2024-01-05 09:00:00', -5],
+    ['2024-01-10 08:00:00', -0],
+    ['2024-01-10 09:00:00', 0],
+  ])('should return trial info if expired', (expirationDate, expectedAuditTrialDaysRemaining) => {
     const { result } = renderHook({
       courseInfo: { isUpgradeEligible: true },
       coursewareMeta: {
@@ -180,7 +184,7 @@ describe('useCourseUpgrade()', () => {
         learningAssistant: {
           auditTrialLengthDays: mockedAuditTrialLengthDays,
           auditTrial: {
-            expirationDate: '2024-01-05 09:00:00',
+            expirationDate,
           },
         },
       },
@@ -188,9 +192,9 @@ describe('useCourseUpgrade()', () => {
 
     expect(result.current).toEqual({
       auditTrial: {
-        expirationDate: '2024-01-05 09:00:00',
+        expirationDate,
       },
-      auditTrialDaysRemaining: -5,
+      auditTrialDaysRemaining: expectedAuditTrialDaysRemaining,
       auditTrialExpired: true,
       auditTrialLengthDays: mockedAuditTrialLengthDays,
       upgradeUrl: 'https://upgrade.edx/course/test',
