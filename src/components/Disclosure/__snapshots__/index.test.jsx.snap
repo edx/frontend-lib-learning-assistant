@@ -122,6 +122,7 @@ exports[`<TrialDisclosure /> When trial upgrade being shown should match snapsho
             class="trial-upgrade mt-3 btn btn-brand btn-block"
             data-testid="upgrade-cta"
             href="https://upgrade.edx/course/test"
+            target="_blank"
           >
             Upgrade now
           </a>
@@ -134,9 +135,41 @@ exports[`<TrialDisclosure /> When trial upgrade being shown should match snapsho
         <a
           class="pgn__hyperlink default-link standalone-link privacy-policy-link text-light-100"
           href="https://some.url/policy"
-          target="_self"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           privacy policy
+          <span
+            class="pgn__hyperlink__external-icon"
+            title="Opens in a new tab"
+          >
+            <span
+              class="pgn__icon"
+              data-testid="hyperlink-icon"
+              style="height: 1em; width: 1em;"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 19H5V5h7V3H3v18h18v-9h-2v7ZM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="sr-only"
+              >
+                in a new tab
+              </span>
+            </span>
+          </span>
         </a>
         .
       </p>
@@ -239,9 +272,41 @@ exports[`<TrialDisclosure /> When trial upgrade is not being shown should match 
         <a
           class="pgn__hyperlink default-link standalone-link privacy-policy-link text-light-100"
           href="https://some.url/policy"
-          target="_self"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           privacy policy
+          <span
+            class="pgn__hyperlink__external-icon"
+            title="Opens in a new tab"
+          >
+            <span
+              class="pgn__icon"
+              data-testid="hyperlink-icon"
+              style="height: 1em; width: 1em;"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 19H5V5h7V3H3v18h18v-9h-2v7ZM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span
+                class="sr-only"
+              >
+                in a new tab
+              </span>
+            </span>
+          </span>
         </a>
         .
       </p>

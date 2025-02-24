@@ -158,6 +158,7 @@ exports[`UpgradePanel displays correct bullet points if FBE 1`] = `
           class="trial-upgrade mt-3 btn btn-brand btn-block"
           data-testid="upgrade-cta"
           href="www.test.com"
+          target="_blank"
         >
           <span
             class="pgn__icon my-0 mx-2"
@@ -338,6 +339,7 @@ exports[`UpgradePanel displays correct bullet points if FBE 1`] = `
         class="trial-upgrade mt-3 btn btn-brand btn-block"
         data-testid="upgrade-cta"
         href="www.test.com"
+        target="_blank"
       >
         <span
           class="pgn__icon my-0 mx-2"
@@ -516,6 +518,7 @@ exports[`UpgradePanel displays correct bullet points if not FBE 1`] = `
           class="trial-upgrade mt-3 btn btn-brand btn-block"
           data-testid="upgrade-cta"
           href="www.test.com"
+          target="_blank"
         >
           <span
             class="pgn__icon my-0 mx-2"
@@ -630,6 +633,7 @@ exports[`UpgradePanel displays correct bullet points if not FBE 1`] = `
         class="trial-upgrade mt-3 btn btn-brand btn-block"
         data-testid="upgrade-cta"
         href="www.test.com"
+        target="_blank"
       >
         <span
           class="pgn__icon my-0 mx-2"

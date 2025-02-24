@@ -59,6 +59,7 @@ const Disclosure = ({ children }) => {
           Your personal data will be used as described in our &nbsp;
           <Hyperlink
             className="privacy-policy-link text-light-100"
+            target="_blank"
             destination={getConfig().PRIVACY_POLICY_URL}
           >
             privacy policy

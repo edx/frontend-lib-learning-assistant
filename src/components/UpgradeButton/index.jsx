@@ -30,6 +30,7 @@ const UpgradeButton = ({ includeLockIcon, trackingEventName }) => {
   return (
     <Button
       onClick={handleClick}
+      target="_blank"
       href={upgradeUrl}
       className="trial-upgrade mt-3"
       variant="brand"
