@@ -56,17 +56,17 @@ export function addChatMessage(role, content, courseId, promptExperimentVariatio
   };
 }
 
-export function getChatResponse(courseId, unitId, upgradeable, promptExperimentVariationKey = undefined) {
+export function getChatResponse(courseId, unitId, upgradeable, auditTrialExperimentVariationKey = undefined) {
   return async (dispatch, getState) => {
     const { userId } = getAuthenticatedUser();
     const { messageList } = getState().learningAssistant;
 
     dispatch(setApiIsLoading(true));
     try {
-      if (promptExperimentVariationKey) {
+      if (auditTrialExperimentVariationKey) {
         trackChatBotMessageOptimizely(userId.toString());
       }
-      const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
+      const customQueryParams = auditTrialExperimentVariationKey ? { responseVariation: auditTrialExperimentVariationKey } : {};
       const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
 
       // Refresh chat summary only on the first message for an upgrade eligible user
@@ -77,7 +77,7 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
       }
 
       dispatch(setApiIsLoading(false));
-      dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
+      dispatch(addChatMessage(message.role, message.content, courseId, auditTrialExperimentVariationKey));
     } catch (error) {
       dispatch(setApiError());
       dispatch(setApiIsLoading(false));
