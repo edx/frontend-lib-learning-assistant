@@ -75,11 +75,10 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
-
-      dispatch(setApiIsLoading(false));
       dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
     } catch (error) {
       dispatch(setApiError());
+    } finally {
       dispatch(setApiIsLoading(false));
     }
   };

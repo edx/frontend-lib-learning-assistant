@@ -43,6 +43,7 @@
   }
 
   .trial-header {
+    display: flex;
     font-size: 0.9em;
     background-color: var.$brand-100;
     font-size: 0.875rem;
@@ -52,6 +53,10 @@
 
     a {
       text-decoration: underline;
+    }
+
+    &.has-spinner {
+      justify-content: center;
     }
   }
 }
