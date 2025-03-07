@@ -98,6 +98,19 @@ describe('<Sidebar />', () => {
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
     });
 
+    it('If auditTrialDaysRemaining not yet defined, show days remaining', () => {
+      useCourseUpgrade.mockReturnValue({
+        upgradeable: true,
+        upgradeUrl: 'https://mockurl.com',
+        auditTrialDaysRemaining: undefined,
+      });
+      render(undefined, { disclosureAcknowledged: true });
+      expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
+      expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('days-remaining-spinner')).toBeInTheDocument();
+      expect(screen.queryByTestId('days-remaining-message')).not.toBeInTheDocument();
+    });
+
     it('If auditTrialDaysRemaining > 1, show days remaining', () => {
       useCourseUpgrade.mockReturnValue({
         upgradeable: true,
@@ -108,6 +121,7 @@ describe('<Sidebar />', () => {
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
       expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
       expect(screen.queryByTestId('days-remaining-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('days-remaining-spinner')).not.toBeInTheDocument();
     });
 
     it('If auditTrialDaysRemaining === 1, say final day', () => {
@@ -120,6 +134,7 @@ describe('<Sidebar />', () => {
       expect(screen.queryByTestId('sidebar-xpert')).toBeInTheDocument();
       expect(screen.queryByTestId('get-days-remaining-message')).toBeInTheDocument();
       expect(screen.queryByTestId('trial-ends-today-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('days-remaining-spinner')).not.toBeInTheDocument();
     });
 
     it('should call track event on click', () => {

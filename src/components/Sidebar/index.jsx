@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {
   Icon,
   IconButton,
+  Spinner,
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
@@ -76,19 +77,31 @@ const Sidebar = ({
     </a>
   );
 
-  const getDaysRemainingMessage = () => {
+  const getDaysRemainingMessage = () => (
+    auditTrialDaysRemaining === 1 ? (
+      <div data-testid="trial-ends-today-message">
+        Your trial ends today! {getUpgradeLink()} for full access to Xpert.
+      </div>
+    ) : (
+      <div data-testid="days-remaining-message">
+        {auditTrialDaysRemaining} days remaining. {getUpgradeLink()} for full access to Xpert.
+      </div>
+    )
+  );
+
+  const getDaysRemainingHeader = () => {
     if (!upgradeable || auditTrialDaysRemaining < 1) { return null; }
 
+    const shouldShowSpinner = !auditTrialDaysRemaining;
     return (
-      <div className="trial-header" data-testid="get-days-remaining-message">
-        {auditTrialDaysRemaining === 1 ? (
-          <div data-testid="trial-ends-today-message">
-            Your trial ends today! {getUpgradeLink()} for full access to Xpert.
-          </div>
+      <div
+        className={`trial-header ${shouldShowSpinner ? 'has-spinner' : ''}`}
+        data-testid="get-days-remaining-message"
+      >
+        {shouldShowSpinner ? (
+          <Spinner animation="border" className="spinner" data-testid="days-remaining-spinner" screenReaderText="loading" />
         ) : (
-          <div data-testid="days-remaining-message">
-            {auditTrialDaysRemaining} days remaining. {getUpgradeLink()} for full access to Xpert.
-          </div>
+          getDaysRemainingMessage()
         )}
       </div>
     );
@@ -103,7 +116,7 @@ const Sidebar = ({
         <XpertLogo />
       </div>
 
-      {getDaysRemainingMessage()}
+      {getDaysRemainingHeader()}
 
       <ChatBox messageList={messageList} />
       {
