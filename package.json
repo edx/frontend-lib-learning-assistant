@@ -51,7 +51,7 @@
     "@edx/browserslist-config": "*",
     "@edx/frontend-platform": "^8",
     "@openedx/frontend-build": "^14",
-    "@openedx/paragon": "^22",
+    "@openedx/paragon": "^22 || ^23",
     "@reduxjs/toolkit": "^1.8",
     "prop-types": "^15",
     "react": "^17 || ^18",
