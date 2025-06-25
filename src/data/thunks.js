@@ -75,7 +75,9 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
-      dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
+      message.forEach(msg => {
+        dispatch(addChatMessage(msg.role, msg.content, courseId, promptExperimentVariationKey));
+      });
     } catch (error) {
       dispatch(setApiError());
     } finally {
