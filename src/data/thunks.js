@@ -67,7 +67,7 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         trackChatBotMessageOptimizely(userId.toString());
       }
       const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
-      const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
+      const messages = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
 
       // Refresh chat summary only on the first message for an upgrade eligible user
       // so we can tell if the user has just initiated an audit trial
@@ -75,7 +75,7 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
-      message.forEach(msg => {
+      messages.forEach(msg => {
         dispatch(addChatMessage(msg.role, msg.content, courseId, promptExperimentVariationKey));
       });
     } catch (error) {

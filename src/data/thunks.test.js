@@ -34,6 +34,8 @@ describe('Thunks unit tests', () => {
   afterEach(() => {
     // Only reset mocks that we want to reset, not all mocks
     dispatch.mockClear();
+    getState.mockClear();
+    getAuthenticatedUser.mockClear();
     fetchLearningAssistantChatSummary.mockClear();
     fetchChatResponse.mockClear();
     sendTrackEvent.mockClear();
@@ -76,7 +78,7 @@ describe('Thunks unit tests', () => {
     it('handles API response as array and dispatches addChatMessage for each message', async () => {
       const apiResponse = [
         { role: 'assistant', content: 'Hello!' },
-        { role: 'assistant', content: 'How can I help?' }
+        { role: 'assistant', content: 'How can I help?' },
       ];
 
       fetchChatResponse.mockResolvedValue(apiResponse);
@@ -92,7 +94,7 @@ describe('Thunks unit tests', () => {
 
       // Should dispatch addChatMessage for each message in the array
       expect(dispatch).toHaveBeenCalledWith(
-        expect.any(Function) // addChatMessage thunk
+        expect.any(Function), // addChatMessage thunk
       );
 
       expect(dispatch).toHaveBeenNthCalledWith(4, {
@@ -117,7 +119,7 @@ describe('Thunks unit tests', () => {
 
       // Should dispatch addChatMessage once for the single message
       expect(dispatch).toHaveBeenCalledWith(
-        expect.any(Function) // addChatMessage thunk
+        expect.any(Function), // addChatMessage thunk
       );
 
       expect(dispatch).toHaveBeenNthCalledWith(3, {
@@ -155,29 +157,29 @@ describe('Thunks unit tests', () => {
       await getChatResponse(courseId, unitId, upgradeable, promptExperimentVariationKey)(dispatch, getState);
 
       expect(fetchChatResponse).toHaveBeenCalledWith(
-        courseId, 
-        [], 
-        unitId, 
-        { responseVariation: promptExperimentVariationKey }
+        courseId,
+        [],
+        unitId,
+        { responseVariation: promptExperimentVariationKey },
       );
     });
 
     it('triggers chat summary refresh for first message when upgradeable is true', async () => {
       const mockStateWithOneMessage = {
-        learningAssistant: { 
-          messageList: [{ role: 'user', content: 'First message' }], 
-          conversationId: uuidv4() 
+        learningAssistant: {
+          messageList: [{ role: 'user', content: 'First message' }],
+          conversationId: uuidv4(),
         },
       };
       const getStateWithMessage = jest.fn().mockReturnValue(mockStateWithOneMessage);
-      
+
       const apiResponse = [{ role: 'assistant', content: 'Response' }];
       fetchChatResponse.mockResolvedValue(apiResponse);
 
       await getChatResponse(courseId, unitId, true)(dispatch, getStateWithMessage);
 
       expect(dispatch).toHaveBeenCalledWith(
-        expect.any(Function) // getLearningAssistantChatSummary thunk
+        expect.any(Function), // getLearningAssistantChatSummary thunk
       );
     });
   });
