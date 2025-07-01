@@ -67,7 +67,7 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         trackChatBotMessageOptimizely(userId.toString());
       }
       const customQueryParams = promptExperimentVariationKey ? { responseVariation: promptExperimentVariationKey } : {};
-      const message = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
+      const messages = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
 
       // Refresh chat summary only on the first message for an upgrade eligible user
       // so we can tell if the user has just initiated an audit trial
@@ -75,7 +75,15 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
-      dispatch(addChatMessage(message.role, message.content, courseId, promptExperimentVariationKey));
+      if (process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT?.toLowerCase() === 'true') {
+        // If the feature is enabled, we will use the new endpoint to fetch messages
+        messages.forEach(msg => {
+          dispatch(addChatMessage(msg.role, msg.content, courseId, promptExperimentVariationKey));
+        });
+      } else {
+        // If the feature is not enabled, we will use the old endpoint to fetch messages
+        dispatch(addChatMessage(messages.role, messages.content, courseId, promptExperimentVariationKey));
+      }
     } catch (error) {
       dispatch(setApiError());
     } finally {

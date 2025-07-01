@@ -1,17 +1,22 @@
 import { v4 as uuidv4 } from 'uuid';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
-import { fetchLearningAssistantChatSummary } from './api';
+import { fetchLearningAssistantChatSummary, fetchChatResponse } from './api';
 
-import { addChatMessage, getLearningAssistantChatSummary } from './thunks';
+import { addChatMessage, getLearningAssistantChatSummary, getChatResponse } from './thunks';
+
+const userId = 5;
 
 jest.mock('./api');
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendTrackEvent: jest.fn(),
 }));
-const userId = 5;
 jest.mock('@edx/frontend-platform/auth', () => ({
-  getAuthenticatedUser: jest.fn().mockReturnValue({ userId }),
+  getAuthenticatedUser: jest.fn(),
+}));
+jest.mock('../utils/optimizelyExperiment', () => ({
+  trackChatBotMessageOptimizely: jest.fn(),
 }));
 
 const mockState = {
@@ -22,7 +27,24 @@ describe('Thunks unit tests', () => {
   const dispatch = jest.fn();
   const getState = jest.fn().mockReturnValue(mockState);
 
-  afterEach(() => jest.resetAllMocks());
+  beforeEach(() => {
+    // Set up the mock for getAuthenticatedUser
+    getAuthenticatedUser.mockReturnValue({ userId });
+    // Reset and set up getState mock
+    getState.mockReturnValue(mockState);
+  });
+
+  afterEach(() => {
+    // Only reset mocks that we want to reset, not all mocks
+    dispatch.mockClear();
+    getState.mockClear();
+    getAuthenticatedUser.mockClear();
+    fetchLearningAssistantChatSummary.mockClear();
+    fetchChatResponse.mockClear();
+    sendTrackEvent.mockClear();
+    // Reset environment variable
+    delete process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT;
+  });
 
   describe('addChatMessage()', () => {
     const mockDate = new Date(2024, 1, 1);
@@ -49,6 +71,179 @@ describe('Thunks unit tests', () => {
       expect(sendTrackEvent).toHaveBeenCalledWith(
         eventName,
         properties,
+      );
+    });
+  });
+
+  describe('getChatResponse()', () => {
+    const courseId = 'course-v1:edx+test+23';
+    const unitId = 'unit123';
+    const upgradeable = false;
+
+    describe('when V2 endpoint is enabled', () => {
+      beforeEach(() => {
+        process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT = 'true';
+      });
+
+      it('handles API response as array and dispatches addChatMessage for each message', async () => {
+        const apiResponse = [
+          { role: 'assistant', content: 'Hello!' },
+          { role: 'assistant', content: 'How can I help?' },
+        ];
+
+        fetchChatResponse.mockResolvedValue(apiResponse);
+
+        await getChatResponse(courseId, unitId, upgradeable)(dispatch, getState);
+
+        expect(dispatch).toHaveBeenNthCalledWith(1, {
+          type: 'learning-assistant/setApiIsLoading',
+          payload: true,
+        });
+
+        expect(fetchChatResponse).toHaveBeenCalledWith(courseId, [], unitId, {});
+
+        // Should dispatch addChatMessage for each message in the array (V2 endpoint behavior)
+        expect(dispatch).toHaveBeenCalledWith(
+          expect.any(Function), // addChatMessage thunk for first message
+        );
+        expect(dispatch).toHaveBeenCalledWith(
+          expect.any(Function), // addChatMessage thunk for second message
+        );
+
+        expect(dispatch).toHaveBeenNthCalledWith(4, {
+          type: 'learning-assistant/setApiIsLoading',
+          payload: false,
+        });
+      });
+
+      it('handles single message in array', async () => {
+        const apiResponse = [{ role: 'assistant', content: 'Single response' }];
+
+        fetchChatResponse.mockResolvedValue(apiResponse);
+
+        await getChatResponse(courseId, unitId, upgradeable)(dispatch, getState);
+
+        expect(dispatch).toHaveBeenNthCalledWith(1, {
+          type: 'learning-assistant/setApiIsLoading',
+          payload: true,
+        });
+
+        expect(fetchChatResponse).toHaveBeenCalledWith(courseId, [], unitId, {});
+
+        // Should dispatch addChatMessage once for the single message in array
+        expect(dispatch).toHaveBeenCalledWith(
+          expect.any(Function), // addChatMessage thunk
+        );
+
+        expect(dispatch).toHaveBeenNthCalledWith(3, {
+          type: 'learning-assistant/setApiIsLoading',
+          payload: false,
+        });
+      });
+    });
+
+    describe('when V2 endpoint is disabled', () => {
+      beforeEach(() => {
+        process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT = 'false';
+      });
+
+      it('handles API response as single object and dispatches addChatMessage once', async () => {
+        const apiResponse = { role: 'assistant', content: 'Single response' };
+
+        fetchChatResponse.mockResolvedValue(apiResponse);
+
+        await getChatResponse(courseId, unitId, upgradeable)(dispatch, getState);
+
+        expect(dispatch).toHaveBeenNthCalledWith(1, {
+          type: 'learning-assistant/setApiIsLoading',
+          payload: true,
+        });
+
+        expect(fetchChatResponse).toHaveBeenCalledWith(courseId, [], unitId, {});
+
+        // Should dispatch addChatMessage once for the single message (old endpoint behavior)
+        expect(dispatch).toHaveBeenCalledWith(
+          expect.any(Function), // addChatMessage thunk
+        );
+
+        expect(dispatch).toHaveBeenNthCalledWith(3, {
+          type: 'learning-assistant/setApiIsLoading',
+          payload: false,
+        });
+      });
+    });
+
+    describe('when V2 endpoint flag is undefined', () => {
+      beforeEach(() => {
+        delete process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT;
+      });
+
+      it('defaults to V2 endpoint behavior (false)', async () => {
+        const apiResponse = { role: 'assistant', content: 'Default response' };
+
+        fetchChatResponse.mockResolvedValue(apiResponse);
+
+        await getChatResponse(courseId, unitId, upgradeable)(dispatch, getState);
+
+        // Should use old endpoint behavior by default (when env var is undefined)
+        expect(dispatch).toHaveBeenCalledWith(
+          expect.any(Function), // addChatMessage thunk
+        );
+      });
+    });
+
+    it('handles API errors and dispatches setApiError', async () => {
+      fetchChatResponse.mockRejectedValue(new Error('API Error'));
+
+      await getChatResponse(courseId, unitId, upgradeable)(dispatch, getState);
+
+      expect(dispatch).toHaveBeenNthCalledWith(1, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: true,
+      });
+
+      expect(dispatch).toHaveBeenNthCalledWith(2, {
+        type: 'learning-assistant/setApiError',
+      });
+
+      expect(dispatch).toHaveBeenNthCalledWith(3, {
+        type: 'learning-assistant/setApiIsLoading',
+        payload: false,
+      });
+    });
+
+    it('passes promptExperimentVariationKey to query params and addChatMessage', async () => {
+      const promptExperimentVariationKey = 'variation_a';
+      const apiResponse = [{ role: 'assistant', content: 'Test response' }];
+
+      fetchChatResponse.mockResolvedValue(apiResponse);
+
+      await getChatResponse(courseId, unitId, upgradeable, promptExperimentVariationKey)(dispatch, getState);
+
+      expect(fetchChatResponse).toHaveBeenCalledWith(
+        courseId,
+        [],
+        unitId,
+        { responseVariation: promptExperimentVariationKey },
+      );
+    });
+
+    it('triggers chat summary refresh for first message when upgradeable is true', async () => {
+      const mockStateWithOneMessage = {
+        learningAssistant: {
+          messageList: [{ role: 'user', content: 'First message' }],
+          conversationId: uuidv4(),
+        },
+      };
+      const getStateWithMessage = jest.fn().mockReturnValue(mockStateWithOneMessage);
+
+      const apiResponse = [{ role: 'assistant', content: 'Response' }];
+      fetchChatResponse.mockResolvedValue(apiResponse);
+
+      await getChatResponse(courseId, unitId, true)(dispatch, getStateWithMessage);
+
+      expect(dispatch).toHaveBeenCalledWith(
+        expect.any(Function), // getLearningAssistantChatSummary thunk
       );
     });
   });
