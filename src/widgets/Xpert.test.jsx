@@ -178,7 +178,7 @@ test('response text appears as message in the sidebar', async () => {
 
   // re-mock the fetchChatResponse API function so that we can assert that the
   // responseMessage appears in the DOM
-  const responseMessage = createRandomResponseForTesting()[0];
+  const responseMessage = createRandomResponseForTesting();
   jest.spyOn(api, 'fetchChatResponse').mockResolvedValue(responseMessage);
 
   render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} />, { preloadedState: initialState });
@@ -193,8 +193,8 @@ test('response text appears as message in the sidebar', async () => {
   await user.type(input, userMessage);
   await user.click(screen.getByRole('button', { name: 'submit' }));
 
-  await screen.findByText(responseMessage.content);
-  expect(screen.getByText(responseMessage.content)).toBeInTheDocument();
+  await screen.findByText(responseMessage[0].content);
+  expect(screen.getByText(responseMessage[0].content)).toBeInTheDocument();
 });
 test('clicking the close button closes the sidebar', async () => {
   const user = userEvent.setup();
@@ -224,6 +224,10 @@ test('toggle elements do not appear when sidebar is open', async () => {
 test('error message should disappear upon succesful api call', async () => {
   const user = userEvent.setup();
   const userMessage = 'Hello, Xpert!';
+
+  // Mock fetchChatResponse to return a successful response
+  const responseMessage = createRandomResponseForTesting();
+  jest.spyOn(api, 'fetchChatResponse').mockResolvedValue(responseMessage);
 
   const errorState = {
     learningAssistant: {
