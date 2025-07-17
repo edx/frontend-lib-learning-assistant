@@ -75,9 +75,15 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
-      messages.forEach(msg => {
-        dispatch(addChatMessage(msg.role, msg.content, courseId, promptExperimentVariationKey));
-      });
+      if (process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT?.toLowerCase() === 'true') {
+        // If the feature is enabled, handle array response format from the new endpoint version
+        messages.forEach(msg => {
+          dispatch(addChatMessage(msg.role, msg.content, courseId, promptExperimentVariationKey));
+        });
+      } else {
+        // If the feature is not enabled, handle the response as a single object (legacy format)
+        dispatch(addChatMessage(messages.role, messages.content, courseId, promptExperimentVariationKey));
+      }
     } catch (error) {
       dispatch(setApiError());
     } finally {
