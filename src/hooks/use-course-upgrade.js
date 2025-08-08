@@ -3,9 +3,6 @@ import { useModel } from '@src/generic/model-store'; // eslint-disable-line impo
 import { useSelector } from 'react-redux';
 import { CourseInfoContext } from '../context';
 
-import { OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS } from '../data/optimizely';
-import { useAuditTrialExperimentDecision } from '../experiments';
-
 const millisecondsInOneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
 
 /**
@@ -44,17 +41,11 @@ export default function useCourseUpgrade() {
     auditTrial,
   } = useSelector(state => state.learningAssistant);
 
-  const [decision] = useAuditTrialExperimentDecision();
-  const { enabled, variationKey } = decision || {};
-
   const upgradeUrl = offer?.upgradeUrl || verifiedMode?.upgradeUrl;
 
   if (
     !isUpgradeEligible
     || !upgradeUrl
-    || !enabled
-    || (variationKey !== OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.XPERT_AUDIT_14_DAY_TRIAL
-      && variationKey !== OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.XPERT_AUDIT_28_DAY_TRIAL)
   ) { return { upgradeable: false }; }
 
   let auditTrialExpired = false;

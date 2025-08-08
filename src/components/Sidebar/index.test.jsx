@@ -8,7 +8,6 @@ import {
 import { render as renderComponent } from '../../utils/utils.test';
 import { initialState } from '../../data/slice';
 import showSurvey from '../../utils/surveyMonkey';
-import { trackUpgradeButtonClickedOptimizely } from '../../utils/optimizelyExperiment';
 
 import Sidebar from '.';
 
@@ -151,7 +150,6 @@ describe('<Sidebar />', () => {
       expect(mockedTrackEvent).not.toHaveBeenCalled();
       fireEvent.click(upgradeLink);
 
-      expect(trackUpgradeButtonClickedOptimizely).toHaveBeenCalled();
       expect(mockedTrackEvent).toHaveBeenCalledWith('edx.ui.lms.learning_assistant.days_remaining_banner_upgrade_click');
       expect(mockedTrackEvent).toHaveBeenCalledWith(
         'edx.bi.ecommerce.upsell_links_clicked',
