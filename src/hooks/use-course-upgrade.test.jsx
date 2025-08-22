@@ -3,15 +3,11 @@ import { useSelector } from 'react-redux';
 import { useModel } from '@src/generic/model-store'; // eslint-disable-line import/no-unresolved
 import { CourseInfoProvider } from '../context';
 import useCourseUpgrade from './use-course-upgrade';
-import { OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS } from '../data/optimizely';
-
-import { useAuditTrialExperimentDecision } from '../experiments';
 
 jest.mock('react-redux', () => ({ useSelector: jest.fn() }));
-jest.mock('../experiments', () => ({ useAuditTrialExperimentDecision: jest.fn() }));
 
 const mockedUpgradeUrl = 'https://upgrade.edx/course/test';
-const mockedAuditTrialLengthDays = 7;
+const mockedAuditTrialLengthDays = 14;
 
 const contextWrapper = ({ courseInfo }) => function Wrapper({ children }) { // eslint-disable-line react/prop-types
   return (
@@ -35,10 +31,6 @@ const renderHook = ({
   });
 
   useSelector.mockReturnValue(state.learningAssistant);
-  useAuditTrialExperimentDecision.mockReturnValue([{
-    enabled: true,
-    variationKey: OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.XPERT_AUDIT_14_DAY_TRIAL,
-  }]);
 
   return rtlRenderHook(
     () => useCourseUpgrade(),
@@ -52,33 +44,53 @@ describe('useCourseUpgrade()', () => {
   afterEach(() => jest.resetAllMocks());
 
   it('should return { upgradeable: false } if not eligible', () => {
-    const { result } = renderHook({ courseInfo: { isUpgradeEligible: false } });
+    const { result } = renderHook({
+      courseInfo: { isUpgradeEligible: false },
+      state: {
+        learningAssistant: {
+          auditTrialLengthDays: mockedAuditTrialLengthDays,
+        },
+      },
+    });
 
     expect(result.current).toEqual({ upgradeable: false });
   });
 
   it('should return { upgradeable: false } if missing upgradeUrl', () => {
-    const { result } = renderHook({ courseInfo: { isUpgradeEligible: true } });
+    const { result } = renderHook({
+      courseInfo: { isUpgradeEligible: true },
+      state: {
+        learningAssistant: {
+          auditTrialLengthDays: mockedAuditTrialLengthDays,
+        },
+      },
+    });
 
     expect(result.current).toEqual({ upgradeable: false });
   });
 
   it('should return { upgradeable: false } if audit trial experiment is not enabled', () => {
-    const { result } = renderHook({ courseInfo: { isUpgradeEligible: true } });
-    useAuditTrialExperimentDecision.mockReturnValue([{
-      enabled: false,
-      variationKey: OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.XPERT_AUDIT_14_DAY_TRIAL,
-    }]);
+    const { result } = renderHook({
+      courseInfo: { isUpgradeEligible: true },
+      state: {
+        learningAssistant: {
+          auditTrialLengthDays: mockedAuditTrialLengthDays,
+        },
+      },
+    });
 
     expect(result.current).toEqual({ upgradeable: false });
   });
 
   it('should return { upgradeable: false } is not one of the audit trial experiment treatment keys', () => {
-    useAuditTrialExperimentDecision.mockReturnValue([{
-      enabled: false,
-      variationKey: OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.CONTROL,
-    }]);
-    const { result } = renderHook({ courseInfo: { isUpgradeEligible: true } });
+    const { result } = renderHook({
+      courseInfo: { isUpgradeEligible: true },
+      state: {
+        learningAssistant: {
+          auditTrialLengthDays: mockedAuditTrialLengthDays,
+        },
+      },
+    });
 
     expect(result.current).toEqual({ upgradeable: false });
   });

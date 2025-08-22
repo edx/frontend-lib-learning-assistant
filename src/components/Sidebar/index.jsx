@@ -8,7 +8,6 @@ import {
   Spinner,
 } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 
 import showSurvey from '../../utils/surveyMonkey';
 
@@ -19,7 +18,6 @@ import MessageForm from '../MessageForm';
 import UpgradePanel from '../UpgradePanel';
 import { useCourseUpgrade, useTrackEvent } from '../../hooks';
 import { ReactComponent as XpertLogo } from '../../assets/xpert-logo.svg';
-import { trackUpgradeButtonClickedOptimizely } from '../../utils/optimizelyExperiment';
 import './Sidebar.scss';
 
 const Sidebar = ({
@@ -53,9 +51,6 @@ const Sidebar = ({
   );
 
   const handleUpgradeLinkClick = () => {
-    const { userId } = getAuthenticatedUser();
-    trackUpgradeButtonClickedOptimizely(userId.toString());
-
     track('edx.ui.lms.learning_assistant.days_remaining_banner_upgrade_click');
     track('edx.bi.ecommerce.upsell_links_clicked', {
       linkCategory: 'xpert_learning_assistant',

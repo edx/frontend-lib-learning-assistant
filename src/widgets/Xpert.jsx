@@ -5,8 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSidebarIsOpen, getLearningAssistantChatSummary } from '../data/thunks';
 import ToggleXpert from '../components/ToggleXpertButton';
 import Sidebar from '../components/Sidebar';
-import { OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS } from '../data/optimizely';
-import { ExperimentsProvider, useAuditTrialExperimentDecision } from '../experiments';
+import { ExperimentsProvider } from '../experiments';
 import { CourseInfoProvider } from '../context';
 
 const XpertDisplay = ({
@@ -17,14 +16,7 @@ const XpertDisplay = ({
   sidebarIsOpen,
   setSidebarIsOpen,
 }) => {
-  const [decision] = useAuditTrialExperimentDecision();
-  const { enabled: experimentEnabled, variationKey } = decision || {};
-
-  // Any user should see xpert unless they are an audit learner not part of the experiment or part of the control.
-  const shouldDisplayXpert = (
-    !(variationKey === OPTIMIZELY_AUDIT_TRIAL_LENGTH_EXPERIMENT_VARIATION_KEYS.CONTROL && isUpgradeEligible)
-    && !(!experimentEnabled && isUpgradeEligible)
-  );
+  const shouldDisplayXpert = isUpgradeEligible;
 
   const XpertSidebar = (
     <>
