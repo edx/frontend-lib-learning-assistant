@@ -21,6 +21,7 @@ import {
   setAuditTrialLengthDays,
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
+import { getConfig } from '@edx/frontend-platform';
 
 export function addChatMessage(role, content, courseId, promptExperimentVariationKey = undefined) {
   return (dispatch, getState) => {
@@ -75,7 +76,8 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
         // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
-      if (process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT?.toLowerCase() === 'true') {
+      console.log(getConfig().FEATURE_ENABLE_CHAT_V2_ENDPOINT);
+      if (getConfig().FEATURE_ENABLE_CHAT_V2_ENDPOINT?.toLowerCase() === 'true') {
         // If the feature is enabled, handle array response format from the new endpoint version
         messages.forEach(msg => {
           dispatch(addChatMessage(msg.role, msg.content, courseId, promptExperimentVariationKey));
