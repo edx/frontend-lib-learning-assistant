@@ -12,12 +12,9 @@ const XpertDisplay = ({
   courseId,
   contentToolsEnabled,
   unitId,
-  isUpgradeEligible,
   sidebarIsOpen,
   setSidebarIsOpen,
 }) => {
-  const shouldDisplayXpert = isUpgradeEligible;
-
   const XpertSidebar = (
     <>
       <ToggleXpert
@@ -35,18 +32,17 @@ const XpertDisplay = ({
     </>
   );
 
-  return shouldDisplayXpert ? (
+  return (
     <ExperimentsProvider>
       {XpertSidebar}
     </ExperimentsProvider>
-  ) : null;
+  );
 };
 
 XpertDisplay.propTypes = {
   courseId: PropTypes.string.isRequired,
   contentToolsEnabled: PropTypes.bool.isRequired,
   unitId: PropTypes.string.isRequired,
-  isUpgradeEligible: PropTypes.bool.isRequired,
   sidebarIsOpen: PropTypes.func.isRequired,
   setSidebarIsOpen: PropTypes.func.isRequired,
 };
@@ -84,7 +80,6 @@ const Xpert = ({
           courseId={courseId}
           contentToolsEnabled={contentToolsEnabled}
           unitId={unitId}
-          isUpgradeEligible={isUpgradeEligible}
           sidebarIsOpen={sidebarIsOpen}
           setSidebarIsOpen={setSidebarIsOpen}
         />
