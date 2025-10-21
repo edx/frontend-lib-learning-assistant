@@ -22,6 +22,51 @@ import {
 } from './slice';
 import { OPTIMIZELY_PROMPT_EXPERIMENT_KEY } from './optimizely';
 
+export function getLearningAssistantChatSummary(courseId) {
+  return async (dispatch) => {
+    dispatch(setApiIsLoading(true));
+
+    try {
+      const data = await fetchLearningAssistantChatSummary(courseId);
+
+      // Enabled
+      dispatch(setIsEnabled(data.enabled));
+
+      // Message History
+      const rawMessageList = data.message_history;
+
+      if (rawMessageList.length) {
+        const messageList = rawMessageList
+          .map(({ timestamp, ...msg }) => ({
+            ...msg,
+            timestamp: new Date(timestamp).toString(),
+          }));
+        dispatch(setMessageList({ messageList }));
+        dispatch(setDisclosureAcknowledged(true));
+      }
+
+      // Audit Trial
+      const auditTrial = {
+        startDate: data.audit_trial.start_date,
+        expirationDate: data.audit_trial.expiration_date,
+      };
+      const auditTrialDatesValid = !(
+        Number.isNaN(Date.parse(auditTrial.startDate))
+        || Number.isNaN(Date.parse(auditTrial.expirationDate))
+      );
+      if (Object.keys(auditTrial).length !== 0 && auditTrialDatesValid) {
+        dispatch(setAuditTrial(camelCaseObject(auditTrial)));
+      }
+      if (data.audit_trial_length_days) {
+        dispatch(setAuditTrialLengthDays(data.audit_trial_length_days));
+      }
+    } catch (error) {
+      dispatch(setApiError());
+    }
+    dispatch(setApiIsLoading(false));
+  };
+}
+
 export function addChatMessage(role, content, courseId, promptExperimentVariationKey = undefined) {
   return (dispatch, getState) => {
     const { messageList, conversationId } = getState().learningAssistant;
@@ -70,19 +115,17 @@ export function getChatResponse(courseId, unitId, upgradeable, promptExperimentV
       const messages = await fetchChatResponse(courseId, messageList, unitId, customQueryParams);
 
       // Refresh chat summary only on the first message for an upgrade eligible user
-      // so we can tell if the user has just initiated an audit trial
       if (messageList.length === 1 && upgradeable) {
-        // eslint-disable-next-line no-use-before-define
         dispatch(getLearningAssistantChatSummary(courseId));
       }
-      if (process.env.FEATURE_ENABLE_CHAT_V2_ENDPOINT?.toLowerCase() === 'true') {
-        // If the feature is enabled, handle array response format from the new endpoint version
-        messages.forEach(msg => {
+      if (Array.isArray(messages)) {
+        messages.filter(m => m && m.role && m.content).forEach((msg) => {
           dispatch(addChatMessage(msg.role, msg.content, courseId, promptExperimentVariationKey));
         });
-      } else {
-        // If the feature is not enabled, handle the response as a single object (legacy format)
-        dispatch(addChatMessage(messages.role, messages.content, courseId, promptExperimentVariationKey));
+      } else if (messages && typeof messages === 'object') {
+        if (messages.role && messages.content) {
+          dispatch(addChatMessage(messages.role, messages.content, courseId, promptExperimentVariationKey));
+        }
       }
     } catch (error) {
       dispatch(setApiError());
@@ -113,56 +156,5 @@ export function acknowledgeDisclosure(isDisclosureAcknowledged) {
 export function updateSidebarIsOpen(isOpen) {
   return (dispatch) => {
     dispatch(setSidebarIsOpen(isOpen));
-  };
-}
-
-export function getLearningAssistantChatSummary(courseId) {
-  return async (dispatch) => {
-    dispatch(setApiIsLoading(true));
-
-    try {
-      const data = await fetchLearningAssistantChatSummary(courseId);
-
-      // Enabled
-      dispatch(setIsEnabled(data.enabled));
-
-      // Message History
-      const rawMessageList = data.message_history;
-
-      // If returned message history data is not empty
-      if (rawMessageList.length) {
-        const messageList = rawMessageList
-          .map(({ timestamp, ...msg }) => ({
-            ...msg,
-            timestamp: new Date(timestamp).toString(), // Parse ISO time to Date()
-          }));
-
-        dispatch(setMessageList({ messageList }));
-
-        // If it has chat history, then we assume the user already aknowledged.
-        dispatch(setDisclosureAcknowledged(true));
-      }
-
-      // Audit Trial
-      const auditTrial = {
-        startDate: data.audit_trial.start_date,
-        expirationDate: data.audit_trial.expiration_date,
-      };
-
-      // Validate audit trial data & dates
-      const auditTrialDatesValid = !(
-        Number.isNaN(Date.parse(auditTrial.startDate))
-        || Number.isNaN(Date.parse(auditTrial.expirationDate))
-      );
-
-      if (Object.keys(auditTrial).length !== 0 && auditTrialDatesValid) {
-        dispatch(setAuditTrial(camelCaseObject(auditTrial)));
-      }
-
-      if (data.audit_trial_length_days) { dispatch(setAuditTrialLengthDays(data.audit_trial_length_days)); }
-    } catch (error) {
-      dispatch(setApiError());
-    }
-    dispatch(setApiIsLoading(false));
   };
 }

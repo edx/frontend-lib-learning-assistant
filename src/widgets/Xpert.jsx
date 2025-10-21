@@ -14,8 +14,8 @@ const XpertDisplay = ({
   unitId,
   sidebarIsOpen,
   setSidebarIsOpen,
-}) => {
-  const XpertSidebar = (
+}) => (
+  <ExperimentsProvider>
     <>
       <ToggleXpert
         courseId={courseId}
@@ -30,20 +30,14 @@ const XpertDisplay = ({
         unitId={unitId}
       />
     </>
-  );
-
-  return (
-    <ExperimentsProvider>
-      {XpertSidebar}
-    </ExperimentsProvider>
-  );
-};
+  </ExperimentsProvider>
+);
 
 XpertDisplay.propTypes = {
   courseId: PropTypes.string.isRequired,
   contentToolsEnabled: PropTypes.bool.isRequired,
   unitId: PropTypes.string.isRequired,
-  sidebarIsOpen: PropTypes.func.isRequired,
+  sidebarIsOpen: PropTypes.bool.isRequired,
   setSidebarIsOpen: PropTypes.func.isRequired,
 };
 

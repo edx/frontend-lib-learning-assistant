@@ -77,7 +77,14 @@ test('doesn\'t load if not enabled', async () => {
   jest.spyOn(api, 'fetchLearningAssistantChatSummary').mockResolvedValue({ enabled: false });
 
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: initialState },
   );
 
@@ -87,7 +94,14 @@ test('doesn\'t load if not enabled', async () => {
 });
 test('initial load displays correct elements', async () => {
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: initialState },
   );
 
@@ -101,7 +115,14 @@ test('initial load displays correct elements', async () => {
 test('clicking the call to action dismiss button removes the message', async () => {
   const user = userEvent.setup();
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: initialState },
   );
 
@@ -115,7 +136,14 @@ test('clicking the call to action dismiss button removes the message', async () 
 
   // re-render exam, button to dismiss cta should not be there
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: initialState },
   );
   expect(screen.queryByRole('button', { name: 'dismiss' })).not.toBeInTheDocument();
@@ -124,7 +152,14 @@ test('clicking the call to action opens the sidebar', async () => {
   const user = userEvent.setup();
 
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: initialState },
   );
 
@@ -145,7 +180,14 @@ test('clicking the toggle button opens the sidebar', async () => {
   const user = userEvent.setup();
 
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: initialState },
   );
 
@@ -168,7 +210,12 @@ test('submitted text appears as message in the sidebar', async () => {
   const userMessage = 'Hello, Xpert!';
 
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+    />,
     { preloadedState: initialState },
   );
 
@@ -215,7 +262,12 @@ test('response text appears as message in the sidebar', async () => {
   });
 
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+    />,
     { preloadedState: initialState },
   );
 
@@ -236,7 +288,12 @@ test('response text appears as message in the sidebar', async () => {
 test('clicking the close button closes the sidebar', async () => {
   const user = userEvent.setup();
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+    />,
     { preloadedState: initialState },
   );
 
@@ -252,7 +309,12 @@ test('clicking the close button closes the sidebar', async () => {
 test('toggle elements do not appear when sidebar is open', async () => {
   const user = userEvent.setup();
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+    />,
     { preloadedState: initialState },
   );
 
@@ -285,7 +347,14 @@ test('error message should disappear upon succesful api call', async () => {
     },
   };
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: errorState },
   );
 
@@ -322,7 +391,14 @@ test('error message should disappear when dismissed', async () => {
     },
   };
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: errorState },
   );
 
@@ -343,7 +419,14 @@ test('popup modal should open chat', async () => {
   window.localStorage.clear();
 
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
     { preloadedState: initialState },
   );
 
@@ -368,7 +451,12 @@ test('popup modal should close and display CTA', async () => {
   window.localStorage.clear();
 
   render(
-    <Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />,
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+    />,
     { preloadedState: initialState },
   );
 
@@ -401,7 +489,16 @@ test('survey monkey survey should appear after closing sidebar', async () => {
   const survey = jest.spyOn(surveyMonkey, 'default').mockReturnValueOnce(1);
   const user = userEvent.setup();
 
-  render(<Xpert courseId={courseId} contentToolsEnabled={false} unitId={unitId} isUpgradeEligible />);
+  render(
+    <Xpert
+      courseId={courseId}
+      contentToolsEnabled={false}
+      unitId={unitId}
+      isUpgradeEligible
+      isStaff={false}
+      isPaidLearner={false}
+    />,
+  );
 
   // wait for button to appear
   await screen.findByTestId('toggle-button');
