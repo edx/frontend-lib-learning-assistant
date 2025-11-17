@@ -83,15 +83,13 @@ const ToggleXpert = ({
     && (localStorage.getItem('completedLearningAssistantTour') || !isModalOpen)
   );
 
-  const chatMargin = contentToolsEnabled ? 'mb-5' : 'mb-3';
+  const bottomPosition = contentToolsEnabled ? '10rem' : '1rem';
 
   return (
     (!isOpen && (
       <div
-        className={
-          `toggle position-fixed closed d-flex flex-column justify-content-end align-items-end mx-3 border-0
-           ${chatMargin}`
-        }
+        className="toggle position-fixed closed d-flex flex-column justify-content-end align-items-end mx-3 border-0"
+        style={{ bottom: bottomPosition }}
         data-testid="xpert-toggle"
       >
         <div
@@ -105,7 +103,7 @@ const ToggleXpert = ({
             onClose={handleModalClose}
           >
             <div
-              className={`bg-white p-3 rounded shadow border ${chatMargin}`}
+              className="bg-white p-3 rounded shadow border"
               style={{ textAlign: 'start' }}
             >
               <p data-testid="modal-message">
