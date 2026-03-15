@@ -108,7 +108,7 @@ const XpertChatWidget = ({
       courseId={courseId}
       unitId={unitId}
       contentToolsEnabled={contentToolsEnabled}
-      isUpgradeEligible={hasActiveAuditTrial}
+      isUpgradeEligible={isStaff ? false : hasActiveAuditTrial}
       enableChatV2Endpoint={config.FEATURE_ENABLE_CHAT_V2_ENDPOINT}
     />
   );
